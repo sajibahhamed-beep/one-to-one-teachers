@@ -97,7 +97,7 @@ export default function Home() {
           <span className="eyebrow inline-flex items-center gap-2 font-mono text-xs tracking-widest text-[#FFB627] uppercase mb-4">
             <Sparkles className="w-4 h-4" /> {lang === "bn" ? "আপনি প্রস্তুত যখনই" : "Ready when you are"}
           </span>
-          <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-semibold text-[#FBF7EF] max-w-2xl mx-auto mb-6 leading-tight">
+          <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#FBF7EF] max-w-2xl mx-auto mb-6 leading-[1.65]">
             {lang === "bn" ? "আপনার সন্তানের মেন্টর মাত্র একটি ফরম দূরে।" : "Your child's mentor is one form away."}
           </h2>
           <p className="text-base sm:text-lg text-[#FBF7EF]/75 max-w-lg mx-auto mb-10 leading-relaxed">

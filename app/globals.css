@@ -59,13 +59,13 @@ p:last-child {
   padding: 0 32px;
 }
 
-/* Perfect Standard Line Height for Headings */
+/* Perfect Standard Line Height for Headings with Ample Breathing Room */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-hind-siliguri), sans-serif;
   font-weight: 700;
   letter-spacing: -0.01em;
-  line-height: 1.38 !important;
-  margin-bottom: 0.5rem;
+  line-height: 1.65;
+  margin-bottom: 1rem;
 }
 
 /* Infinite Smooth Slow Horizontal Marquee Animation */

@@ -41,7 +41,7 @@ export default function SubjectTeachersPage() {
             <span>{lang === "bn" ? "বিষয়ভিত্তিক ১-অন-১ টিচার্স ডিরেক্টরি" : "1-on-1 Subject Tutors Directory"}</span>
           </span>
 
-          <h1 className="font-sans text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
+          <h1 className="font-sans text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-[1.65] mb-4">
             {lang === "bn"
               ? "আপনার সন্তানের প্রিয় বিষয়ের জন্য ১-অন-১ শিক্ষক"
               : "Dedicated 1-on-1 Tutors for Every Subject"}
