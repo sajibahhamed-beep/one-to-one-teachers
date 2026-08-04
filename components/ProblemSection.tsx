@@ -9,17 +9,17 @@ export default function ProblemSection() {
   return (
     <section id="problem" className="py-20 md:py-24 bg-[#F8FAFC] text-[#0D2C4A] font-sans border-b border-[#0D2C4A]/10">
       <div className="max-w-[1240px] mx-auto px-6 md:px-8">
-        <div className="text-center max-w-[720px] mx-auto mb-14 space-y-3">
-          <span className="eyebrow inline-flex items-center gap-2 font-mono text-xs tracking-widest text-[#00A896] uppercase mb-2 font-bold bg-[#00A896]/10 px-3.5 py-1 rounded-full border border-[#00A896]/20">
+        <div className="text-center max-w-[780px] mx-auto mb-16 space-y-4">
+          <span className="eyebrow inline-flex items-center gap-2 font-mono text-xs tracking-widest text-[#00A896] uppercase mb-3 font-bold bg-[#00A896]/10 px-4 py-1.5 rounded-full border border-[#00A896]/20">
             {t.probEyebrow}
           </span>
 
-          <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0D2C4A] leading-[1.38] tracking-tight mb-3">
+          <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0D2C4A] leading-[1.65] tracking-tight mb-5">
             আপনার সন্তানের মেন্টর মাত্র <br className="hidden sm:inline" />
             একটি ফরম দূরে।
           </h2>
 
-          <p className="text-base sm:text-lg text-[#475569] leading-[1.8] font-normal max-w-xl mx-auto pt-1">
+          <p className="text-base sm:text-lg text-[#475569] leading-relaxed font-normal max-w-xl mx-auto pt-1">
             সাইন আপ করতে মাত্র ৪ মিনিট সময় লাগবে। প্রথম সেশনটি সম্পূর্ণ ফ্রি!
           </p>
         </div>

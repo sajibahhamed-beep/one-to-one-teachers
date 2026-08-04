@@ -24,14 +24,14 @@ export default function Hero({ onOpenEnroll }: HeroProps) {
         {/* Left Text Column */}
         <div className="lg:col-span-7 space-y-5">
           {/* Eyebrow Badge */}
-          <div className="inline-flex items-center gap-2 bg-[#E6F4F3] border border-[#00A896]/30 px-4 py-1.5 rounded-full text-xs font-mono font-bold text-[#00A896] tracking-wider uppercase shadow-sm mb-1">
+          <div className="inline-flex items-center gap-2 bg-[#E6F4F3] border border-[#00A896]/30 px-4 py-1.5 rounded-full text-xs font-mono font-bold text-[#00A896] tracking-wider uppercase shadow-sm mb-3">
             <span className="w-2 h-2 rounded-full bg-[#00A896] animate-pulse"></span>
             <span className="w-2 h-2 rounded-full bg-[#00A896]/60"></span>
             <span>OTOTEACHER — ONE-TO-ONE TEACHERS FOR ALL</span>
           </div>
 
-          {/* Title with Balanced Standard Line Height 1.38 */}
-          <h1 className="font-sans text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.38] text-[#0D2C4A] tracking-tight mb-4">
+          {/* Title with Spacious Line Height 1.65 for Bangla Font */}
+          <h1 className="font-sans text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.65] text-[#0D2C4A] tracking-tight mb-6">
             প্রতিটি শিক্ষার্থীর জন্য{" "}
             <br className="hidden sm:inline" />
             একজন <span className="text-[#00A896]">ব্যক্তিগত ১-অন-১</span>{" "}
@@ -39,7 +39,7 @@ export default function Hero({ onOpenEnroll }: HeroProps) {
           </h1>
 
           {/* Subtitle / Paragraph */}
-          <p className="text-base sm:text-lg leading-[1.8] text-[#475569] max-w-[560px] font-normal mb-6">
+          <p className="text-base sm:text-lg leading-relaxed text-[#475569] max-w-[580px] font-normal mb-8">
             আলো শিক্ষা কোনো কোর্স বিক্রি করে না। আমরা নিম্ন আয়ের পরিবারের শিক্ষার্থীদের সাথে যাচাই, চরিত্র ও অভিজ্ঞতার ভিত্তিতে শিক্ষকদের ১-অন-১ মিলিয়ে দেই — একজন শিক্ষার্থী, একজন শিক্ষক, একটি পরিবর্তন।
           </p>
 

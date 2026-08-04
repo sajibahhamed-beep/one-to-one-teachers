@@ -53,14 +53,14 @@ export default function BatchSchedule({ onOpenEnroll }: BatchScheduleProps) {
     <section id="batches" className="py-20 bg-[#F8FAFC]">
       <div className="max-w-[1240px] mx-auto px-6 md:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
-          <div>
-            <span className="eyebrow inline-flex items-center gap-2 font-mono text-xs tracking-widest text-[#00A896] uppercase mb-3 font-bold bg-[#00A896]/10 px-3 py-1 rounded-full border border-[#00A896]/20">
+          <div className="space-y-3 max-w-2xl">
+            <span className="eyebrow inline-flex items-center gap-2 font-mono text-xs tracking-widest text-[#00A896] uppercase mb-3 font-bold bg-[#00A896]/10 px-4 py-1.5 rounded-full border border-[#00A896]/20">
               {t.batchEyebrow}
             </span>
-            <h2 className="font-serif text-3xl sm:text-4xl font-semibold text-[#0D2C4A]">
+            <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0D2C4A] leading-[1.65] mb-4">
               {t.batchTitle}
             </h2>
-            <p className="mt-2 text-sm text-[#0D2C4A]/70 max-w-xl">
+            <p className="text-base text-[#475569] leading-relaxed max-w-xl">
               {t.batchDesc}
             </p>
           </div>
@@ -73,58 +73,59 @@ export default function BatchSchedule({ onOpenEnroll }: BatchScheduleProps) {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
           {slots.map((slot) => (
             <div
               key={slot.id}
-              className="bg-white border border-[#0D2C4A]/12 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between"
+              className="bg-white border border-[#0D2C4A]/12 rounded-3xl p-7 shadow-[0_4px_20px_-4px_rgba(13,44,74,0.06)] hover:shadow-[0_20px_40px_-10px_rgba(13,44,74,0.14)] hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group"
             >
               <div>
-                <div className="flex items-center justify-between gap-2 mb-3">
-                  <span className="font-mono text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-md bg-[#00A896]/10 text-[#00A896]">
+                <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
+                  <span className="font-mono text-xs uppercase font-bold tracking-wider px-3 py-1 rounded-full bg-[#00A896]/10 text-[#00A896] border border-[#00A896]/20">
                     {slot.track}
                   </span>
-                  <span className="font-mono text-[11px] font-bold text-[#00A896] flex items-center gap-1">
+                  <span className="font-mono text-xs font-bold text-[#00A896] bg-[#00A896]/10 px-3 py-1 rounded-full flex items-center gap-1.5">
                     <CheckCircle2 className="w-3.5 h-3.5" />
                     {slot.seats}
                   </span>
                 </div>
 
-                <h3 className="font-serif text-xl font-semibold text-[#0D2C4A] mb-3">
+                <h3 className="font-sans text-xl font-extrabold text-[#0D2C4A] leading-snug mb-4 group-hover:text-[#00A896] transition-colors">
                   {slot.subject}
                 </h3>
 
-                <div className="space-y-2 text-xs text-[#0D2C4A]/80 mb-6">
-                  <div className="flex items-center gap-2">
-                    <User className="w-4 h-4 text-[#00A896]" />
+                <div className="space-y-3 text-xs sm:text-sm text-[#0D2C4A]/85 mb-6 bg-[#F8FAFC] p-4 sm:p-5 rounded-2xl border border-[#0D2C4A]/10">
+                  <div className="flex items-center gap-2.5">
+                    <User className="w-4 h-4 text-[#00A896] flex-shrink-0" />
                     <span>
-                      <b>{lang === "bn" ? "ডেডিকেটেড মেন্টর:" : "Assigned Mentor:"}</b> {slot.mentor}
+                      <strong className="text-[#0D2C4A]">{lang === "bn" ? "ডেডিকেটেড মেন্টর:" : "Assigned Mentor:"}</strong> {slot.mentor}
                     </span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-[#00A896]" />
+                  <div className="flex items-center gap-2.5">
+                    <Clock className="w-4 h-4 text-[#00A896] flex-shrink-0" />
                     <span>
-                      <b>{lang === "bn" ? "সাপ্তাহিক সময়:" : "Weekly Slot:"}</b> {slot.schedule}
+                      <strong className="text-[#0D2C4A]">{lang === "bn" ? "সাপ্তাহিক সময়:" : "Weekly Slot:"}</strong> {slot.schedule}
                     </span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-[#00A896]" />
+                  <div className="flex items-center gap-2.5">
+                    <Calendar className="w-4 h-4 text-[#00A896] flex-shrink-0" />
                     <span>
-                      <b>{lang === "bn" ? "মেন্টরিং শুরু:" : "Mentorship Starts:"}</b> {slot.startDate}
+                      <strong className="text-[#0D2C4A]">{lang === "bn" ? "মেন্টরিং শুরু:" : "Mentorship Starts:"}</strong> {slot.startDate}
                     </span>
                   </div>
                 </div>
               </div>
 
               <div className="flex items-center justify-between border-t border-[#0D2C4A]/10 pt-4 mt-2">
-                <span className="text-xs text-[#0D2C4A]/60 font-mono">
+                <span className="text-xs text-[#64748B] font-mono font-semibold">
                   {lang === "bn" ? "১-অন-১ লাইভ সেশন" : "1-on-1 Live Session"}
                 </span>
                 <button
                   onClick={onOpenEnroll}
-                  className="btn btn-teal px-5 py-2 rounded-full bg-[#00A896] text-white font-bold text-xs hover:bg-[#008075] transition-all"
+                  className="px-5 py-2.5 rounded-full bg-[#00A896] text-white font-extrabold text-xs hover:bg-[#008075] transition-all shadow-md shadow-[#00A896]/20 hover:-translate-y-0.5 cursor-pointer flex items-center gap-1.5"
                 >
-                  {t.batchJoinNow}
+                  <span>{t.batchJoinNow}</span>
+                  <ArrowRight className="w-3.5 h-3.5 text-white" />
                 </button>
               </div>
             </div>

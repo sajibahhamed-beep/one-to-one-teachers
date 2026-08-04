@@ -54,25 +54,26 @@ export default function SuccessStories() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* Redesigned Testimonial Cards with generous breathing room & smooth shadow */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
           {reviews.map((rev, idx) => (
             <div
               key={idx}
-              className="bg-white border border-[#0D2C4A]/10 rounded-3xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
+              className="bg-white border border-[#0D2C4A]/12 rounded-3xl p-7 sm:p-8 shadow-[0_4px_20px_-4px_rgba(13,44,74,0.06)] hover:shadow-[0_20px_40px_-10px_rgba(13,44,74,0.14)] hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group"
             >
               <div className="space-y-4">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex gap-1 text-[#00A896]">
                     {[...Array(rev.rating)].map((_, i) => (
                       <Star key={i} className="w-4 h-4 fill-[#00A896]" />
                     ))}
                   </div>
-                  <span className="text-xs font-mono font-bold text-[#00A896] bg-[#00A896]/10 px-3 py-1 rounded-full">
+                  <span className="text-xs font-mono font-bold text-[#00A896] bg-[#00A896]/10 px-3 py-1 rounded-full border border-[#00A896]/20">
                     {rev.grade}
                   </span>
                 </div>
 
-                <p className="text-sm sm:text-base text-[#0D2C4A]/85 leading-[1.85] italic font-normal">
+                <p className="text-sm sm:text-base text-[#0D2C4A]/90 leading-relaxed italic font-normal">
                   "{rev.quote}"
                 </p>
               </div>
@@ -82,12 +83,14 @@ export default function SuccessStories() {
                   <strong className="block font-sans text-sm font-extrabold text-[#0D2C4A]">
                     {rev.name}
                   </strong>
-                  <div className="flex items-center gap-1 text-xs text-[#64748B] font-mono pt-0.5">
+                  <div className="flex items-center gap-1.5 text-xs text-[#64748B] font-mono pt-1">
                     <MapPin className="w-3.5 h-3.5 text-[#00A896]" />
                     <span>{rev.location}</span>
                   </div>
                 </div>
-                <CheckCircle className="w-5 h-5 text-[#00A896]" />
+                <div className="p-1.5 rounded-full bg-[#00A896]/10 text-[#00A896]">
+                  <CheckCircle className="w-4 h-4" />
+                </div>
               </div>
             </div>
           ))}

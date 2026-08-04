@@ -156,14 +156,14 @@ export default function Subjects({ onOpenEnroll }: { onOpenEnroll: () => void })
     <section id="subjects" className="py-20 md:py-24 bg-[#F8FAFC]">
       <div className="max-w-[1240px] mx-auto px-6 md:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-          <div className="max-w-[700px] space-y-3">
-            <span className="eyebrow inline-flex items-center gap-2 font-mono text-xs tracking-widest text-[#00A896] uppercase mb-2 font-bold bg-[#00A896]/10 px-4 py-1.5 rounded-full border border-[#00A896]/20">
+          <div className="max-w-[700px] space-y-4">
+            <span className="eyebrow inline-flex items-center gap-2 font-mono text-xs tracking-widest text-[#00A896] uppercase mb-3 font-bold bg-[#00A896]/10 px-4 py-1.5 rounded-full border border-[#00A896]/20">
               {t.subjEyebrow}
             </span>
-            <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0D2C4A] leading-[1.4] tracking-tight mb-3">
+            <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0D2C4A] leading-[1.65] tracking-tight mb-4">
               {t.subjTitle}
             </h2>
-            <p className="text-base sm:text-lg text-[#475569] leading-[1.8] font-normal pt-1">
+            <p className="text-base sm:text-lg text-[#475569] leading-relaxed font-normal pt-1">
               {t.subjDesc}
             </p>
           </div>
@@ -197,38 +197,38 @@ export default function Subjects({ onOpenEnroll }: { onOpenEnroll: () => void })
           ))}
         </div>
 
-        {/* Grid Cards (Exact 2:56 PM State: gap-8) */}
+        {/* Grid Cards with generous breathing room & soft shadow */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {filteredSubjects.map((subject) => (
             <div
               key={subject.id}
-              className="bg-white rounded-3xl border border-[#0D2C4A]/10 p-8 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group"
+              className="bg-white rounded-3xl border border-[#0D2C4A]/12 p-7 sm:p-8 shadow-[0_4px_20px_-4px_rgba(13,44,74,0.06)] hover:shadow-[0_20px_40px_-10px_rgba(13,44,74,0.14)] hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group"
             >
               <div>
-                <div className="flex items-center justify-between gap-4 mb-5">
+                <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
                   <span className="font-mono text-xs font-bold uppercase text-[#00A896] bg-[#00A896]/10 px-3.5 py-1 rounded-full border border-[#00A896]/20">
                     {subject.tag}
                   </span>
-                  <span className="text-xs font-mono text-[#475569] font-bold">
+                  <span className="text-xs font-mono text-[#475569] font-bold bg-[#F8FAFC] px-3 py-1 rounded-lg border border-[#0D2C4A]/5">
                     {subject.mentorInfo}
                   </span>
                 </div>
 
-                <h3 className="font-sans text-2xl font-extrabold text-[#0D2C4A] leading-[1.4] mb-3">
+                <h3 className="font-sans text-xl sm:text-2xl font-extrabold text-[#0D2C4A] leading-snug tracking-tight mb-3 group-hover:text-[#00A896] transition-colors">
                   {subject.title}
                 </h3>
 
-                <p className="text-sm sm:text-base text-[#475569] leading-[1.8] mb-6 font-normal">
+                <p className="text-sm sm:text-base text-[#475569] leading-relaxed mb-6 font-normal">
                   {subject.desc}
                 </p>
 
-                <div className="space-y-2.5 mb-8 bg-[#F8FAFC] p-5 rounded-2xl border border-[#0D2C4A]/10">
+                <div className="space-y-3 mb-8 bg-[#F8FAFC] p-5 sm:p-6 rounded-2xl border border-[#0D2C4A]/10">
                   <h4 className="text-xs font-mono font-bold uppercase text-[#0D2C4A] mb-3 tracking-wider">
                     {lang === "bn" ? "১-অন-১ কোর্স সিলেবাস ও সুবিধা:" : "1-on-1 Syllabus & Highlights:"}
                   </h4>
                   {subject.syllabus.map((item, idx) => (
-                    <div key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-[#0D2C4A]">
-                      <CheckCircle2 className="w-4 h-4 text-[#00A896] flex-shrink-0 mt-0.5" />
+                    <div key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-[#0D2C4A] leading-relaxed">
+                      <CheckCircle2 className="w-4.5 h-4.5 text-[#00A896] flex-shrink-0 mt-0.5" />
                       <span>{item}</span>
                     </div>
                   ))}
@@ -238,7 +238,7 @@ export default function Subjects({ onOpenEnroll }: { onOpenEnroll: () => void })
               <div className="flex items-center gap-4 pt-4 border-t border-[#0D2C4A]/10">
                 <button
                   onClick={onOpenEnroll}
-                  className="flex-1 py-3.5 rounded-full bg-[#00A896] text-white font-extrabold text-xs sm:text-sm hover:bg-[#008075] transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
+                  className="flex-1 py-3.5 rounded-full bg-[#00A896] text-white font-extrabold text-xs sm:text-sm hover:bg-[#008075] transition-all shadow-md shadow-[#00A896]/20 flex items-center justify-center gap-2 cursor-pointer hover:-translate-y-0.5"
                 >
                   <span>{t.subjEnrollBtn}</span>
                   <ArrowRight className="w-4 h-4 text-white" />
@@ -246,7 +246,7 @@ export default function Subjects({ onOpenEnroll }: { onOpenEnroll: () => void })
 
                 <button
                   onClick={() => setSelectedSubject(subject)}
-                  className="px-5 py-3.5 rounded-full bg-white text-[#0D2C4A] border border-[#0D2C4A]/20 font-bold text-xs sm:text-sm hover:bg-[#F8FAFC] transition-colors"
+                  className="px-5 py-3.5 rounded-full bg-white text-[#0D2C4A] border border-[#0D2C4A]/20 font-bold text-xs sm:text-sm hover:bg-[#F8FAFC] transition-colors cursor-pointer"
                 >
                   {t.subjLearnMore}
                 </button>

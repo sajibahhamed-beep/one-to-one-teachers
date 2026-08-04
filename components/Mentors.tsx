@@ -69,30 +69,35 @@ export default function Mentors() {
           </div>
         </div>
 
-        {/* Mentors Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* Mentors Grid with spacious layout & hover elevation */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
           {mentors.map((m, i) => (
             <div
               key={i}
-              className="bg-white border border-[#0D2C4A]/10 rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex items-center gap-5"
+              className="bg-white border border-[#0D2C4A]/12 rounded-3xl p-7 shadow-[0_4px_20px_-4px_rgba(13,44,74,0.06)] hover:shadow-[0_20px_40px_-10px_rgba(13,44,74,0.14)] hover:-translate-y-1.5 transition-all duration-300 flex items-center gap-5 group cursor-pointer"
             >
-              <img
-                src={m.img}
-                alt={m.name}
-                className="w-20 h-20 rounded-2xl object-cover border-2 border-[#00A896]/30 flex-shrink-0"
-              />
-              <div className="space-y-1">
-                <h3 className="font-sans text-lg font-extrabold text-[#0D2C4A] leading-[1.5]">
+              <div className="relative flex-shrink-0">
+                <img
+                  src={m.img}
+                  alt={m.name}
+                  className="w-20 h-20 rounded-2xl object-cover border-2 border-[#00A896]/30 group-hover:scale-105 transition-transform duration-300 shadow-md"
+                />
+                <div className="absolute -bottom-1 -right-1 bg-[#00A896] text-white p-1 rounded-full shadow-sm">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                </div>
+              </div>
+              <div className="space-y-1.5 min-w-0">
+                <h3 className="font-sans text-lg font-extrabold text-[#0D2C4A] leading-snug truncate group-hover:text-[#00A896] transition-colors">
                   {m.name}
                 </h3>
-                <p className="text-xs font-bold text-[#00A896]">
+                <p className="text-xs font-bold text-[#00A896] truncate">
                   {m.university}
                 </p>
-                <p className="text-xs text-[#475569]">
+                <p className="text-xs text-[#475569] leading-relaxed truncate">
                   {m.subject}
                 </p>
-                <div className="inline-flex items-center gap-1 text-[11px] font-mono text-[#0D2C4A]/60 pt-1">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#00A896]" />
+                <div className="inline-flex items-center gap-1.5 text-xs font-mono text-[#0D2C4A]/70 pt-1 font-semibold">
+                  <span className="w-2 h-2 rounded-full bg-[#00A896]"></span>
                   <span>{m.students}</span>
                 </div>
               </div>

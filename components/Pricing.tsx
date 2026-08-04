@@ -15,14 +15,14 @@ export default function Pricing({ onOpenEnroll }: PricingProps) {
   return (
     <section id="pricing" className="py-20 bg-[#F8FAFC]">
       <div className="max-w-[1240px] mx-auto px-6 md:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-14">
-          <span className="eyebrow inline-flex items-center gap-2 font-mono text-xs tracking-widest text-[#00A896] uppercase mb-3 font-bold bg-[#00A896]/10 px-3.5 py-1 rounded-full border border-[#00A896]/20">
+        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+          <span className="eyebrow inline-flex items-center gap-2 font-mono text-xs tracking-widest text-[#00A896] uppercase mb-3 font-bold bg-[#00A896]/10 px-4 py-1.5 rounded-full border border-[#00A896]/20">
             {lang === "bn" ? "প্রাইসিং ও ফি প্যাকেজ" : "Pricing & Fee Packages"}
           </span>
-          <h2 className="font-sans text-3xl sm:text-4xl font-extrabold text-[#0D2C4A]">
+          <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0D2C4A] leading-[1.65] mb-4">
             {lang === "bn" ? "আপনার জন্য উপযুক্ত প্ল্যান বেছে নিন" : "Choose the Plan That Fits You"}
           </h2>
-          <p className="mt-2 text-base text-[#475569]">
+          <p className="text-base sm:text-lg text-[#475569] leading-relaxed max-w-xl mx-auto">
             {lang === "bn"
               ? "কোনো গোপন ফি বা হিডেন চার্জ নেই। প্রতিটি প্ল্যানে বিষয়ভিত্তিক ১-অন-১ শিক্ষক সুনিশ্চিত।"
               : "No hidden charges. Subject wise 1-on-1 teacher guaranteed with every plan."}

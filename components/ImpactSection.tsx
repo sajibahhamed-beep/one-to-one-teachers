@@ -28,7 +28,7 @@ export default function ImpactSection() {
           <span className="eyebrow inline-flex items-center gap-2 font-mono text-xs tracking-widest text-[#38BDF8] uppercase mb-2 font-bold bg-white/10 px-3.5 py-1 rounded-full border border-white/15">
             {t.impactEyebrow}
           </span>
-          <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-bold text-[#FFFFFF] leading-tight tracking-tight">
+          <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#FFFFFF] leading-[1.65] tracking-tight mb-4">
             {t.impactTitle}
           </h2>
           <p className="text-base sm:text-lg text-[#F8FAFC]/80 leading-relaxed font-normal pt-2">
