@@ -44,6 +44,7 @@ import {
   Filter,
   Eye,
   Share2,
+  Upload,
 } from "lucide-react";
 import { SettingData, SocialLinkItem, Enrollment, PricingRequest, ContactMessage, Teacher, FAQItem, TeacherApplication, Inquiry, Payment } from "@/lib/db";
 import { BlogPost } from "@/lib/blogsData";
@@ -111,6 +112,13 @@ export default function AdminDashboardPage() {
   const [showAddTeacher, setShowAddTeacher] = useState(false);
   const [showAddInquiry, setShowAddInquiry] = useState(false);
   const [showAddPayment, setShowAddPayment] = useState(false);
+  const [showAddSocialModal, setShowAddSocialModal] = useState(false);
+
+  // New Social Media Modal State
+  const [newSocialName, setNewSocialName] = useState("");
+  const [newSocialIconUrl, setNewSocialIconUrl] = useState("facebook");
+  const [newSocialRedirectUrl, setNewSocialRedirectUrl] = useState("");
+  const [newSocialIconFilePreview, setNewSocialIconFilePreview] = useState<string | null>(null);
 
   // New Blog State
   const [newBlogTitleBn, setNewBlogTitleBn] = useState("");
@@ -369,11 +377,63 @@ export default function AdminDashboardPage() {
   };
 
   // Remove social link item
-  const handleRemoveSocialLink = (id: string) => {
-    setSettings((prev) => ({
-      ...prev,
-      socialLinks: (prev.socialLinks || []).filter((item) => item.id !== id),
-    }));
+  const handleRemoveSocialLink = async (id: string) => {
+    const updatedLinks = (settings.socialLinks || []).filter((item) => item.id !== id);
+    const updatedSettings = { ...settings, socialLinks: updatedLinks };
+    setSettings(updatedSettings);
+
+    await fetch("/api/settings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedSettings),
+    });
+  };
+
+  const handleSocialIconFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const result = reader.result as string;
+        setNewSocialIconUrl(result);
+        setNewSocialIconFilePreview(result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSaveNewSocialMedia = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newSocialName || !newSocialRedirectUrl) {
+      alert("Please enter both platform name and redirect URL.");
+      return;
+    }
+
+    const newItem: SocialLinkItem = {
+      id: "soc-" + Date.now(),
+      name: newSocialName,
+      iconUrl: newSocialIconUrl || "facebook",
+      url: newSocialRedirectUrl,
+    };
+
+    const updatedLinks = [...(settings.socialLinks || []), newItem];
+    const updatedSettings = { ...settings, socialLinks: updatedLinks };
+
+    setSettings(updatedSettings);
+
+    await fetch("/api/settings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedSettings),
+    });
+
+    setShowAddSocialModal(false);
+    setNewSocialName("");
+    setNewSocialIconUrl("facebook");
+    setNewSocialRedirectUrl("");
+    setNewSocialIconFilePreview(null);
+    setSettingsSaved(true);
+    setTimeout(() => setSettingsSaved(false), 3000);
   };
 
   // Save WhatsApp Settings
@@ -1395,7 +1455,7 @@ export default function AdminDashboardPage() {
 
                     <button
                       type="button"
-                      onClick={handleAddSocialLink}
+                      onClick={() => setShowAddSocialModal(true)}
                       className="px-5 py-3 rounded-2xl bg-[#00A896] hover:bg-[#008075] text-white text-xs font-extrabold flex items-center gap-2 shadow-md cursor-pointer active:scale-95 transition-all"
                     >
                       <Plus className="w-4 h-4" />
@@ -1417,7 +1477,7 @@ export default function AdminDashboardPage() {
                         
                         <button
                           type="button"
-                          onClick={handleAddSocialLink}
+                          onClick={() => setShowAddSocialModal(true)}
                           className="text-xs font-bold text-[#00A896] hover:underline flex items-center gap-1 cursor-pointer"
                         >
                           <Plus className="w-3.5 h-3.5" />
@@ -1824,6 +1884,135 @@ export default function AdminDashboardPage() {
                 <textarea required rows={2} value={newFaqABn} onChange={(e) => setNewFaqABn(e.target.value)} className="w-full p-2.5 rounded-xl border" />
               </div>
               <button type="submit" className="w-full py-3 rounded-xl bg-[#00A896] text-white font-extrabold">Save FAQ Item</button>
+            </form>
+          </div>
+        </div>
+      )}
+      {showAddSocialModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl border border-slate-100 space-y-6 relative">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-[#E6F4F3] text-[#00A896] flex items-center justify-center">
+                  <Share2 className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-extrabold text-base text-[#0D2C4A]">Add New Social Media</h3>
+                  <p className="text-xs text-slate-500 font-normal">Upload icon and set redirect target URL</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowAddSocialModal(false)}
+                className="p-2 rounded-xl text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveNewSocialMedia} className="space-y-5">
+              {/* Option 1: Platform Name */}
+              <div>
+                <label className="admin-kicker text-slate-500 block mb-2 uppercase">
+                  1. PLATFORM NAME
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Facebook, Instagram, YouTube, TikTok"
+                  value={newSocialName}
+                  onChange={(e) => setNewSocialName(e.target.value)}
+                  className="w-full p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-sans font-bold text-[#0D2C4A] focus:outline-none focus:border-[#00A896]"
+                />
+              </div>
+
+              {/* Option 2: Icon Upload & Selection */}
+              <div>
+                <label className="admin-kicker text-slate-500 block mb-2 uppercase">
+                  2. ICON UPLOAD / PRESET OPTION
+                </label>
+                
+                {/* File Upload Box */}
+                <div className="p-4 rounded-2xl bg-slate-50 border border-dashed border-slate-300 flex flex-col items-center justify-center gap-2 mb-3">
+                  {newSocialIconFilePreview || newSocialIconUrl.startsWith("data:") ? (
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-[#0D2C4A] text-white flex items-center justify-center overflow-hidden p-2">
+                        <img src={newSocialIconUrl} alt="Preview" className="w-full h-full object-contain filter invert" />
+                      </div>
+                      <span className="text-xs font-bold text-emerald-600">✓ Image Icon Uploaded!</span>
+                    </div>
+                  ) : (
+                    <Upload className="w-6 h-6 text-[#00A896]" />
+                  )}
+
+                  <label className="px-4 py-2 rounded-xl bg-white border border-slate-200 text-xs font-bold text-[#0D2C4A] hover:bg-slate-100 cursor-pointer shadow-sm">
+                    <span>Choose Icon Image File (.png, .svg, .jpg)</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleSocialIconFileUpload}
+                      className="hidden"
+                    />
+                  </label>
+                </div>
+
+                {/* Preset Icon Keywords Selector */}
+                <div className="space-y-1">
+                  <span className="text-[11px] font-bold text-slate-400 block font-mono">Or select quick preset icon:</span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {["facebook", "instagram", "youtube", "linkedin", "twitter", "whatsapp", "telegram", "tiktok", "discord", "website"].map((preset) => (
+                      <button
+                        key={preset}
+                        type="button"
+                        onClick={() => {
+                          setNewSocialIconUrl(preset);
+                          setNewSocialIconFilePreview(null);
+                        }}
+                        className={`px-3 py-1.5 rounded-xl text-xs font-bold capitalize transition-all cursor-pointer ${
+                          newSocialIconUrl === preset
+                            ? "bg-[#00A896] text-white shadow-sm"
+                            : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                        }`}
+                      >
+                        {preset}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Option 3: Redirect Target URL Input */}
+              <div>
+                <label className="admin-kicker text-slate-500 block mb-2 uppercase">
+                  3. REDIRECT TARGET URL LINK
+                </label>
+                <input
+                  type="url"
+                  required
+                  placeholder="https://facebook.com/yourpage"
+                  value={newSocialRedirectUrl}
+                  onChange={(e) => setNewSocialRedirectUrl(e.target.value)}
+                  className="w-full p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-mono font-bold text-[#0D2C4A] focus:outline-none focus:border-[#00A896]"
+                />
+              </div>
+
+              {/* Submit Buttons */}
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setShowAddSocialModal(false)}
+                  className="px-5 py-3 rounded-2xl bg-slate-100 text-slate-600 font-extrabold text-xs hover:bg-slate-200 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-[#00A896] hover:bg-[#008075] text-white font-extrabold text-xs shadow-md transition-all active:scale-95 cursor-pointer"
+                >
+                  <CheckCircle className="w-4 h-4" />
+                  <span>Save Changes</span>
+                </button>
+              </div>
             </form>
           </div>
         </div>
