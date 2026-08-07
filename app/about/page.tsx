@@ -41,7 +41,7 @@ export default function AboutPage() {
       </section>
 
       {/* Problem & Educational Gap Section */}
-      <ProblemSection />
+      <ProblemSection onOpenEnroll={() => setEnrollModalOpen(true)} />
 
       {/* Impact Section */}
       <ImpactSection />

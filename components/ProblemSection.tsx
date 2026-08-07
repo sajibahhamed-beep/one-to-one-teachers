@@ -1,9 +1,13 @@
 "use client";
 
 import { useLanguage } from "../context/LanguageContext";
-import { Target, ShieldCheck, MapPin } from "lucide-react";
+import { Target, ShieldCheck, MapPin, ArrowRight } from "lucide-react";
 
-export default function ProblemSection() {
+interface ProblemSectionProps {
+  onOpenEnroll?: () => void;
+}
+
+export default function ProblemSection({ onOpenEnroll }: ProblemSectionProps) {
   const { t, lang } = useLanguage();
 
   return (
@@ -70,6 +74,18 @@ export default function ProblemSection() {
               {t.probStat3Desc}
             </p>
           </div>
+        </div>
+
+        {/* CTA Button to fill up student details for teacher */}
+        <div className="mt-12 text-center flex justify-center">
+          <button
+            type="button"
+            onClick={() => onOpenEnroll?.()}
+            className="inline-flex items-center gap-2.5 px-8 py-4 rounded-full bg-[#00A896] hover:bg-[#008075] text-white font-extrabold text-sm sm:text-base shadow-lg shadow-[#00A896]/30 hover:-translate-y-0.5 transition-all cursor-pointer"
+          >
+            <span>{lang === "bn" ? "শিক্ষার্থীর তথ্য পূরণ করুন (ফ্রি শিক্ষক রিকোয়েস্ট)" : "Fill Student Details for Tutor"}</span>
+            <ArrowRight className="w-5 h-5 text-white" />
+          </button>
         </div>
       </div>
     </section>

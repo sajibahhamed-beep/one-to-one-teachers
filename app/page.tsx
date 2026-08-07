@@ -71,7 +71,7 @@ export default function Home() {
       <SubjectMarquee />
 
       {/* Educational Gap & Vision */}
-      <ProblemSection />
+      <ProblemSection onOpenEnroll={() => handleOpenEnroll("Pay-what-you-can", 600)} />
 
       {/* How it works */}
       <HowItWorks />
