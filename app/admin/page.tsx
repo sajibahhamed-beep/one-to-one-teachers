@@ -640,7 +640,6 @@ export default function AdminDashboardPage() {
               { id: "blogs", label: "Blog Posts", icon: FileText },
               { id: "faqs", label: "FAQ Items", icon: HelpCircle },
               { id: "seo", label: "SEO and Metadata", icon: Search },
-              { id: "whatsapp", label: "Floating WhatsApp", icon: PhoneCall },
               { id: "settings", label: "Settings", icon: Settings },
             ].map((item) => {
               const IconComp = item.icon;
@@ -1357,99 +1356,18 @@ export default function AdminDashboardPage() {
                 </div>
               )}
 
-              {/* ===== TAB 11: FLOATING WHATSAPP SETTINGS ===== */}
-              {activeTab === "whatsapp" && (
-                <div className="space-y-6 max-w-3xl">
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
-                    <div>
-                      <div className="flex items-center gap-2.5">
-                        <PhoneCall className="w-5 h-5 text-[#25D366]" />
-                        <h2 className="admin-heading-md text-[#0D2C4A]">Floating WhatsApp Hotline Settings</h2>
-                      </div>
-                      <p className="admin-body-text text-slate-500 pt-0.5">
-                        Update the floating WhatsApp phone number and automatic introductory greeting message for instant customer support.
-                      </p>
-                    </div>
-
-                    <a
-                      href={`https://wa.me/${(settings.whatsappPhone || "8801775551325").replace(/[^0-9]/g, "")}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-4 py-2.5 rounded-2xl bg-emerald-50 border border-emerald-300 text-emerald-700 hover:bg-emerald-600 hover:text-white transition-all text-xs font-extrabold flex items-center gap-2"
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                      <span>Test WhatsApp Direct ↗</span>
-                    </a>
-                  </div>
-
-                  <form onSubmit={handleSaveWhatsapp} className="space-y-6 bg-white p-6 sm:p-7 rounded-3xl border border-[#0D2C4A]/10 shadow-sm">
-                    <div>
-                      <label className="admin-kicker text-slate-500 block mb-2">WHATSAPP PHONE NUMBER (WITH COUNTRY CODE)</label>
-                      <input
-                        type="text"
-                        placeholder="8801775551325"
-                        value={settings.whatsappPhone || ""}
-                        onChange={(e) => setSettings({ ...settings, whatsappPhone: e.target.value })}
-                        className="w-full p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-mono font-bold text-[#0D2C4A] focus:outline-none focus:border-[#25D366] shadow-sm"
-                      />
-                      <span className="text-[11px] text-slate-400 font-mono pt-1 block">
-                        Format example: 8801775551325 (do not use + or spaces)
-                      </span>
-                    </div>
-
-                    <div>
-                      <label className="admin-kicker text-slate-500 block mb-2">AUTOMATIC INITIAL MESSAGE (BENGALI)</label>
-                      <textarea
-                        rows={3}
-                        value={settings.whatsappMessageBn || ""}
-                        onChange={(e) => setSettings({ ...settings, whatsappMessageBn: e.target.value })}
-                        placeholder="হ্যালো আলো শিক্ষা টিম, ১-অন-১ অনলাইন শিক্ষক সম্পর্কে জানতে চাই।"
-                        className="w-full p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-sans font-semibold text-[#0D2C4A] focus:outline-none focus:border-[#25D366] shadow-sm"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="admin-kicker text-slate-500 block mb-2">AUTOMATIC INITIAL MESSAGE (ENGLISH)</label>
-                      <textarea
-                        rows={3}
-                        value={settings.whatsappMessageEn || ""}
-                        onChange={(e) => setSettings({ ...settings, whatsappMessageEn: e.target.value })}
-                        placeholder="Hello Alo Shikkha team, I want to inquire about 1-on-1 online teachers."
-                        className="w-full p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-sans font-semibold text-[#0D2C4A] focus:outline-none focus:border-[#25D366] shadow-sm"
-                      />
-                    </div>
-
-                    <div className="flex items-center gap-4 pt-2">
-                      <button
-                        type="submit"
-                        className="flex items-center gap-2 px-7 py-3 rounded-2xl bg-[#25D366] hover:bg-[#1ebd56] text-white admin-caption-text font-extrabold transition-all shadow-md cursor-pointer active:scale-95"
-                      >
-                        <CheckCircle className="w-4 h-4" />
-                        <span>Save WhatsApp Settings</span>
-                      </button>
-
-                      {whatsappSaved && (
-                        <span className="admin-caption-text text-emerald-600 font-extrabold flex items-center gap-1">
-                          ✓ WhatsApp number and message saved successfully!
-                        </span>
-                      )}
-                    </div>
-                  </form>
-                </div>
-              )}
-
-              {/* ===== TAB 12: DYNAMIC SOCIAL MEDIA & SETTINGS ===== */}
+              {/* ===== TAB 11: SETTINGS & PLATFORM PREFERENCES ===== */}
               {activeTab === "settings" && (
                 <div className="space-y-8">
                   {/* Header title */}
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
                     <div>
                       <div className="flex items-center gap-2.5">
-                        <Share2 className="w-5 h-5 text-[#00A896]" />
-                        <h2 className="admin-heading-md text-[#0D2C4A]">Social Media & Contact Settings</h2>
+                        <Settings className="w-5.5 h-5.5 text-[#00A896]" />
+                        <h2 className="admin-heading-md text-[#0D2C4A]">Platform Settings & Contacts</h2>
                       </div>
                       <p className="admin-body-text text-slate-500 pt-0.5">
-                        Add, customize, or remove as many social media icons as you want. All active social media channels will be rendered in the website footer.
+                        Manage your Floating WhatsApp Hotline number, custom Social Media links, Support Phone number, and Physical Address.
                       </p>
                     </div>
 
@@ -1463,25 +1381,105 @@ export default function AdminDashboardPage() {
                     </button>
                   </div>
 
+                  {/* SECTION 1: FLOATING WHATSAPP HOTLINE SETTINGS */}
+                  <div className="bg-white p-6 sm:p-7 rounded-3xl border border-[#0D2C4A]/10 shadow-sm space-y-6">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-9 h-9 rounded-2xl bg-emerald-50 text-[#25D366] flex items-center justify-center border border-emerald-200">
+                          <PhoneCall className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <h3 className="admin-heading-sm text-[#0D2C4A]">Floating WhatsApp Hotline Settings</h3>
+                          <p className="text-xs text-slate-500 font-normal">Change WhatsApp number & automatic greeting anytime</p>
+                        </div>
+                      </div>
+
+                      <a
+                        href={`https://wa.me/${(settings.whatsappPhone || "8801775551325").replace(/[^0-9]/g, "")}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-4 py-2 rounded-2xl bg-emerald-50 border border-emerald-300 text-emerald-700 hover:bg-emerald-600 hover:text-white transition-all text-xs font-extrabold flex items-center gap-2"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                        <span>Test WhatsApp Direct ↗</span>
+                      </a>
+                    </div>
+
+                    <form onSubmit={handleSaveWhatsapp} className="space-y-5">
+                      <div>
+                        <label className="admin-kicker text-slate-500 block mb-2">WHATSAPP PHONE NUMBER (WITH COUNTRY CODE)</label>
+                        <input
+                          type="text"
+                          placeholder="8801775551325"
+                          value={settings.whatsappPhone || ""}
+                          onChange={(e) => setSettings({ ...settings, whatsappPhone: e.target.value })}
+                          className="w-full p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-mono font-bold text-[#0D2C4A] focus:outline-none focus:border-[#25D366] shadow-sm"
+                        />
+                        <span className="text-[11px] text-slate-400 font-mono pt-1 block">
+                          Format example: 8801775551325 (do not use + or spaces)
+                        </span>
+                      </div>
+
+                      <div>
+                        <label className="admin-kicker text-slate-500 block mb-2">AUTOMATIC INITIAL MESSAGE (BENGALI)</label>
+                        <textarea
+                          rows={2}
+                          value={settings.whatsappMessageBn || ""}
+                          onChange={(e) => setSettings({ ...settings, whatsappMessageBn: e.target.value })}
+                          placeholder="হ্যালো আলো শিক্ষা টিম, ১-অন-১ অনলাইন শিক্ষক সম্পর্কে জানতে চাই।"
+                          className="w-full p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-sans font-semibold text-[#0D2C4A] focus:outline-none focus:border-[#25D366] shadow-sm"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="admin-kicker text-slate-500 block mb-2">AUTOMATIC INITIAL MESSAGE (ENGLISH)</label>
+                        <textarea
+                          rows={2}
+                          value={settings.whatsappMessageEn || ""}
+                          onChange={(e) => setSettings({ ...settings, whatsappMessageEn: e.target.value })}
+                          placeholder="Hello Alo Shikkha team, I want to inquire about 1-on-1 online teachers."
+                          className="w-full p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-sans font-semibold text-[#0D2C4A] focus:outline-none focus:border-[#25D366] shadow-sm"
+                        />
+                      </div>
+
+                      <div className="flex items-center gap-4 pt-2">
+                        <button
+                          type="submit"
+                          className="flex items-center gap-2 px-7 py-3 rounded-2xl bg-[#25D366] hover:bg-[#1ebd56] text-white admin-caption-text font-extrabold transition-all shadow-md cursor-pointer active:scale-95"
+                        >
+                          <CheckCircle className="w-4 h-4" />
+                          <span>Save WhatsApp Settings</span>
+                        </button>
+
+                        {whatsappSaved && (
+                          <span className="admin-caption-text text-emerald-600 font-extrabold flex items-center gap-1">
+                            ✓ WhatsApp number & messages saved successfully!
+                          </span>
+                        )}
+                      </div>
+                    </form>
+                  </div>
+
                   <form onSubmit={handleSaveSettings} className="space-y-8">
                     
-                    {/* DYNAMIC CUSTOM SOCIAL MEDIA LIST */}
-                    <div className="space-y-4">
+                    {/* SECTION 2: DYNAMIC CUSTOM SOCIAL MEDIA LIST */}
+                    <div className="space-y-4 pt-4 border-t border-slate-100">
                       <div className="flex items-center justify-between">
-                        <h3 className="admin-heading-sm text-[#0D2C4A] flex items-center gap-2">
-                          <span>Custom Social Media Channels</span>
+                        <div className="flex items-center gap-2">
+                          <Share2 className="w-5 h-5 text-[#00A896]" />
+                          <h3 className="admin-heading-sm text-[#0D2C4A]">Custom Social Media Channels</h3>
                           <span className="admin-chip-label bg-[#E6F4F3] text-[#00A896] px-2.5 py-0.5 rounded-full font-bold">
                             {(settings.socialLinks || []).length} Active Channels
                           </span>
-                        </h3>
+                        </div>
                         
                         <button
                           type="button"
                           onClick={() => setShowAddSocialModal(true)}
-                          className="text-xs font-bold text-[#00A896] hover:underline flex items-center gap-1 cursor-pointer"
+                          className="px-4 py-2 rounded-xl bg-[#00A896] hover:bg-[#008075] text-white text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
                         >
                           <Plus className="w-3.5 h-3.5" />
-                          <span>Add New Icon</span>
+                          <span>+ Add Social Media</span>
                         </button>
                       </div>
 
