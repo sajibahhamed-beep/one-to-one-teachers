@@ -55,15 +55,15 @@ export default function AdminDashboardPage() {
   const [activeTab, setActiveTab] = useState<
     | "dashboard"
     | "enrollments"
-    | "contacts"
-    | "inquiries"
-    | "pricing"
-    | "teachers"
     | "teacher-applications"
+    | "teachers"
+    | "pricing"
+    | "inquiries"
+    | "contacts"
+    | "payments"
     | "blogs"
     | "faqs"
     | "settings"
-    | "payments"
   >("dashboard");
   const [loading, setLoading] = useState(true);
 
@@ -89,6 +89,7 @@ export default function AdminDashboardPage() {
 
   // Filter & Search states
   const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("All");
 
   // Modal forms
   const [showAddBlog, setShowAddBlog] = useState(false);
@@ -117,6 +118,7 @@ export default function AdminDashboardPage() {
   const [newTeacherUniEn, setNewTeacherUniEn] = useState("BUET (CSE)");
   const [newTeacherSubBn, setNewTeacherSubBn] = useState("গণিত ও আইসিটি শিক্ষক");
   const [newTeacherSubEn, setNewTeacherSubEn] = useState("Math & ICT Tutor");
+  const [newTeacherAvatar, setNewTeacherAvatar] = useState("https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80");
 
   // New Inquiry State
   const [newInquiryName, setNewInquiryName] = useState("");
@@ -298,6 +300,7 @@ export default function AdminDashboardPage() {
         universityEn: newTeacherUniEn,
         subjectBn: newTeacherSubBn,
         subjectEn: newTeacherSubEn,
+        avatar: newTeacherAvatar,
       }),
     });
     setShowAddTeacher(false);
@@ -450,7 +453,7 @@ export default function AdminDashboardPage() {
 
             <button
               type="submit"
-              className="w-full py-3.5 rounded-xl bg-[#00A896] text-white font-extrabold text-sm hover:bg-[#008075] transition-all shadow-md flex items-center justify-center gap-2"
+              className="w-full py-3.5 rounded-xl bg-[#00A896] text-white font-extrabold text-sm hover:bg-[#008075] transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
             >
               <span>প্রবেশ করুন / Login</span>
               <ArrowRight className="w-4 h-4" />
@@ -461,22 +464,24 @@ export default function AdminDashboardPage() {
     );
   }
 
-  // Filtered lists according to searchQuery
+  // Filtered lists according to searchQuery and statusFilter
   const filteredEnrollments = enrollments.filter(
     (e) =>
-      e.studentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      e.phone.includes(searchQuery) ||
-      e.district.toLowerCase().includes(searchQuery.toLowerCase())
+      (statusFilter === "All" || e.status === statusFilter) &&
+      (e.studentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        e.phone.includes(searchQuery) ||
+        e.district.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   const pendingEnrollmentsCount = enrollments.filter((e) => e.status === "Pending").length;
   const pendingTeacherAppsCount = teacherApplications.filter((a) => a.status === "Pending").length;
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-[#0D2C4A] font-sans flex overflow-x-hidden">
+    <div className="min-h-screen bg-[#F8FAFC] text-[#0D2C4A] font-sans flex">
       
-      {/* ===== LEFT NAVIGATION SIDEBAR ===== */}
-      <aside className="w-64 flex-shrink-0 bg-[#0D2C4A] text-white flex flex-col justify-between p-6 shadow-2xl border-r border-[#00A896]/20 z-30">
+      {/* ===== FIXED LEFT NAVIGATION SIDEBAR ===== */}
+      {/* Locked to screen: fixed left-0 top-0 bottom-0 h-screen w-64 */}
+      <aside className="fixed left-0 top-0 bottom-0 h-screen w-64 bg-[#0D2C4A] text-white flex flex-col justify-between p-6 shadow-2xl border-r border-[#00A896]/20 z-30 overflow-y-auto">
         <div className="space-y-8">
           
           {/* Brand Logo & Header */}
@@ -494,12 +499,13 @@ export default function AdminDashboardPage() {
           <nav className="space-y-1.5 font-sans">
             {[
               { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-              { id: "enrollments", label: "Enrollments", icon: Users, count: pendingEnrollmentsCount },
-              { id: "teacher-applications", label: "Applications", icon: GraduationCap, count: pendingTeacherAppsCount },
+              { id: "enrollments", label: "Student Requests", icon: Users, count: pendingEnrollmentsCount },
+              { id: "teacher-applications", label: "Mentor Apps", icon: GraduationCap, count: pendingTeacherAppsCount },
+              { id: "teachers", label: "Tutors Directory", icon: UserCheck },
               { id: "pricing", label: "Pricing Plan", icon: DollarSign },
+              { id: "inquiries", label: "Support Tickets", icon: MessageSquare },
               { id: "contacts", label: "Messages", icon: Mail },
-              { id: "inquiries", label: "Inquiries", icon: MessageSquare },
-              { id: "teachers", label: "Teachers Directory", icon: UserCheck },
+              { id: "payments", label: "Transactions", icon: CreditCard },
               { id: "blogs", label: "Blog Posts", icon: FileText },
               { id: "faqs", label: "FAQ Items", icon: HelpCircle },
               { id: "settings", label: "Settings", icon: Settings },
@@ -510,7 +516,7 @@ export default function AdminDashboardPage() {
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id as any)}
-                  className={`w-full relative flex items-center justify-between px-4 py-3 rounded-2xl text-sm font-extrabold transition-all duration-200 cursor-pointer ${
+                  className={`w-full relative flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-extrabold transition-all duration-200 cursor-pointer ${
                     active
                       ? "bg-white/12 text-[#00A896] shadow-sm"
                       : "text-slate-300 hover:bg-white/5 hover:text-white"
@@ -559,8 +565,8 @@ export default function AdminDashboardPage() {
         </div>
       </aside>
 
-      {/* ===== MAIN CONTENT FEED ===== */}
-      <main className="flex-1 flex flex-col min-w-0 bg-[#F8FAFC] overflow-y-auto">
+      {/* ===== MAIN CONTENT FEED (Margin left: ml-64) ===== */}
+      <main className="ml-64 flex-1 flex flex-col min-w-0 bg-[#F8FAFC] min-h-screen overflow-y-auto">
         
         {/* TOP HEADER BAR */}
         <header className="bg-white border-b border-[#0D2C4A]/10 px-8 py-4 sticky top-0 z-20 flex items-center justify-between gap-6 shadow-sm">
@@ -614,7 +620,7 @@ export default function AdminDashboardPage() {
           </div>
         </header>
 
-        {/* BODY CONTAINER (Matching Reference 3-Column Grid Layout) */}
+        {/* BODY CONTAINER (3-Column Grid Layout matching reference) */}
         <div className="p-6 md:p-8 grid grid-cols-1 xl:grid-cols-12 gap-8">
           
           {/* CENTER COLUMN (XL 8 Columns) */}
@@ -634,14 +640,14 @@ export default function AdminDashboardPage() {
                 </p>
               </div>
 
-              {/* Action Badge */}
+              {/* System Badge */}
               <div className="hidden sm:flex items-center gap-2 bg-[#E6F4F3] border border-[#00A896]/20 px-4 py-2 rounded-2xl text-xs font-extrabold text-[#00A896]">
                 <ShieldCheck className="w-4 h-4 text-[#00A896]" />
                 <span>100% Verified System</span>
               </div>
             </div>
 
-            {/* LAST OPENED / PRIORITY REGISTRATIONS (Matching Reference 2-Card Row) */}
+            {/* LAST OPENED / PRIORITY REGISTRATIONS (2 Cards Row) */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-extrabold text-[#0D2C4A]">Last Opened Registrations</h2>
@@ -678,7 +684,7 @@ export default function AdminDashboardPage() {
                         </span>
                       </div>
 
-                      {/* Card Preview Banner */}
+                      {/* Card Banner */}
                       <div className="h-28 bg-[#0D2C4A]/5 rounded-2xl flex items-center justify-center p-4 relative overflow-hidden border border-slate-100">
                         <div className="w-12 h-12 rounded-full bg-[#0D2C4A] text-white flex items-center justify-center font-extrabold text-lg shadow-md">
                           {item.studentName.charAt(0)}
@@ -722,7 +728,7 @@ export default function AdminDashboardPage() {
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h2 className="text-xl font-extrabold text-[#0D2C4A]">Student Enrollments Overview</h2>
+                      <h2 className="text-xl font-extrabold text-[#0D2C4A]">Student Requests Overview</h2>
                       <p className="text-xs text-slate-500">Live feed of student tutor requests nationwide</p>
                     </div>
                     <button
@@ -801,10 +807,26 @@ export default function AdminDashboardPage() {
               {/* ===== TAB 2: ENROLLMENTS MANAGEMENT ===== */}
               {activeTab === "enrollments" && (
                 <div className="space-y-6">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div>
-                      <h2 className="text-xl font-extrabold text-[#0D2C4A]">Student Registrations ({filteredEnrollments.length})</h2>
-                      <p className="text-xs text-slate-500">Manage all student 1-on-1 tutoring requests</p>
+                      <h2 className="text-xl font-extrabold text-[#0D2C4A]">Student Tutoring Requests ({filteredEnrollments.length})</h2>
+                      <p className="text-xs text-slate-500">Manage 1-on-1 online class enrollment requests</p>
+                    </div>
+
+                    {/* Status Filter Dropdown */}
+                    <div className="flex items-center gap-2">
+                      <Filter className="w-4 h-4 text-slate-400" />
+                      <select
+                        value={statusFilter}
+                        onChange={(e) => setStatusFilter(e.target.value)}
+                        className="text-xs font-bold px-3 py-2 rounded-xl border border-slate-300 bg-white"
+                      >
+                        <option value="All">All Statuses</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Contacted">Contacted</option>
+                        <option value="Enrolled">Enrolled</option>
+                        <option value="Rejected">Rejected</option>
+                      </select>
                     </div>
                   </div>
 
@@ -856,8 +878,8 @@ export default function AdminDashboardPage() {
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h2 className="text-xl font-extrabold text-[#0D2C4A]">Mentor Applications ({teacherApplications.length})</h2>
-                      <p className="text-xs text-slate-500">Review teacher join requests from BUET, DU & DMC</p>
+                      <h2 className="text-xl font-extrabold text-[#0D2C4A]">Mentor Join Applications ({teacherApplications.length})</h2>
+                      <p className="text-xs text-slate-500">Review teacher application requests from BUET, DU & DMC</p>
                     </div>
                   </div>
 
@@ -899,70 +921,320 @@ export default function AdminDashboardPage() {
                 </div>
               )}
 
-              {/* ===== OTHER TABS FALLBACK CONTENT ===== */}
-              {["pricing", "contacts", "inquiries", "teachers", "blogs", "faqs", "settings"].includes(activeTab) && (
+              {/* ===== TAB 4: TEACHERS DIRECTORY ===== */}
+              {activeTab === "teachers" && (
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h2 className="text-xl font-extrabold text-[#0D2C4A] capitalize">{activeTab} Management</h2>
-                      <p className="text-xs text-slate-500 font-mono">Control center for {activeTab}</p>
+                      <h2 className="text-xl font-extrabold text-[#0D2C4A]">Verified Tutors Directory ({teachers.length})</h2>
+                      <p className="text-xs text-slate-500">Public teacher profiles displayed on the platform</p>
                     </div>
+                    <button
+                      onClick={() => setShowAddTeacher(true)}
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#00A896] text-white text-xs font-extrabold hover:bg-[#008075] transition-all cursor-pointer"
+                    >
+                      <Plus className="w-4 h-4" />
+                      <span>Add Tutor</span>
+                    </button>
                   </div>
 
-                  {activeTab === "teachers" && (
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                      {teachers.map((t) => (
-                        <div key={t.id} className="bg-slate-50 rounded-2xl p-4 border border-slate-200 space-y-2">
-                          <h3 className="font-bold text-sm text-[#0D2C4A]">{t.nameBn} ({t.nameEn})</h3>
-                          <p className="text-xs font-bold text-[#00A896]">{t.universityBn}</p>
-                          <p className="text-xs text-slate-500">{t.subjectBn}</p>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {activeTab === "blogs" && (
-                    <div className="space-y-3">
-                      {blogs.map((b) => (
-                        <div key={b.id} className="bg-slate-50 rounded-2xl p-4 border border-slate-200 flex items-center justify-between">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+                    {teachers.map((t) => (
+                      <div key={t.id} className="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3 flex flex-col justify-between">
+                        <div className="flex items-center gap-3">
+                          <img src={t.avatar} alt={t.nameEn} className="w-12 h-12 rounded-xl object-cover border border-slate-300" />
                           <div>
-                            <h3 className="font-bold text-sm text-[#0D2C4A]">{b.titleBn}</h3>
-                            <p className="text-xs text-slate-500 font-mono">{b.publishedDateBn}</p>
+                            <h3 className="font-extrabold text-sm text-[#0D2C4A]">{t.nameBn}</h3>
+                            <p className="text-[11px] text-slate-500 font-mono">{t.nameEn}</p>
                           </div>
-                          <button onClick={() => handleDeleteBlog(b.id)} className="p-2 text-rose-600 hover:bg-rose-50 rounded-xl">
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-xs font-bold text-[#00A896]">🎓 {t.universityBn}</p>
+                          <p className="text-xs text-slate-600 font-medium">📚 {t.subjectBn}</p>
+                        </div>
+                        <div className="pt-2 border-t border-slate-200 flex justify-end">
+                          <button
+                            onClick={() => handleDeleteTeacher(t.id)}
+                            className="p-1.5 rounded-lg bg-rose-100 text-rose-600 hover:bg-rose-200 transition-colors"
+                          >
                             <Trash2 className="w-4 h-4" />
                           </button>
                         </div>
-                      ))}
-                    </div>
-                  )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
-                  {activeTab === "settings" && (
-                    <form onSubmit={handleSaveSettings} className="space-y-4 max-w-xl">
-                      <div>
-                        <label className="block text-xs font-mono font-bold text-[#0D2C4A] mb-1">Phone Number</label>
-                        <input
-                          type="text"
-                          value={settings.phone}
-                          onChange={(e) => setSettings({ ...settings, phone: e.target.value })}
-                          className="w-full p-3 rounded-xl border text-xs font-mono"
-                        />
+              {/* ===== TAB 5: PRICING REQUESTS ===== */}
+              {activeTab === "pricing" && (
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h2 className="text-xl font-extrabold text-[#0D2C4A]">Pricing & Sliding Scale Inquiries ({pricingRequests.length})</h2>
+                      <p className="text-xs text-slate-500">Pay-What-You-Can calculator and sponsored track requests</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    {pricingRequests.map((p) => (
+                      <div key={p.id} className="bg-slate-50 rounded-2xl p-5 border border-slate-200 flex items-center justify-between">
+                        <div>
+                          <div className="flex items-center gap-3">
+                            <h3 className="font-extrabold text-sm text-[#0D2C4A]">{p.planName}</h3>
+                            <span className="text-xs font-mono font-bold text-[#00A896]">৳{p.monthlyFee} / mo</span>
+                          </div>
+                          <p className="text-xs text-slate-600 font-mono">Duration: {p.duration}</p>
+                        </div>
+
+                        <select
+                          value={p.status}
+                          onChange={(e) => handleUpdatePricingStatus(p.id, e.target.value)}
+                          className="text-xs font-bold px-3 py-1.5 rounded-xl border border-slate-300 bg-white"
+                        >
+                          <option value="Pending">Pending</option>
+                          <option value="Contacted">Contacted</option>
+                          <option value="Completed">Completed</option>
+                          <option value="Cancelled">Cancelled</option>
+                        </select>
                       </div>
-                      <div>
-                        <label className="block text-xs font-mono font-bold text-[#0D2C4A] mb-1">Support Email</label>
-                        <input
-                          type="text"
-                          value={settings.email}
-                          onChange={(e) => setSettings({ ...settings, email: e.target.value })}
-                          className="w-full p-3 rounded-xl border text-xs font-mono"
-                        />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* ===== TAB 6: SUPPORT TICKETS & INQUIRIES ===== */}
+              {activeTab === "inquiries" && (
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h2 className="text-xl font-extrabold text-[#0D2C4A]">Support Tickets & Inquiries ({inquiries.length})</h2>
+                      <p className="text-xs text-slate-500">Parent and student callback tickets</p>
+                    </div>
+                    <button
+                      onClick={() => setShowAddInquiry(true)}
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#00A896] text-white text-xs font-extrabold hover:bg-[#008075] transition-all cursor-pointer"
+                    >
+                      <Plus className="w-4 h-4" />
+                      <span>New Ticket</span>
+                    </button>
+                  </div>
+
+                  <div className="space-y-4">
+                    {inquiries.map((inq) => (
+                      <div key={inq.id} className="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <h3 className="font-extrabold text-sm text-[#0D2C4A]">{inq.name}</h3>
+                          <span className="text-xs font-mono text-slate-500">📞 {inq.phone}</span>
+                        </div>
+                        <p className="text-xs font-bold text-[#00A896]">Subject: {inq.subject}</p>
+                        <p className="text-xs text-slate-600 bg-white p-3 rounded-xl border border-slate-100">{inq.message}</p>
+
+                        <div className="flex items-center justify-between pt-2">
+                          <select
+                            value={inq.status || "Pending"}
+                            onChange={(e) => handleUpdateInquiryStatus(inq.id, e.target.value)}
+                            className="text-xs font-bold px-3 py-1 rounded-xl border border-slate-300 bg-white"
+                          >
+                            <option value="Pending">Pending</option>
+                            <option value="Contacted">Contacted</option>
+                            <option value="Resolved">Resolved</option>
+                          </select>
+
+                          <button onClick={() => handleDeleteInquiry(inq.id)} className="p-1.5 text-rose-600 hover:bg-rose-100 rounded-lg">
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
                       </div>
-                      <button type="submit" className="px-6 py-3 rounded-xl bg-[#00A896] text-white font-extrabold text-xs">
-                        Save Settings
-                      </button>
-                      {settingsSaved && <p className="text-xs text-emerald-600 font-bold">Settings saved successfully!</p>}
-                    </form>
-                  )}
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* ===== TAB 7: CONTACT MESSAGES ===== */}
+              {activeTab === "contacts" && (
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h2 className="text-xl font-extrabold text-[#0D2C4A]">Contact Form Messages ({contacts.length})</h2>
+                      <p className="text-xs text-slate-500">Direct inquiries from the website contact page</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    {contacts.map((c) => (
+                      <div key={c.id} className="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <h3 className="font-extrabold text-sm text-[#0D2C4A]">{c.name}</h3>
+                          <span className="text-xs font-mono text-slate-400">{c.createdAt}</span>
+                        </div>
+                        <p className="text-xs text-slate-600 font-mono">📞 {c.phone} · 📧 {c.email}</p>
+                        <p className="text-xs font-bold text-[#00A896]">Subject: {c.subject}</p>
+                        <p className="text-xs text-slate-700 bg-white p-3 rounded-xl border border-slate-100">{c.message}</p>
+                        <div className="flex justify-end pt-1">
+                          <button onClick={() => handleDeleteContact(c.id)} className="p-1.5 text-rose-600 hover:bg-rose-100 rounded-lg">
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* ===== TAB 8: TRANSACTIONS & PAYMENTS ===== */}
+              {activeTab === "payments" && (
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h2 className="text-xl font-extrabold text-[#0D2C4A]">Fee Collections & Payouts ({payments.length})</h2>
+                      <p className="text-xs text-slate-500">Financial records of student fees and tutor honorarium</p>
+                    </div>
+                    <button
+                      onClick={() => setShowAddPayment(true)}
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#00A896] text-white text-xs font-extrabold hover:bg-[#008075] transition-all cursor-pointer"
+                    >
+                      <Plus className="w-4 h-4" />
+                      <span>Record Payment</span>
+                    </button>
+                  </div>
+
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs font-sans">
+                      <thead>
+                        <tr className="bg-slate-50 text-[#0D2C4A] font-mono uppercase font-bold border-b border-slate-200">
+                          <th className="p-3">TRX ID</th>
+                          <th className="p-3">Name</th>
+                          <th className="p-3">Amount</th>
+                          <th className="p-3">Type</th>
+                          <th className="p-3">Method</th>
+                          <th className="p-3">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {payments.map((p) => (
+                          <tr key={p.id}>
+                            <td className="p-3 font-mono font-bold text-[#00A896]">{p.trxId}</td>
+                            <td className="p-3 font-bold text-[#0D2C4A]">{p.studentName}</td>
+                            <td className="p-3 font-mono font-extrabold">৳{p.amount}</td>
+                            <td className="p-3">{p.type}</td>
+                            <td className="p-3 font-mono">{p.paymentMethod}</td>
+                            <td className="p-3">
+                              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-100 text-emerald-800">
+                                {p.status}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* ===== TAB 9: BLOG POSTS ===== */}
+              {activeTab === "blogs" && (
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h2 className="text-xl font-extrabold text-[#0D2C4A]">Blog Articles & Guides ({blogs.length})</h2>
+                      <p className="text-xs text-slate-500">Academic tips and mentorship articles</p>
+                    </div>
+                    <button
+                      onClick={() => setShowAddBlog(true)}
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#00A896] text-white text-xs font-extrabold hover:bg-[#008075] transition-all cursor-pointer"
+                    >
+                      <Plus className="w-4 h-4" />
+                      <span>Write Article</span>
+                    </button>
+                  </div>
+
+                  <div className="space-y-3">
+                    {blogs.map((b) => (
+                      <div key={b.id} className="bg-slate-50 rounded-2xl p-4 border border-slate-200 flex items-center justify-between">
+                        <div>
+                          <h3 className="font-bold text-sm text-[#0D2C4A]">{b.titleBn}</h3>
+                          <p className="text-xs text-slate-500 font-mono">{b.publishedDateBn}</p>
+                        </div>
+                        <button onClick={() => handleDeleteBlog(b.id)} className="p-2 text-rose-600 hover:bg-rose-50 rounded-xl">
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* ===== TAB 10: FAQ ITEMS ===== */}
+              {activeTab === "faqs" && (
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h2 className="text-xl font-extrabold text-[#0D2C4A]">Frequently Asked Questions ({faqs.length})</h2>
+                      <p className="text-xs text-slate-500">Bilingual FAQs shown on main landing page</p>
+                    </div>
+                    <button
+                      onClick={() => setShowAddFaq(true)}
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#00A896] text-white text-xs font-extrabold hover:bg-[#008075] transition-all cursor-pointer"
+                    >
+                      <Plus className="w-4 h-4" />
+                      <span>Add FAQ</span>
+                    </button>
+                  </div>
+
+                  <div className="space-y-3">
+                    {faqs.map((f) => (
+                      <div key={f.id} className="bg-slate-50 rounded-2xl p-4 border border-slate-200 flex items-center justify-between">
+                        <div>
+                          <h3 className="font-bold text-sm text-[#0D2C4A]">{f.qBn}</h3>
+                          <p className="text-xs text-slate-500">{f.aBn}</p>
+                        </div>
+                        <button onClick={() => handleDeleteFaq(f.id)} className="p-2 text-rose-600 hover:bg-rose-50 rounded-xl">
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* ===== TAB 11: SETTINGS ===== */}
+              {activeTab === "settings" && (
+                <div className="space-y-6">
+                  <h2 className="text-xl font-extrabold text-[#0D2C4A]">Platform Contact Settings</h2>
+                  <form onSubmit={handleSaveSettings} className="space-y-4 max-w-xl">
+                    <div>
+                      <label className="block text-xs font-mono font-bold text-[#0D2C4A] mb-1">Phone Number</label>
+                      <input
+                        type="text"
+                        value={settings.phone}
+                        onChange={(e) => setSettings({ ...settings, phone: e.target.value })}
+                        className="w-full p-3 rounded-xl border text-xs font-mono"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-mono font-bold text-[#0D2C4A] mb-1">Support Email</label>
+                      <input
+                        type="text"
+                        value={settings.email}
+                        onChange={(e) => setSettings({ ...settings, email: e.target.value })}
+                        className="w-full p-3 rounded-xl border text-xs font-mono"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-mono font-bold text-[#0D2C4A] mb-1">Address (Bengali)</label>
+                      <input
+                        type="text"
+                        value={settings.addressBn}
+                        onChange={(e) => setSettings({ ...settings, addressBn: e.target.value })}
+                        className="w-full p-3 rounded-xl border text-xs font-mono"
+                      />
+                    </div>
+                    <button type="submit" className="px-6 py-3 rounded-xl bg-[#00A896] text-white font-extrabold text-xs cursor-pointer">
+                      Save Settings
+                    </button>
+                    {settingsSaved && <p className="text-xs text-emerald-600 font-bold">Settings saved successfully!</p>}
+                  </form>
                 </div>
               )}
 
@@ -972,7 +1244,7 @@ export default function AdminDashboardPage() {
           {/* ===== RIGHT SIDE ANALYTICS & QUICK TASK COLUMN (XL 4 Columns) ===== */}
           <div className="xl:col-span-4 space-y-6">
             
-            {/* CARD 1: LEARNING PROGRESS / MATCH PROGRESS DONUT (Matching Reference Right Top Card) */}
+            {/* CARD 1: LEARNING PROGRESS / MATCH PROGRESS DONUT */}
             <div className="bg-white rounded-3xl p-6 border border-[#0D2C4A]/10 shadow-sm space-y-5">
               <div className="flex items-center justify-between">
                 <h3 className="font-extrabold text-base text-[#0D2C4A]">Learning Progress</h3>
@@ -981,7 +1253,7 @@ export default function AdminDashboardPage() {
                 </span>
               </div>
 
-              {/* Progress Summary Metrics Row */}
+              {/* Progress Metrics Row */}
               <div className="grid grid-cols-3 gap-2 text-center">
                 <div className="bg-slate-50 p-2.5 rounded-2xl border border-slate-100">
                   <strong className="block font-mono text-sm font-extrabold text-[#0D2C4A]">10/75</strong>
@@ -997,7 +1269,7 @@ export default function AdminDashboardPage() {
                 </div>
               </div>
 
-              {/* SVG Donut Ring Graphic (Matching Reference Center Circle) */}
+              {/* SVG Donut Ring Graphic */}
               <div className="flex flex-col items-center justify-center pt-2">
                 <div className="relative w-36 h-36 flex items-center justify-center">
                   <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
@@ -1013,7 +1285,7 @@ export default function AdminDashboardPage() {
               </div>
             </div>
 
-            {/* CARD 2: COURSE TASK / ADMINISTRATIVE ACTION LIST (Matching Reference Task Stack) */}
+            {/* CARD 2: COURSE TASK / ADMINISTRATIVE ACTION LIST */}
             <div className="bg-white rounded-3xl p-6 border border-[#0D2C4A]/10 shadow-sm space-y-4">
               <div className="flex items-center justify-between">
                 <h3 className="font-extrabold text-base text-[#0D2C4A]">Course Task</h3>
@@ -1053,7 +1325,7 @@ export default function AdminDashboardPage() {
               </div>
             </div>
 
-            {/* CARD 3: LEARNING STATISTICS / MONTHLY BAR CHART GRAPHIC (Matching Reference Bottom Chart) */}
+            {/* CARD 3: LEARNING STATISTICS / MONTHLY BAR CHART GRAPHIC */}
             <div className="bg-white rounded-3xl p-6 border border-[#0D2C4A]/10 shadow-sm space-y-4">
               <div className="flex items-center justify-between">
                 <h3 className="font-extrabold text-base text-[#0D2C4A]">Learning Statistic</h3>
@@ -1096,6 +1368,164 @@ export default function AdminDashboardPage() {
         </div>
 
       </main>
+
+      {/* ===== MODAL OVERLAYS ===== */}
+
+      {/* MODAL 1: ADD TEACHER */}
+      {showAddTeacher && (
+        <div className="fixed inset-0 z-50 bg-[#0D2C4A]/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 border border-[#0D2C4A]/10 shadow-2xl">
+            <div className="flex items-center justify-between border-b pb-3">
+              <h3 className="font-extrabold text-base text-[#0D2C4A]">Add New Tutor Profile</h3>
+              <button onClick={() => setShowAddTeacher(false)} className="p-1 text-slate-400 hover:text-slate-600">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <form onSubmit={handleCreateTeacher} className="space-y-3 text-xs">
+              <div>
+                <label className="block font-bold mb-1">Name (Bengali)</label>
+                <input required type="text" placeholder="যেমন: ফারহান আহমেদ" value={newTeacherNameBn} onChange={(e) => setNewTeacherNameBn(e.target.value)} className="w-full p-2.5 rounded-xl border" />
+              </div>
+              <div>
+                <label className="block font-bold mb-1">Name (English)</label>
+                <input required type="text" placeholder="e.g. Farhan Ahmed" value={newTeacherNameEn} onChange={(e) => setNewTeacherNameEn(e.target.value)} className="w-full p-2.5 rounded-xl border" />
+              </div>
+              <div>
+                <label className="block font-bold mb-1">University (Bengali)</label>
+                <input required type="text" value={newTeacherUniBn} onChange={(e) => setNewTeacherUniBn(e.target.value)} className="w-full p-2.5 rounded-xl border" />
+              </div>
+              <div>
+                <label className="block font-bold mb-1">Subject Expertise (Bengali)</label>
+                <input required type="text" value={newTeacherSubBn} onChange={(e) => setNewTeacherSubBn(e.target.value)} className="w-full p-2.5 rounded-xl border" />
+              </div>
+              <button type="submit" className="w-full py-3 rounded-xl bg-[#00A896] text-white font-extrabold">Save Tutor Profile</button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 2: ADD INQUIRY */}
+      {showAddInquiry && (
+        <div className="fixed inset-0 z-50 bg-[#0D2C4A]/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 border border-[#0D2C4A]/10 shadow-2xl">
+            <div className="flex items-center justify-between border-b pb-3">
+              <h3 className="font-extrabold text-base text-[#0D2C4A]">New Support Ticket</h3>
+              <button onClick={() => setShowAddInquiry(false)} className="p-1 text-slate-400 hover:text-slate-600">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <form onSubmit={handleCreateInquiry} className="space-y-3 text-xs">
+              <div>
+                <label className="block font-bold mb-1">Name</label>
+                <input required type="text" placeholder="Parent / Student Name" value={newInquiryName} onChange={(e) => setNewInquiryName(e.target.value)} className="w-full p-2.5 rounded-xl border" />
+              </div>
+              <div>
+                <label className="block font-bold mb-1">Phone Number</label>
+                <input required type="text" placeholder="017xxxxxxxx" value={newInquiryPhone} onChange={(e) => setNewInquiryPhone(e.target.value)} className="w-full p-2.5 rounded-xl border" />
+              </div>
+              <div>
+                <label className="block font-bold mb-1">Subject</label>
+                <input required type="text" placeholder="Issue or Inquiry subject" value={newInquirySubject} onChange={(e) => setNewInquirySubject(e.target.value)} className="w-full p-2.5 rounded-xl border" />
+              </div>
+              <div>
+                <label className="block font-bold mb-1">Message</label>
+                <textarea required rows={3} placeholder="Details..." value={newInquiryMessage} onChange={(e) => setNewInquiryMessage(e.target.value)} className="w-full p-2.5 rounded-xl border" />
+              </div>
+              <button type="submit" className="w-full py-3 rounded-xl bg-[#00A896] text-white font-extrabold">Create Ticket</button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 3: ADD PAYMENT */}
+      {showAddPayment && (
+        <div className="fixed inset-0 z-50 bg-[#0D2C4A]/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 border border-[#0D2C4A]/10 shadow-2xl">
+            <div className="flex items-center justify-between border-b pb-3">
+              <h3 className="font-extrabold text-base text-[#0D2C4A]">Record Payment / Payout</h3>
+              <button onClick={() => setShowAddPayment(false)} className="p-1 text-slate-400 hover:text-slate-600">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <form onSubmit={handleCreatePayment} className="space-y-3 text-xs">
+              <div>
+                <label className="block font-bold mb-1">Name</label>
+                <input required type="text" placeholder="Student or Tutor Name" value={newPaymentName} onChange={(e) => setNewPaymentName(e.target.value)} className="w-full p-2.5 rounded-xl border" />
+              </div>
+              <div>
+                <label className="block font-bold mb-1">Phone</label>
+                <input required type="text" placeholder="017xxxxxxxx" value={newPaymentPhone} onChange={(e) => setNewPaymentPhone(e.target.value)} className="w-full p-2.5 rounded-xl border" />
+              </div>
+              <div>
+                <label className="block font-bold mb-1">Amount (৳)</label>
+                <input required type="number" value={newPaymentAmount} onChange={(e) => setNewPaymentAmount(Number(e.target.value))} className="w-full p-2.5 rounded-xl border font-mono" />
+              </div>
+              <div>
+                <label className="block font-bold mb-1">Type</label>
+                <select value={newPaymentType} onChange={(e) => setNewPaymentType(e.target.value as any)} className="w-full p-2.5 rounded-xl border">
+                  <option value="Fee Collection">Fee Collection (From Student)</option>
+                  <option value="Tutor Honorarium">Tutor Honorarium (To Tutor)</option>
+                </select>
+              </div>
+              <button type="submit" className="w-full py-3 rounded-xl bg-[#00A896] text-white font-extrabold">Save Transaction Record</button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 4: ADD BLOG */}
+      {showAddBlog && (
+        <div className="fixed inset-0 z-50 bg-[#0D2C4A]/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 border border-[#0D2C4A]/10 shadow-2xl">
+            <div className="flex items-center justify-between border-b pb-3">
+              <h3 className="font-extrabold text-base text-[#0D2C4A]">Write New Blog Article</h3>
+              <button onClick={() => setShowAddBlog(false)} className="p-1 text-slate-400 hover:text-slate-600">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <form onSubmit={handleCreateBlog} className="space-y-3 text-xs">
+              <div>
+                <label className="block font-bold mb-1">Title (Bengali)</label>
+                <input required type="text" value={newBlogTitleBn} onChange={(e) => setNewBlogTitleBn(e.target.value)} className="w-full p-2.5 rounded-xl border" />
+              </div>
+              <div>
+                <label className="block font-bold mb-1">Title (English)</label>
+                <input required type="text" value={newBlogTitleEn} onChange={(e) => setNewBlogTitleEn(e.target.value)} className="w-full p-2.5 rounded-xl border" />
+              </div>
+              <div>
+                <label className="block font-bold mb-1">Excerpt (Bengali)</label>
+                <textarea required rows={2} value={newBlogExcerptBn} onChange={(e) => setNewBlogExcerptBn(e.target.value)} className="w-full p-2.5 rounded-xl border" />
+              </div>
+              <button type="submit" className="w-full py-3 rounded-xl bg-[#00A896] text-white font-extrabold">Publish Article</button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 5: ADD FAQ */}
+      {showAddFaq && (
+        <div className="fixed inset-0 z-50 bg-[#0D2C4A]/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 border border-[#0D2C4A]/10 shadow-2xl">
+            <div className="flex items-center justify-between border-b pb-3">
+              <h3 className="font-extrabold text-base text-[#0D2C4A]">Add New FAQ Item</h3>
+              <button onClick={() => setShowAddFaq(false)} className="p-1 text-slate-400 hover:text-slate-600">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <form onSubmit={handleCreateFaq} className="space-y-3 text-xs">
+              <div>
+                <label className="block font-bold mb-1">Question (Bengali)</label>
+                <input required type="text" value={newFaqQBn} onChange={(e) => setNewFaqQBn(e.target.value)} className="w-full p-2.5 rounded-xl border" />
+              </div>
+              <div>
+                <label className="block font-bold mb-1">Answer (Bengali)</label>
+                <textarea required rows={2} value={newFaqABn} onChange={(e) => setNewFaqABn(e.target.value)} className="w-full p-2.5 rounded-xl border" />
+              </div>
+              <button type="submit" className="w-full py-3 rounded-xl bg-[#00A896] text-white font-extrabold">Save FAQ Item</button>
+            </form>
+          </div>
+        </div>
+      )}
 
     </div>
   );

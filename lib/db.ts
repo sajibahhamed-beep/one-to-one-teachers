@@ -110,6 +110,9 @@ export interface DBData {
   faqs: FAQItem[];
   blogs: any[];
   settings: SettingData;
+  teacherApplications?: TeacherApplication[];
+  inquiries?: Inquiry[];
+  payments?: Payment[];
 }
 
 const initialData: DBData = {
