@@ -42,6 +42,7 @@ import {
   BarChart2,
   User,
   Filter,
+  Eye,
 } from "lucide-react";
 import { SettingData, Enrollment, PricingRequest, ContactMessage, Teacher, FAQItem, TeacherApplication, Inquiry, Payment } from "@/lib/db";
 import { BlogPost } from "@/lib/blogsData";
@@ -494,7 +495,7 @@ export default function AdminDashboardPage() {
   const pendingTeacherAppsCount = teacherApplications.filter((a) => a.status === "Pending").length;
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-[#0D2C4A] font-sans flex">
+    <div className="admin-theme min-h-screen bg-[#F8FAFC] text-[#0D2C4A] font-sans flex" data-admin-theme="true">
       
       {/* ===== FIXED LEFT NAVIGATION SIDEBAR ===== */}
       {/* Locked to screen: fixed left-0 top-0 bottom-0 h-screen w-64 */}
@@ -507,8 +508,8 @@ export default function AdminDashboardPage() {
               <Sparkles className="w-5 h-5 text-white" />
             </div>
             <div>
-              <span className="font-extrabold text-lg text-white tracking-tight block leading-tight">ototeacher</span>
-              <span className="text-[10px] font-mono text-[#00A896] uppercase tracking-wider block font-bold">Admin Portal</span>
+              <span className="font-extrabold text-lg text-white tracking-tight block leading-tight admin-heading-sm">ototeacher</span>
+              <span className="admin-kicker text-[#00A896] block font-bold">Admin Portal</span>
             </div>
           </div>
 
@@ -534,22 +535,26 @@ export default function AdminDashboardPage() {
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id as any)}
-                  className={`w-full relative flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-extrabold transition-all duration-200 cursor-pointer ${
+                  className={`w-full relative flex items-center justify-between px-4 py-3 rounded-2xl text-xs transition-all duration-200 cursor-pointer ${
                     active
-                      ? "bg-white/12 text-[#00A896] shadow-sm"
-                      : "text-slate-300 hover:bg-white/5 hover:text-white"
+                      ? "bg-[#00A896] text-white font-extrabold shadow-md shadow-[#00A896]/25 border border-[#00A896]"
+                      : "text-slate-300 hover:bg-white/10 hover:text-white font-semibold"
                   }`}
                 >
                   {/* Left Active Indicator Bar */}
                   {active && (
-                    <span className="absolute left-0 top-2 bottom-2 w-1.5 bg-[#00A896] rounded-r-full" />
+                    <span className="absolute left-0 top-2 bottom-2 w-1.5 bg-white rounded-r-full shadow-sm" />
                   )}
                   <div className="flex items-center gap-3">
-                    <IconComp className={`w-4 h-4 ${active ? "text-[#00A896]" : "text-slate-400"}`} />
-                    <span>{item.label}</span>
+                    <IconComp className={`w-4 h-4 ${active ? "text-white" : "text-slate-400"}`} />
+                    <span className={`text-xs ${active ? "font-extrabold text-white tracking-tight" : "font-bold text-slate-300"}`}>
+                      {item.label}
+                    </span>
                   </div>
                   {item.count !== undefined && item.count > 0 && (
-                    <span className="bg-[#FFB627] text-[#0D2C4A] text-[10px] font-mono font-bold px-2 py-0.5 rounded-full">
+                    <span className={`admin-chip-label px-2 py-0.5 rounded-full ${
+                      active ? "bg-white text-[#0D2C4A] font-extrabold" : "bg-[#FFB627] text-[#0D2C4A] font-bold"
+                    }`}>
                       {item.count}
                     </span>
                   )}
@@ -564,7 +569,7 @@ export default function AdminDashboardPage() {
           <Link
             href="/"
             target="_blank"
-            className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-xs font-bold text-slate-300 hover:bg-white/10 hover:text-white transition-colors"
+            className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-xs font-bold text-slate-300 hover:bg-white/10 hover:text-white transition-colors admin-caption-text"
           >
             <ExternalLink className="w-4 h-4 text-[#00A896]" />
             <span>View Live Website</span>
@@ -575,7 +580,7 @@ export default function AdminDashboardPage() {
               sessionStorage.clear();
               setIsAuthenticated(false);
             }}
-            className="w-full flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-xs font-bold text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer"
+            className="w-full flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-xs font-bold text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer admin-caption-text"
           >
             <LogOut className="w-4 h-4" />
             <span>Log Out</span>
@@ -596,14 +601,14 @@ export default function AdminDashboardPage() {
               placeholder="Search students, teachers, phone or district..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-11 pr-4 py-2.5 rounded-2xl bg-[#F8FAFC] border border-[#0D2C4A]/10 text-sm focus:outline-none focus:border-[#00A896] font-sans text-[#0D2C4A] shadow-inner"
+              className="w-full pl-11 pr-4 py-2.5 rounded-2xl bg-[#F8FAFC] border border-[#0D2C4A]/10 text-sm focus:outline-none focus:border-[#00A896] font-sans text-[#0D2C4A] shadow-inner admin-body-text"
             />
           </div>
 
           {/* Right Header Status Badges */}
           <div className="flex items-center gap-5">
             {/* Live Date Badge */}
-            <div className="hidden md:flex items-center gap-2 text-xs font-mono font-bold text-slate-600 bg-slate-100 px-3.5 py-1.5 rounded-full border border-slate-200">
+            <div className="hidden md:flex items-center gap-2 admin-chip-label text-slate-600 bg-slate-100 px-3.5 py-1.5 rounded-full border border-slate-200">
               <Calendar className="w-3.5 h-3.5 text-[#00A896]" />
               <span>Friday, August 07, 2026</span>
             </div>
@@ -631,8 +636,8 @@ export default function AdminDashboardPage() {
                 A
               </div>
               <div className="hidden sm:block">
-                <strong className="block text-xs font-extrabold text-[#0D2C4A] leading-tight">Admin User</strong>
-                <span className="text-[10px] text-slate-400 font-mono">Platform Manager</span>
+                <strong className="block admin-caption-text font-extrabold text-[#0D2C4A] leading-tight">Admin User</strong>
+                <span className="admin-chip-label text-slate-400">Platform Manager</span>
               </div>
             </div>
           </div>
@@ -641,183 +646,208 @@ export default function AdminDashboardPage() {
         {/* BODY CONTAINER */}
         <div className="p-6 md:p-8 space-y-8 max-w-7xl w-full">
             
-            {/* GREETING & HERO HEADER */}
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#0D2C4A]/10 shadow-sm flex items-center justify-between gap-6">
-              <div className="space-y-1">
-                <span className="text-xs font-mono font-bold text-[#00A896] uppercase tracking-wider block">
-                  Good Morning
-                </span>
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0D2C4A] tracking-tight">
-                  Welcome, Admin!
-                </h1>
-                <p className="text-xs sm:text-sm text-slate-500 font-normal pt-0.5">
-                  Here is your 1-on-1 online tutoring platform overview for today.
-                </p>
-              </div>
-
-              {/* System Badge */}
-              <div className="hidden sm:flex items-center gap-2 bg-[#E6F4F3] border border-[#00A896]/20 px-4 py-2 rounded-2xl text-xs font-extrabold text-[#00A896]">
-                <ShieldCheck className="w-4 h-4 text-[#00A896]" />
-                <span>100% Verified System</span>
-              </div>
-            </div>
-
-            {/* LAST OPENED / PRIORITY REGISTRATIONS (2 Cards Row) */}
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h2 className="text-lg font-extrabold text-[#0D2C4A]">Last Opened Registrations</h2>
-                <button
-                  onClick={() => setActiveTab("enrollments")}
-                  className="text-xs font-extrabold text-[#00A896] hover:underline flex items-center gap-1 cursor-pointer"
-                >
-                  <span>View All</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                {enrollments.slice(0, 2).map((item) => (
-                  <div
-                    key={item.id}
-                    className="bg-white rounded-3xl p-6 border border-[#0D2C4A]/10 shadow-sm hover:shadow-md transition-all space-y-4 flex flex-col justify-between"
-                  >
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="text-[11px] font-mono font-bold text-[#00A896] bg-[#00A896]/10 px-3 py-1 rounded-full border border-[#00A896]/20">
-                          {item.grade}
-                        </span>
-                        <span
-                          className={`text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full ${
-                            item.status === "Pending"
-                              ? "bg-amber-100 text-amber-800"
-                              : item.status === "Enrolled"
-                              ? "bg-emerald-100 text-emerald-800"
-                              : "bg-slate-100 text-slate-700"
-                          }`}
-                        >
-                          {item.status}
-                        </span>
-                      </div>
-
-                      {/* Card Banner */}
-                      <div className="h-28 bg-[#0D2C4A]/5 rounded-2xl flex items-center justify-center p-4 relative overflow-hidden border border-slate-100">
-                        <div className="w-12 h-12 rounded-full bg-[#0D2C4A] text-white flex items-center justify-center font-extrabold text-lg shadow-md">
-                          {item.studentName.charAt(0)}
-                        </div>
-                        <div className="absolute bottom-3 left-3 bg-white/90 backdrop-blur-md px-3 py-0.5 rounded-full text-[10px] font-mono font-bold text-[#0D2C4A]">
-                          📍 {item.district}
-                        </div>
-                      </div>
-
-                      <div>
-                        <h3 className="font-bold text-base text-[#0D2C4A]">{item.studentName}</h3>
-                        <p className="text-xs text-slate-500 font-mono">{item.phone}</p>
-                      </div>
-                    </div>
-
-                    <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs font-bold">
-                      <span className="text-[#00A896]">৳{item.fee} / mo</span>
-                      <button
-                        onClick={() => setActiveTab("enrollments")}
-                        className="px-3.5 py-1.5 rounded-xl bg-[#00A896] text-white text-xs font-extrabold hover:bg-[#008075] transition-all cursor-pointer"
-                      >
-                        Manage
-                      </button>
-                    </div>
+            {/* ===== TAB 1: DASHBOARD OVERVIEW ===== */}
+            {activeTab === "dashboard" && (
+              <div className="space-y-8">
+                {/* HERO COMMAND CENTER CARD (WHITE THEME) */}
+                <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#0D2C4A]/10 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden bg-gradient-to-br from-white via-slate-50/50 to-[#E6F4F3]/30">
+                  <div className="space-y-2 relative z-10 max-w-2xl">
+                    <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#E6F4F3] border border-[#00A896]/30 text-[#00A896] admin-caption-text font-extrabold">
+                      <Sparkles className="w-3.5 h-3.5 text-[#00A896]" />
+                      Welcome Back, Sajib
+                    </span>
+                    <h1 className="admin-display-xl text-[#0D2C4A]">
+                      Portfolio Command Center
+                    </h1>
+                    <p className="admin-body-text text-slate-500 font-normal leading-relaxed">
+                      Manage your dynamic tutoring platform, student requests, teacher profiles, blogs, inquiries, and global site configurations in one place.
+                    </p>
                   </div>
-                ))}
 
-                {enrollments.length === 0 && (
-                  <div className="col-span-2 bg-white rounded-3xl p-8 text-center text-slate-400 text-sm border border-slate-200">
-                    No recent enrollment registrations found.
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* DYNAMIC TAB MAIN DATA CONTENT */}
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#0D2C4A]/10 shadow-sm space-y-6">
-              
-              {/* ===== TAB 1: DASHBOARD OVERVIEW ===== */}
-              {activeTab === "dashboard" && (
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h2 className="text-xl font-extrabold text-[#0D2C4A]">Student Requests Overview</h2>
-                      <p className="text-xs text-slate-500">Live feed of student tutor requests nationwide</p>
-                    </div>
+                  {/* Action Buttons Top Right */}
+                  <div className="flex flex-wrap items-center gap-3 relative z-10">
                     <button
-                      onClick={() => setActiveTab("enrollments")}
-                      className="px-4 py-2 rounded-xl bg-[#0D2C4A] text-white text-xs font-extrabold hover:bg-[#16385C] transition-all cursor-pointer"
+                      onClick={() => setShowAddTeacher(true)}
+                      className="px-5 py-3 rounded-2xl bg-[#00A896] hover:bg-[#008075] text-white admin-caption-text font-extrabold transition-all flex items-center gap-2 shadow-md shadow-[#00A896]/20 active:scale-95 cursor-pointer"
                     >
-                      View All Enrollments
+                      <Plus className="w-4 h-4" />
+                      <span>Add Mentor</span>
+                    </button>
+                    <button
+                      onClick={() => setShowAddBlog(true)}
+                      className="px-5 py-3 rounded-2xl bg-[#0D2C4A] hover:bg-[#16385C] text-white admin-caption-text font-extrabold transition-all flex items-center gap-2 shadow-md active:scale-95 cursor-pointer"
+                    >
+                      <Plus className="w-4 h-4" />
+                      <span>New Blog Post</span>
                     </button>
                   </div>
+                </div>
 
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs font-sans">
-                      <thead>
-                        <tr className="bg-slate-50 text-[#0D2C4A] font-mono uppercase font-bold border-b border-slate-200">
-                          <th className="p-3.5">Student</th>
-                          <th className="p-3.5">Phone</th>
-                          <th className="p-3.5">Grade</th>
-                          <th className="p-3.5">District</th>
-                          <th className="p-3.5">Fee</th>
-                          <th className="p-3.5">Status</th>
-                          <th className="p-3.5 text-right">Action</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-slate-100 text-slate-700">
-                        {enrollments.slice(0, 5).map((e) => (
-                          <tr key={e.id} className="hover:bg-slate-50/80 transition-colors">
-                            <td className="p-3.5 font-bold text-[#0D2C4A]">{e.studentName}</td>
-                            <td className="p-3.5 font-mono">{e.phone}</td>
-                            <td className="p-3.5">{e.grade}</td>
-                            <td className="p-3.5 font-semibold text-[#00A896]">{e.district}</td>
-                            <td className="p-3.5 font-mono font-bold">৳{e.fee}</td>
-                            <td className="p-3.5">
-                              <span
-                                className={`px-2.5 py-1 rounded-full text-[10px] font-mono font-bold ${
-                                  e.status === "Pending"
-                                    ? "bg-amber-100 text-amber-800"
-                                    : e.status === "Enrolled"
-                                    ? "bg-emerald-100 text-emerald-800"
-                                    : "bg-slate-100 text-slate-700"
-                                }`}
-                              >
-                                {e.status}
-                              </span>
-                            </td>
-                            <td className="p-3.5 text-right space-x-2">
-                              <button
-                                onClick={() => handleUpdateEnrollmentStatus(e.id, "Enrolled")}
-                                className="p-1.5 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-colors"
-                                title="Mark Enrolled"
-                              >
-                                <CheckCircle className="w-4 h-4" />
-                              </button>
-                              <button
-                                onClick={() => handleDeleteEnrollment(e.id)}
-                                className="p-1.5 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors"
-                                title="Delete"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                        {enrollments.length === 0 && (
-                          <tr>
-                            <td colSpan={7} className="p-6 text-center text-slate-400">
-                              No student enrollments submitted yet.
-                            </td>
-                          </tr>
-                        )}
-                      </tbody>
-                    </table>
+                {/* 4 STAT CARDS GRID (WHITE THEME CARDS) */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                  
+                  {/* CARD 1: PUBLISHED BLOGS */}
+                  <div className="bg-white rounded-3xl p-6 border border-[#0D2C4A]/10 shadow-sm hover:shadow-md hover:border-[#00A896]/30 transition-all flex items-center justify-between">
+                    <div className="space-y-1">
+                      <span className="admin-kicker text-slate-400 block">
+                        PUBLISHED BLOGS
+                      </span>
+                      <div className="admin-stat-num text-[#0D2C4A] pt-1">
+                        {blogs.length}
+                      </div>
+                      <span className="admin-caption-text text-slate-500 block pt-1">
+                        Active CMS Articles
+                      </span>
+                    </div>
+                    <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600 shadow-sm shrink-0">
+                      <FileText className="w-6 h-6" />
+                    </div>
+                  </div>
+
+                  {/* CARD 2: INQUIRIES RECEIVED */}
+                  <div className="bg-white rounded-3xl p-6 border border-[#0D2C4A]/10 shadow-sm hover:shadow-md hover:border-[#00A896]/30 transition-all flex items-center justify-between">
+                    <div className="space-y-1">
+                      <span className="admin-kicker text-slate-400 block">
+                        INQUIRIES RECEIVED
+                      </span>
+                      <div className="admin-stat-num text-[#0D2C4A] pt-1">
+                        {inquiries.length + contacts.length}
+                      </div>
+                      <span className="admin-caption-text text-slate-500 block pt-1">
+                        {inquiries.filter((i) => i.status === "Pending").length} Unread Inquiries
+                      </span>
+                    </div>
+                    <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600 shadow-sm shrink-0">
+                      <Mail className="w-6 h-6" />
+                    </div>
+                  </div>
+
+                  {/* CARD 3: PORTFOLIO VISITORS */}
+                  <div className="bg-white rounded-3xl p-6 border border-[#0D2C4A]/10 shadow-sm hover:shadow-md hover:border-[#00A896]/30 transition-all flex items-center justify-between">
+                    <div className="space-y-1">
+                      <span className="admin-kicker text-slate-400 block">
+                        PORTFOLIO VISITORS
+                      </span>
+                      <div className="admin-stat-num text-[#0D2C4A] pt-1">
+                        12,480
+                      </div>
+                      <span className="admin-caption-text text-[#00A896] block font-bold pt-1">
+                        +18.4% this month
+                      </span>
+                    </div>
+                    <div className="w-12 h-12 rounded-2xl bg-[#E6F4F3] border border-[#00A896]/30 flex items-center justify-center text-[#00A896] shadow-sm shrink-0">
+                      <Eye className="w-6 h-6" />
+                    </div>
+                  </div>
+
+                  {/* CARD 4: ACTIVE FAQS */}
+                  <div className="bg-white rounded-3xl p-6 border border-[#0D2C4A]/10 shadow-sm hover:shadow-md hover:border-[#00A896]/30 transition-all flex items-center justify-between">
+                    <div className="space-y-1">
+                      <span className="admin-kicker text-slate-400 block">
+                        ACTIVE FAQS
+                      </span>
+                      <div className="admin-stat-num text-[#0D2C4A] pt-1">
+                        {faqs.length}
+                      </div>
+                      <span className="admin-caption-text text-slate-500 block pt-1">
+                        Customer Q&A items
+                      </span>
+                    </div>
+                    <div className="w-12 h-12 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-600 shadow-sm shrink-0">
+                      <HelpCircle className="w-6 h-6" />
+                    </div>
                   </div>
                 </div>
-              )}
+
+                {/* BOTTOM TWO PANELS (WHITE THEME) */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  
+                  {/* LEFT PANEL: RECENT CLIENT INQUIRIES */}
+                  <div className="bg-white rounded-3xl p-6 border border-[#0D2C4A]/10 shadow-sm space-y-4">
+                    <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600">
+                          <Mail className="w-4 h-4" />
+                        </div>
+                        <h3 className="font-extrabold text-base text-[#0D2C4A]">Recent Client Inquiries</h3>
+                      </div>
+                      <button
+                        onClick={() => setActiveTab("inquiries")}
+                        className="text-xs font-extrabold text-[#00A896] hover:underline flex items-center gap-1 cursor-pointer"
+                      >
+                        <span>View All</span>
+                        <ChevronRight className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+
+                    <div className="space-y-3">
+                      {inquiries.slice(0, 4).map((inq) => (
+                        <div key={inq.id} className="p-4 rounded-2xl bg-slate-50/90 border border-slate-200/80 flex items-center justify-between gap-3 hover:border-[#00A896]/30 transition-all">
+                          <div className="space-y-0.5 min-w-0">
+                            <h4 className="font-extrabold text-xs text-[#0D2C4A] truncate">{inq.name}</h4>
+                            <p className="text-[11px] text-slate-500 font-mono truncate">{inq.subject || inq.phone}</p>
+                          </div>
+                          <span className={`text-[10px] font-mono font-bold px-2.5 py-1 rounded-full ${
+                            inq.status === "Pending" ? "bg-amber-100 text-amber-800 border border-amber-200" : "bg-emerald-100 text-emerald-800 border border-emerald-200"
+                          }`}>
+                            {inq.status}
+                          </span>
+                        </div>
+                      ))}
+                      {inquiries.length === 0 && (
+                        <div className="text-xs text-slate-400 text-center py-6">No recent inquiries recorded yet.</div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* RIGHT PANEL: RECENT STUDENT REQUESTS */}
+                  <div className="bg-white rounded-3xl p-6 border border-[#0D2C4A]/10 shadow-sm space-y-4">
+                    <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-xl bg-[#E6F4F3] border border-[#00A896]/30 flex items-center justify-center text-[#00A896]">
+                          <Users className="w-4 h-4" />
+                        </div>
+                        <h3 className="font-extrabold text-base text-[#0D2C4A]">Student Requests</h3>
+                      </div>
+                      <button
+                        onClick={() => setActiveTab("enrollments")}
+                        className="text-xs font-extrabold text-[#00A896] hover:underline flex items-center gap-1 cursor-pointer"
+                      >
+                        <span>Manage All</span>
+                        <ChevronRight className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+
+                    <div className="space-y-3">
+                      {enrollments.slice(0, 4).map((enr) => (
+                        <div key={enr.id} className="p-4 rounded-2xl bg-slate-50/90 border border-slate-200/80 flex items-center justify-between gap-3 hover:border-[#00A896]/30 transition-all">
+                          <div className="space-y-0.5 min-w-0">
+                            <div className="flex items-center gap-2">
+                              <h4 className="font-extrabold text-xs text-[#0D2C4A] truncate">{enr.studentName}</h4>
+                              <span className="text-[10px] font-mono font-bold text-[#00A896] bg-[#00A896]/10 border border-[#00A896]/20 px-2 py-0.5 rounded-md">{enr.grade}</span>
+                            </div>
+                            <p className="text-[11px] text-slate-500 font-mono truncate">📍 {enr.district} · 📞 {enr.phone}</p>
+                          </div>
+                          <span className={`text-[10px] font-mono font-bold px-2.5 py-1 rounded-full ${
+                            enr.status === "Pending" ? "bg-amber-100 text-amber-800 border border-amber-200" : "bg-emerald-100 text-emerald-800 border border-emerald-200"
+                          }`}>
+                            {enr.status}
+                          </span>
+                        </div>
+                      ))}
+                      {enrollments.length === 0 && (
+                        <div className="text-xs text-slate-400 text-center py-6">No student requests submitted yet.</div>
+                      )}
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            )}
+
+            {/* OTHER TABS WRAPPER */}
+            {activeTab !== "dashboard" && (
+              <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#0D2C4A]/10 shadow-sm space-y-6">
 
               {/* ===== TAB 2: ENROLLMENTS MANAGEMENT ===== */}
               {activeTab === "enrollments" && (
@@ -1319,8 +1349,8 @@ export default function AdminDashboardPage() {
                   </form>
                 </div>
               )}
-
-        </div>
+            </div>
+          )}
 
         </div>
 

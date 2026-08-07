@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Hind_Siliguri, Roboto, JetBrains_Mono } from "next/font/google";
+import { Hind_Siliguri, Roboto, JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import { LanguageProvider } from "@/context/LanguageContext";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import "./globals.css";
@@ -25,6 +25,14 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   weight: ["400", "500"],
   variable: "--font-jetbrains-mono",
+  display: "swap",
+  preload: false,
+});
+
+const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-plus-jakarta",
   display: "swap",
   preload: false,
 });
@@ -96,7 +104,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body
-        className={`${hindSiliguri.variable} ${roboto.variable} ${jetbrainsMono.variable} antialiased bg-[#FBF7EF] text-[#12213D]`}
+        className={`${hindSiliguri.variable} ${roboto.variable} ${jetbrainsMono.variable} ${plusJakartaSans.variable} antialiased bg-[#FBF7EF] text-[#12213D]`}
       >
         <LanguageProvider>
           {children}
