@@ -20,8 +20,24 @@ export default function MentorModal({ isOpen, onClose }: MentorModalProps) {
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    try {
+      await fetch("/api/teacher-applications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName,
+          institution,
+          subjectExpertise,
+          hoursPerWeek,
+          email,
+          phone,
+        }),
+      });
+    } catch (err) {
+      console.error("Failed to submit tutor application", err);
+    }
     setIsSubmitted(true);
   };
 

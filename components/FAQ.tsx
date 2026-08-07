@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLanguage } from "../context/LanguageContext";
 import { ChevronDown, HelpCircle } from "lucide-react";
 
-const faqs = {
+const defaultFaqs = {
   bn: [
     {
       q: "১-অন-১ অনলাইন ক্লাস কীভাবে কাজ করে?",
@@ -78,7 +78,27 @@ const faqs = {
 export default function FAQ() {
   const { lang } = useLanguage();
   const [openIdx, setOpenIdx] = useState<number | null>(null);
-  const items = lang === "bn" ? faqs.bn : faqs.en;
+  const [apiFaqs, setApiFaqs] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetch("/api/faqs")
+      .then((r) => r.json())
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setApiFaqs(data);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const defaultItems = lang === "bn" ? defaultFaqs.bn : defaultFaqs.en;
+  const items =
+    apiFaqs.length > 0
+      ? apiFaqs.map((f) => ({
+          q: lang === "bn" ? f.qBn || f.qEn : f.qEn || f.qBn,
+          a: lang === "bn" ? f.aBn || f.aEn : f.aEn || f.aBn,
+        }))
+      : defaultItems;
 
   return (
     <section id="faq" className="py-24 md:py-32 bg-white font-sans border-b border-[#0D2C4A]/10">

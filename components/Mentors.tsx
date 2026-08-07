@@ -7,10 +7,28 @@ interface MentorsProps {
   onOpenEnroll?: () => void;
 }
 
+import { useState, useEffect } from "react";
+
+interface MentorsProps {
+  onOpenEnroll?: () => void;
+}
+
 export default function Mentors({ onOpenEnroll }: MentorsProps) {
   const { t, lang } = useLanguage();
+  const [teacherList, setTeacherList] = useState<any[]>([]);
 
-  const mentors = [
+  useEffect(() => {
+    fetch("/api/teachers")
+      .then((r) => r.json())
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setTeacherList(data);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const defaultMentors = [
     {
       name: lang === "bn" ? "নুসরাত জাহান" : "Nusrat Jahan",
       university: lang === "bn" ? "বুয়েট (সিএসই)" : "BUET (CSE)",
@@ -33,6 +51,17 @@ export default function Mentors({ onOpenEnroll }: MentorsProps) {
       img: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=400&q=80",
     },
   ];
+
+  const displayMentors =
+    teacherList.length > 0
+      ? teacherList.map((t) => ({
+          name: lang === "bn" ? t.nameBn || t.nameEn : t.nameEn || t.nameBn,
+          university: lang === "bn" ? t.universityBn || t.universityEn : t.universityEn || t.universityBn,
+          subject: lang === "bn" ? t.subjectBn || t.subjectEn : t.subjectEn || t.subjectBn,
+          students: lang === "bn" ? "যাচাইকৃত ১-অন-১ শিক্ষক" : "Verified 1-on-1 Tutor",
+          img: t.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80",
+        }))
+      : defaultMentors;
 
   return (
     <section id="mentors" className="py-24 md:py-32 bg-[#F8FAFC] border-b border-[#0D2C4A]/10 font-sans">
@@ -75,7 +104,7 @@ export default function Mentors({ onOpenEnroll }: MentorsProps) {
 
         {/* Mentors Grid with spacious layout & hover elevation */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-          {mentors.map((m, i) => (
+          {displayMentors.map((m, i) => (
             <div
               key={i}
               onClick={() => onOpenEnroll?.()}
