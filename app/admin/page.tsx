@@ -43,8 +43,9 @@ import {
   User,
   Filter,
   Eye,
+  Share2,
 } from "lucide-react";
-import { SettingData, Enrollment, PricingRequest, ContactMessage, Teacher, FAQItem, TeacherApplication, Inquiry, Payment } from "@/lib/db";
+import { SettingData, SocialLinkItem, Enrollment, PricingRequest, ContactMessage, Teacher, FAQItem, TeacherApplication, Inquiry, Payment } from "@/lib/db";
 import { BlogPost } from "@/lib/blogsData";
 
 export default function AdminDashboardPage() {
@@ -65,6 +66,7 @@ export default function AdminDashboardPage() {
     | "blogs"
     | "faqs"
     | "seo"
+    | "whatsapp"
     | "settings"
   >("dashboard");
   const [loading, setLoading] = useState(true);
@@ -80,17 +82,24 @@ export default function AdminDashboardPage() {
   const [faqs, setFaqs] = useState<FAQItem[]>([]);
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [settings, setSettings] = useState<SettingData>({
-    facebookUrl: "https://facebook.com",
-    instagramUrl: "https://instagram.com",
-    youtubeUrl: "https://youtube.com",
+    socialLinks: [
+      { id: "soc-1", name: "Facebook", iconUrl: "facebook", url: "https://facebook.com" },
+      { id: "soc-2", name: "Instagram", iconUrl: "instagram", url: "https://instagram.com" },
+      { id: "soc-3", name: "YouTube", iconUrl: "youtube", url: "https://youtube.com" },
+      { id: "soc-4", name: "LinkedIn", iconUrl: "linkedin", url: "https://linkedin.com" },
+    ],
+    whatsappPhone: "8801775551325",
+    whatsappMessageBn: "হ্যালো আলো শিক্ষা টিম, ১-অন-১ অনলাইন শিক্ষক সম্পর্কে জানতে চাই।",
+    whatsappMessageEn: "Hello Alo Shikkha team, I want to inquire about 1-on-1 online teachers.",
     phone: "01775551325",
     email: "support@aloshikkha.org",
     addressBn: "ধানমণ্ডি, ঢাকা, বাংলাদেশ",
     addressEn: "Dhanmondi, Dhaka, Bangladesh",
-    metaTitle: "Muhammad Sajib — Lead UI/UX & Product Designer",
-    metaDescription: "Crafting intuitive digital experiences, mobile apps, SaaS dashboards, and design systems.",
-    keywords: "UI/UX Designer, Product Designer, Figma, Next.js, Tailwind CSS",
+    metaTitle: "ototeacher — ১-অন-১ অনলাইন শিক্ষক | One-to-One Teacher for All",
+    metaDescription: "বাংলাদেশের ১-অন-১ অনলাইন শিক্ষক প্ল্যাটফর্ম। বুয়েট, ঢাবি ও মেডিকেলের যাচাইকৃত শিক্ষকদের সাথে সরাসরি লাইভ ক্লাস — ঘরে বসে।",
+    keywords: "online teacher Bangladesh, ১-অন-১ শিক্ষক, ototeacher, private tutor Bangladesh",
   });
+  const [whatsappSaved, setWhatsappSaved] = useState(false);
 
   // Filter & Search states
   const [searchQuery, setSearchQuery] = useState("");
@@ -335,6 +344,50 @@ export default function AdminDashboardPage() {
     setTimeout(() => setSettingsSaved(false), 3000);
   };
 
+  // Add new dynamic social link item
+  const handleAddSocialLink = () => {
+    const newItem: SocialLinkItem = {
+      id: "soc-" + Date.now(),
+      name: "New Social Media",
+      iconUrl: "facebook",
+      url: "https://",
+    };
+    setSettings((prev) => ({
+      ...prev,
+      socialLinks: [...(prev.socialLinks || []), newItem],
+    }));
+  };
+
+  // Update dynamic social link item
+  const handleUpdateSocialLink = (id: string, field: keyof SocialLinkItem, value: string) => {
+    setSettings((prev) => ({
+      ...prev,
+      socialLinks: (prev.socialLinks || []).map((item) =>
+        item.id === id ? { ...item, [field]: value } : item
+      ),
+    }));
+  };
+
+  // Remove social link item
+  const handleRemoveSocialLink = (id: string) => {
+    setSettings((prev) => ({
+      ...prev,
+      socialLinks: (prev.socialLinks || []).filter((item) => item.id !== id),
+    }));
+  };
+
+  // Save WhatsApp Settings
+  const handleSaveWhatsapp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await fetch("/api/settings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(settings),
+    });
+    setWhatsappSaved(true);
+    setTimeout(() => setWhatsappSaved(false), 3000);
+  };
+
   // Save SEO Settings
   const handleSaveSeo = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -527,6 +580,7 @@ export default function AdminDashboardPage() {
               { id: "blogs", label: "Blog Posts", icon: FileText },
               { id: "faqs", label: "FAQ Items", icon: HelpCircle },
               { id: "seo", label: "SEO and Metadata", icon: Search },
+              { id: "whatsapp", label: "Floating WhatsApp", icon: PhoneCall },
               { id: "settings", label: "Settings", icon: Settings },
             ].map((item) => {
               const IconComp = item.icon;
@@ -1243,42 +1297,303 @@ export default function AdminDashboardPage() {
                 </div>
               )}
 
-              {/* ===== TAB 11: SETTINGS ===== */}
+              {/* ===== TAB 11: FLOATING WHATSAPP SETTINGS ===== */}
+              {activeTab === "whatsapp" && (
+                <div className="space-y-6 max-w-3xl">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+                    <div>
+                      <div className="flex items-center gap-2.5">
+                        <PhoneCall className="w-5 h-5 text-[#25D366]" />
+                        <h2 className="admin-heading-md text-[#0D2C4A]">Floating WhatsApp Hotline Settings</h2>
+                      </div>
+                      <p className="admin-body-text text-slate-500 pt-0.5">
+                        Update the floating WhatsApp phone number and automatic introductory greeting message for instant customer support.
+                      </p>
+                    </div>
+
+                    <a
+                      href={`https://wa.me/${(settings.whatsappPhone || "8801775551325").replace(/[^0-9]/g, "")}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-4 py-2.5 rounded-2xl bg-emerald-50 border border-emerald-300 text-emerald-700 hover:bg-emerald-600 hover:text-white transition-all text-xs font-extrabold flex items-center gap-2"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      <span>Test WhatsApp Direct ↗</span>
+                    </a>
+                  </div>
+
+                  <form onSubmit={handleSaveWhatsapp} className="space-y-6 bg-white p-6 sm:p-7 rounded-3xl border border-[#0D2C4A]/10 shadow-sm">
+                    <div>
+                      <label className="admin-kicker text-slate-500 block mb-2">WHATSAPP PHONE NUMBER (WITH COUNTRY CODE)</label>
+                      <input
+                        type="text"
+                        placeholder="8801775551325"
+                        value={settings.whatsappPhone || ""}
+                        onChange={(e) => setSettings({ ...settings, whatsappPhone: e.target.value })}
+                        className="w-full p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-mono font-bold text-[#0D2C4A] focus:outline-none focus:border-[#25D366] shadow-sm"
+                      />
+                      <span className="text-[11px] text-slate-400 font-mono pt-1 block">
+                        Format example: 8801775551325 (do not use + or spaces)
+                      </span>
+                    </div>
+
+                    <div>
+                      <label className="admin-kicker text-slate-500 block mb-2">AUTOMATIC INITIAL MESSAGE (BENGALI)</label>
+                      <textarea
+                        rows={3}
+                        value={settings.whatsappMessageBn || ""}
+                        onChange={(e) => setSettings({ ...settings, whatsappMessageBn: e.target.value })}
+                        placeholder="হ্যালো আলো শিক্ষা টিম, ১-অন-১ অনলাইন শিক্ষক সম্পর্কে জানতে চাই।"
+                        className="w-full p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-sans font-semibold text-[#0D2C4A] focus:outline-none focus:border-[#25D366] shadow-sm"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="admin-kicker text-slate-500 block mb-2">AUTOMATIC INITIAL MESSAGE (ENGLISH)</label>
+                      <textarea
+                        rows={3}
+                        value={settings.whatsappMessageEn || ""}
+                        onChange={(e) => setSettings({ ...settings, whatsappMessageEn: e.target.value })}
+                        placeholder="Hello Alo Shikkha team, I want to inquire about 1-on-1 online teachers."
+                        className="w-full p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-sans font-semibold text-[#0D2C4A] focus:outline-none focus:border-[#25D366] shadow-sm"
+                      />
+                    </div>
+
+                    <div className="flex items-center gap-4 pt-2">
+                      <button
+                        type="submit"
+                        className="flex items-center gap-2 px-7 py-3 rounded-2xl bg-[#25D366] hover:bg-[#1ebd56] text-white admin-caption-text font-extrabold transition-all shadow-md cursor-pointer active:scale-95"
+                      >
+                        <CheckCircle className="w-4 h-4" />
+                        <span>Save WhatsApp Settings</span>
+                      </button>
+
+                      {whatsappSaved && (
+                        <span className="admin-caption-text text-emerald-600 font-extrabold flex items-center gap-1">
+                          ✓ WhatsApp number and message saved successfully!
+                        </span>
+                      )}
+                    </div>
+                  </form>
+                </div>
+              )}
+
+              {/* ===== TAB 12: DYNAMIC SOCIAL MEDIA & SETTINGS ===== */}
               {activeTab === "settings" && (
-                <div className="space-y-6">
-                  <h2 className="text-xl font-extrabold text-[#0D2C4A]">Platform Contact Settings</h2>
-                  <form onSubmit={handleSaveSettings} className="space-y-4 max-w-xl">
+                <div className="space-y-8">
+                  {/* Header title */}
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
                     <div>
-                      <label className="block text-xs font-mono font-bold text-[#0D2C4A] mb-1">Phone Number</label>
-                      <input
-                        type="text"
-                        value={settings.phone}
-                        onChange={(e) => setSettings({ ...settings, phone: e.target.value })}
-                        className="w-full p-3 rounded-xl border text-xs font-mono"
-                      />
+                      <div className="flex items-center gap-2.5">
+                        <Share2 className="w-5 h-5 text-[#00A896]" />
+                        <h2 className="admin-heading-md text-[#0D2C4A]">Social Media & Contact Settings</h2>
+                      </div>
+                      <p className="admin-body-text text-slate-500 pt-0.5">
+                        Add, customize, or remove as many social media icons as you want. All active social media channels will be rendered in the website footer.
+                      </p>
                     </div>
-                    <div>
-                      <label className="block text-xs font-mono font-bold text-[#0D2C4A] mb-1">Support Email</label>
-                      <input
-                        type="text"
-                        value={settings.email}
-                        onChange={(e) => setSettings({ ...settings, email: e.target.value })}
-                        className="w-full p-3 rounded-xl border text-xs font-mono"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-mono font-bold text-[#0D2C4A] mb-1">Address (Bengali)</label>
-                      <input
-                        type="text"
-                        value={settings.addressBn}
-                        onChange={(e) => setSettings({ ...settings, addressBn: e.target.value })}
-                        className="w-full p-3 rounded-xl border text-xs font-mono"
-                      />
-                    </div>
-                    <button type="submit" className="px-6 py-3 rounded-xl bg-[#00A896] text-white font-extrabold text-xs cursor-pointer">
-                      Save Settings
+
+                    <button
+                      type="button"
+                      onClick={handleAddSocialLink}
+                      className="px-5 py-3 rounded-2xl bg-[#00A896] hover:bg-[#008075] text-white text-xs font-extrabold flex items-center gap-2 shadow-md cursor-pointer active:scale-95 transition-all"
+                    >
+                      <Plus className="w-4 h-4" />
+                      <span>+ Add Social Media</span>
                     </button>
-                    {settingsSaved && <p className="text-xs text-emerald-600 font-bold">Settings saved successfully!</p>}
+                  </div>
+
+                  <form onSubmit={handleSaveSettings} className="space-y-8">
+                    
+                    {/* DYNAMIC CUSTOM SOCIAL MEDIA LIST */}
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <h3 className="admin-heading-sm text-[#0D2C4A] flex items-center gap-2">
+                          <span>Custom Social Media Channels</span>
+                          <span className="admin-chip-label bg-[#E6F4F3] text-[#00A896] px-2.5 py-0.5 rounded-full font-bold">
+                            {(settings.socialLinks || []).length} Active Channels
+                          </span>
+                        </h3>
+                        
+                        <button
+                          type="button"
+                          onClick={handleAddSocialLink}
+                          className="text-xs font-bold text-[#00A896] hover:underline flex items-center gap-1 cursor-pointer"
+                        >
+                          <Plus className="w-3.5 h-3.5" />
+                          <span>Add New Icon</span>
+                        </button>
+                      </div>
+
+                      {(!settings.socialLinks || settings.socialLinks.length === 0) ? (
+                        <div className="p-8 text-center bg-slate-50 rounded-3xl border border-dashed border-slate-200 space-y-3">
+                          <p className="text-xs font-bold text-slate-400">No social media links added yet.</p>
+                          <button
+                            type="button"
+                            onClick={handleAddSocialLink}
+                            className="px-4 py-2 bg-[#00A896] text-white text-xs font-bold rounded-xl cursor-pointer"
+                          >
+                            + Add First Social Media
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                          {settings.socialLinks.map((item) => (
+                            <div key={item.id} className="bg-white p-5 rounded-3xl border border-[#0D2C4A]/10 shadow-sm space-y-4 relative group">
+                              
+                              {/* Top Bar: Title & Delete */}
+                              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                                <div className="flex items-center gap-2">
+                                  <span className="w-7 h-7 rounded-xl bg-[#E6F4F3] text-[#00A896] flex items-center justify-center text-xs font-extrabold">
+                                    {(item.name || "S")[0].toUpperCase()}
+                                  </span>
+                                  <input
+                                    type="text"
+                                    placeholder="Platform Name (e.g. Facebook, TikTok)"
+                                    value={item.name}
+                                    onChange={(e) => handleUpdateSocialLink(item.id, "name", e.target.value)}
+                                    className="p-1.5 rounded-lg border border-transparent hover:border-slate-200 focus:border-[#00A896] text-xs font-extrabold text-[#0D2C4A] focus:outline-none"
+                                  />
+                                </div>
+
+                                <div className="flex items-center gap-2">
+                                  {item.url && item.url.startsWith("http") && (
+                                    <a
+                                      href={item.url}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="p-1.5 text-slate-400 hover:text-[#00A896] transition-colors"
+                                      title="Test Target Link"
+                                    >
+                                      <ExternalLink className="w-4 h-4" />
+                                    </a>
+                                  )}
+                                  <button
+                                    type="button"
+                                    onClick={() => handleRemoveSocialLink(item.id)}
+                                    className="p-1.5 text-rose-500 hover:bg-rose-50 rounded-xl transition-colors cursor-pointer"
+                                    title="Delete Social Media"
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </button>
+                                </div>
+                              </div>
+
+                              {/* Preset Icon Selector Quick Badges */}
+                              <div className="space-y-1.5">
+                                <label className="admin-kicker text-slate-400 block">SELECT ICON PRESET OR PASTE CUSTOM IMAGE URL</label>
+                                <div className="flex flex-wrap items-center gap-1.5">
+                                  {["facebook", "instagram", "youtube", "linkedin", "twitter", "whatsapp", "telegram", "tiktok", "discord", "website"].map((preset) => (
+                                    <button
+                                      key={preset}
+                                      type="button"
+                                      onClick={() => handleUpdateSocialLink(item.id, "iconUrl", preset)}
+                                      className={`px-2.5 py-1 rounded-lg text-[10px] font-bold capitalize transition-all cursor-pointer ${
+                                        (item.iconUrl || "").toLowerCase() === preset
+                                          ? "bg-[#00A896] text-white shadow-sm"
+                                          : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                                      }`}
+                                    >
+                                      {preset}
+                                    </button>
+                                  ))}
+                                </div>
+                              </div>
+
+                              {/* Custom Icon Image URL Input / File Upload */}
+                              <div className="space-y-1.5">
+                                <label className="admin-kicker text-slate-400 block">ICON IMAGE URL / KEYWORD</label>
+                                <input
+                                  type="text"
+                                  placeholder="Preset keyword (e.g. facebook) or Custom Icon Image URL (https://...)"
+                                  value={item.iconUrl || ""}
+                                  onChange={(e) => handleUpdateSocialLink(item.id, "iconUrl", e.target.value)}
+                                  className="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-mono font-semibold text-[#0D2C4A] focus:outline-none focus:border-[#00A896]"
+                                />
+                              </div>
+
+                              {/* Target URL Input */}
+                              <div className="space-y-1.5">
+                                <label className="admin-kicker text-slate-400 block">TARGET URL LINK</label>
+                                <input
+                                  type="url"
+                                  placeholder="https://facebook.com/yourpage"
+                                  value={item.url || ""}
+                                  onChange={(e) => handleUpdateSocialLink(item.id, "url", e.target.value)}
+                                  className="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-mono font-semibold text-[#0D2C4A] focus:outline-none focus:border-[#00A896]"
+                                />
+                              </div>
+
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* PLATFORM HOTLINE DETAILS */}
+                    <div className="space-y-4 pt-6 border-t border-slate-100">
+                      <h3 className="admin-heading-sm text-[#0D2C4A]">General Platform Support Hotline & Address</h3>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div>
+                          <label className="admin-kicker text-slate-500 block mb-2">HOTLINE / PHONE NUMBER</label>
+                          <input
+                            type="text"
+                            value={settings.phone || ""}
+                            onChange={(e) => setSettings({ ...settings, phone: e.target.value })}
+                            className="w-full p-3.5 rounded-2xl bg-white border border-[#0D2C4A]/10 text-xs font-mono font-bold text-[#0D2C4A] focus:outline-none focus:border-[#00A896] shadow-sm"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="admin-kicker text-slate-500 block mb-2">SUPPORT EMAIL ADDRESS</label>
+                          <input
+                            type="email"
+                            value={settings.email || ""}
+                            onChange={(e) => setSettings({ ...settings, email: e.target.value })}
+                            className="w-full p-3.5 rounded-2xl bg-white border border-[#0D2C4A]/10 text-xs font-mono font-bold text-[#0D2C4A] focus:outline-none focus:border-[#00A896] shadow-sm"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="admin-kicker text-slate-500 block mb-2">OFFICE ADDRESS (BENGALI)</label>
+                          <input
+                            type="text"
+                            value={settings.addressBn || ""}
+                            onChange={(e) => setSettings({ ...settings, addressBn: e.target.value })}
+                            className="w-full p-3.5 rounded-2xl bg-white border border-[#0D2C4A]/10 text-xs font-sans font-bold text-[#0D2C4A] focus:outline-none focus:border-[#00A896] shadow-sm"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="admin-kicker text-slate-500 block mb-2">OFFICE ADDRESS (ENGLISH)</label>
+                          <input
+                            type="text"
+                            value={settings.addressEn || ""}
+                            onChange={(e) => setSettings({ ...settings, addressEn: e.target.value })}
+                            className="w-full p-3.5 rounded-2xl bg-white border border-[#0D2C4A]/10 text-xs font-sans font-bold text-[#0D2C4A] focus:outline-none focus:border-[#00A896] shadow-sm"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* SAVE BUTTON */}
+                    <div className="flex items-center gap-4 pt-4 border-t border-slate-100">
+                      <button
+                        type="submit"
+                        className="flex items-center gap-2 px-7 py-3.5 rounded-2xl bg-[#00A896] hover:bg-[#008075] text-white admin-caption-text font-extrabold transition-all shadow-md cursor-pointer active:scale-95"
+                      >
+                        <CheckCircle className="w-4 h-4" />
+                        <span>Save Social Media & Settings</span>
+                      </button>
+
+                      {settingsSaved && (
+                        <span className="admin-caption-text text-emerald-600 font-extrabold flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 px-4 py-2 rounded-xl">
+                          ✓ Social media links updated and published to footer!
+                        </span>
+                      )}
+                    </div>
+
                   </form>
                 </div>
               )}

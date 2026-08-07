@@ -58,10 +58,18 @@ export interface FAQItem {
   aEn: string;
 }
 
+export interface SocialLinkItem {
+  id: string;
+  name: string;
+  iconUrl: string;
+  url: string;
+}
+
 export interface SettingData {
-  facebookUrl?: string;
-  instagramUrl?: string;
-  youtubeUrl?: string;
+  socialLinks?: SocialLinkItem[];
+  whatsappPhone?: string;
+  whatsappMessageBn?: string;
+  whatsappMessageEn?: string;
   phone?: string;
   email?: string;
   addressBn?: string;
@@ -261,16 +269,22 @@ const initialData: DBData = {
     },
   ],
   settings: {
-    facebookUrl: "https://facebook.com",
-    instagramUrl: "https://instagram.com",
-    youtubeUrl: "https://youtube.com",
+    socialLinks: [
+      { id: "soc-1", name: "Facebook", iconUrl: "facebook", url: "https://facebook.com" },
+      { id: "soc-2", name: "Instagram", iconUrl: "instagram", url: "https://instagram.com" },
+      { id: "soc-3", name: "YouTube", iconUrl: "youtube", url: "https://youtube.com" },
+      { id: "soc-4", name: "LinkedIn", iconUrl: "linkedin", url: "https://linkedin.com" },
+    ],
+    whatsappPhone: "8801775551325",
+    whatsappMessageBn: "হ্যালো আলো শিক্ষা টিম, ১-অন-১ অনলাইন শিক্ষক সম্পর্কে জানতে চাই।",
+    whatsappMessageEn: "Hello Alo Shikkha team, I want to inquire about 1-on-1 online teachers.",
     phone: "01775551325",
     email: "support@aloshikkha.org",
     addressBn: "ধানমণ্ডি, ঢাকা, বাংলাদেশ",
     addressEn: "Dhanmondi, Dhaka, Bangladesh",
-    metaTitle: "Muhammad Sajib — Lead UI/UX & Product Designer",
-    metaDescription: "Crafting intuitive digital experiences, mobile apps, SaaS dashboards, and design systems.",
-    keywords: "UI/UX Designer, Product Designer, Figma, Next.js, Tailwind CSS",
+    metaTitle: "ototeacher — ১-অন-১ অনলাইন শিক্ষক | One-to-One Teacher for All",
+    metaDescription: "বাংলাদেশের ১-অন-১ অনলাইন শিক্ষক প্ল্যাটফর্ম। বুয়েট, ঢাবি ও মেডিকেলের যাচাইকৃত শিক্ষকদের সাথে সরাসরি লাইভ ক্লাস — ঘরে বসে।",
+    keywords: "online teacher Bangladesh, ১-অন-১ শিক্ষক, ototeacher, private tutor Bangladesh",
   },
 };
 

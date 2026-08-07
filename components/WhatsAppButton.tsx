@@ -1,25 +1,37 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { usePathname } from "next/navigation";
 
 export default function WhatsAppButton() {
   const { lang } = useLanguage();
   const pathname = usePathname();
+  const [phone, setPhone] = useState("8801775551325");
+  const [msgBn, setMsgBn] = useState("হ্যালো আলো শিক্ষা টিম, ১-অন-১ অনলাইন শিক্ষক সম্পর্কে জানতে চাই।");
+  const [msgEn, setMsgEn] = useState("Hello Alo Shikkha team, I want to inquire about 1-on-1 online teachers.");
+
+  useEffect(() => {
+    fetch("/api/settings")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.whatsappPhone) {
+          setPhone(data.whatsappPhone.replace(/[^0-9]/g, ""));
+        } else if (data && data.phone) {
+          setPhone(data.phone.replace(/[^0-9]/g, ""));
+        }
+        if (data && data.whatsappMessageBn) setMsgBn(data.whatsappMessageBn);
+        if (data && data.whatsappMessageEn) setMsgEn(data.whatsappMessageEn);
+      })
+      .catch(() => {});
+  }, []);
 
   if (pathname?.startsWith("/admin")) {
     return null;
   }
 
-  const phone = "8801775551325";
-  const defaultText =
-    lang === "bn"
-      ? "হ্যালো আলো শিক্ষা টিম, ১-অন-১ অনলাইন শিক্ষক সম্পর্কে জানতে চাই।"
-      : "Hello Alo Shikkha team, I want to inquire about 1-on-1 online teachers.";
-
-  const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(
-    defaultText
-  )}`;
+  const defaultText = lang === "bn" ? msgBn : msgEn;
+  const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(defaultText)}`;
 
   return (
     <a
