@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
@@ -8,7 +8,7 @@ import Footer from "@/components/Footer";
 import EnrollModal from "@/components/EnrollModal";
 import MentorModal from "@/components/MentorModal";
 import { useLanguage } from "@/context/LanguageContext";
-import { BLOG_POSTS, BLOG_CATEGORIES } from "@/lib/blogsData";
+import { BLOG_POSTS, BLOG_CATEGORIES, BlogPost } from "@/lib/blogsData";
 import {
   Clock,
   Calendar,
@@ -36,29 +36,115 @@ export default function SingleBlogPage() {
   const [selectedFee, setSelectedFee] = useState(600);
   const [copiedLink, setCopiedLink] = useState(false);
 
+  const [apiPosts, setApiPosts] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetch("/api/blogs")
+      .then((r) => r.json())
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setApiPosts(data);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   const handleOpenEnroll = (planName = "Pay-what-you-can", fee = 600) => {
     setSelectedPlan(planName);
     setSelectedFee(fee);
     setEnrollModalOpen(true);
   };
 
-  // Find the post by id or slug
-  const post = useMemo(() => {
-    const foundId = Array.isArray(id) ? id[0] : id;
-    return (
-      BLOG_POSTS.find((p) => p.id === foundId || p.slug === foundId) ||
-      BLOG_POSTS[0]
-    );
+  const foundId = useMemo(() => {
+    return Array.isArray(id) ? id[0] : id;
   }, [id]);
+
+  // Find the post by id or slug across static & API posts
+  const post = useMemo(() => {
+    // 1. Search in static BLOG_POSTS first
+    const staticMatch = BLOG_POSTS.find(
+      (p) => p.id === foundId || p.slug === foundId
+    );
+    if (staticMatch) return staticMatch;
+
+    // 2. Search in dynamic apiPosts
+    const apiMatch = apiPosts.find(
+      (p) => p.id === foundId || p.slug === foundId
+    );
+    if (apiMatch) {
+      return {
+        id: apiMatch.id || apiMatch.slug,
+        slug: apiMatch.slug || apiMatch.id,
+        category: apiMatch.category || "mentorship",
+        image: apiMatch.image || "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1200&q=80",
+        titleBn: apiMatch.titleBn || "১-অন-১ শিক্ষাদান নির্দেশিকা",
+        titleEn: apiMatch.titleEn || "1-on-1 Mentorship Guide",
+        excerptBn: apiMatch.excerptBn || "আলো শিক্ষা প্ল্যাটফর্মের ১-অন-১ টিচিং দিকনির্দেশনা।",
+        excerptEn: apiMatch.excerptEn || "1-on-1 guidance from Alo Shikkha platform.",
+        author: apiMatch.author || {
+          nameBn: "আলো শিক্ষা টিম",
+          nameEn: "Alo Shikkha Team",
+          roleBn: "পরামর্শক",
+          roleEn: "Academic Advisor",
+          institutionBn: "বুয়েট ও ঢাবি",
+          institutionEn: "BUET & DU",
+          avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+        },
+        readTimeBn: apiMatch.readTimeBn || "৪ মিনিট পড়া",
+        readTimeEn: apiMatch.readTimeEn || "4 min read",
+        publishedDateBn: apiMatch.publishedDateBn || "০৬ আগস্ট, ২০২৬",
+        publishedDateEn: apiMatch.publishedDateEn || "06 August 2026",
+        tagsBn: apiMatch.tagsBn || ["১-অন-১ শিক্ষক", "পড়াশোনা"],
+        tagsEn: apiMatch.tagsEn || ["1-on-1 Tutor", "Study"],
+        introBn: apiMatch.introBn || apiMatch.excerptBn || "১-অন-১ ব্যক্তিগত শিক্ষক এর মাধ্যমে আপনার সন্তানের পড়ালেখার অগ্রগতি নিশ্চিত করুন।",
+        introEn: apiMatch.introEn || apiMatch.excerptEn || "Ensure your child's learning progress with 1-on-1 personalized tutoring.",
+        sectionsBn: apiMatch.sectionsBn || [
+          {
+            heading: "১-অন-১ শিক্ষাদানের বিশেষ সুবিধা",
+            subheading: "কেন একজন ডেডিকেটেড শিক্ষক প্রয়োজন?",
+            paragraphs: [
+              apiMatch.excerptBn || "১-অন-১ লাইভ ক্লাসে প্রতিটি শিক্ষার্থী তাদের নিজস্ব গতিতে শিখতে পারে এবং সকল জটিল প্রশ্নের সমাধান তাৎক্ষণিক পেয়ে থাকে।",
+              "আমাদের বুয়েট, ঢাবি ও মেডিকেলের শিক্ষকেরা প্রতিটি বিষয় ধরে ধরে ১-অন-১ সহজ ভাষায় বুঝিয়ে দেন।"
+            ],
+            callout: "অর্থ যেন কখনো কোনো শিক্ষার্থীর শিক্ষার পথে বাধা না হয়।"
+          }
+        ],
+        sectionsEn: apiMatch.sectionsEn || [
+          {
+            heading: "Benefits of 1-on-1 Tutoring",
+            subheading: "Why a dedicated tutor matters?",
+            paragraphs: [
+              apiMatch.excerptEn || "In 1-on-1 live sessions, students learn at their own pace and get instant solutions to complex doubts.",
+              "Tutors from BUET, DU & DMC break down difficult concepts step by step."
+            ],
+            callout: "Money should never be a restriction for education."
+          }
+        ],
+        keyTakeawaysBn: apiMatch.keyTakeawaysBn || [
+          "ব্যক্তিগত ১-অন-১ মনোযোগ",
+          "প্রথম ক্লাস সম্পূর্ণ ফ্রি",
+          "অনুকূল সময়সূচী বেছে নেওয়ার সুযোগ"
+        ],
+        keyTakeawaysEn: apiMatch.keyTakeawaysEn || [
+          "Personalized 1-on-1 attention",
+          "First session completely free",
+          "Flexible schedule selection"
+        ]
+      } as BlogPost;
+    }
+
+    // Default fallback to first static post if ID not matched
+    return BLOG_POSTS[0];
+  }, [foundId, apiPosts]);
 
   // Related posts (excluding current)
   const relatedPosts = useMemo(() => {
-    return BLOG_POSTS.filter((p) => p.id !== post.id).slice(0, 3);
-  }, [post.id]);
+    return BLOG_POSTS.filter((p) => p.id !== post.id && p.slug !== post.slug).slice(0, 3);
+  }, [post.id, post.slug]);
 
   const categoryLabel = useMemo(() => {
     const cat = BLOG_CATEGORIES.find((c) => c.id === post.category);
-    return lang === "bn" ? cat?.labelBn : cat?.labelEn;
+    return lang === "bn" ? cat?.labelBn || "নিবন্ধ" : cat?.labelEn || "Article";
   }, [post.category, lang]);
 
   const handleCopyLink = () => {
@@ -73,9 +159,10 @@ export default function SingleBlogPage() {
     return null;
   }
 
-  const sections = lang === "bn" ? post.sectionsBn : post.sectionsEn;
-  const intro = lang === "bn" ? post.introBn : post.introEn;
-  const keyTakeaways = lang === "bn" ? post.keyTakeawaysBn : post.keyTakeawaysEn;
+  const sections = (lang === "bn" ? post.sectionsBn : post.sectionsEn) || [];
+  const intro = (lang === "bn" ? post.introBn : post.introEn) || post.excerptBn || "";
+  const keyTakeaways = (lang === "bn" ? post.keyTakeawaysBn : post.keyTakeawaysEn) || [];
+  const tags = (lang === "bn" ? post.tagsBn : post.tagsEn) || [];
 
   return (
     <main suppressHydrationWarning className="min-h-screen bg-[#FBF7EF] font-sans text-[#12213D] flex flex-col">
@@ -85,12 +172,12 @@ export default function SingleBlogPage() {
         onOpenMentor={() => setMentorModalOpen(true)}
       />
 
-      {/* ===== BREADCRUMB & NAV ===== */}
+      {/* ===== BREADCRUMB NAVIGATION ===== */}
       <div className="bg-[#0D2C4A] text-white/80 py-3.5 border-b border-white/10">
         <div className="max-w-[1240px] mx-auto px-6 md:px-8 flex items-center justify-between text-xs sm:text-sm">
           <Link
             href="/blogs"
-            className="inline-flex items-center gap-2 text-[#00A896] hover:text-white font-extrabold transition-colors"
+            className="inline-flex items-center gap-2 text-[#00A896] hover:text-white font-extrabold transition-colors cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>{lang === "bn" ? "সকল নিবন্ধে ফিরে যান" : "Back to Articles"}</span>
@@ -146,19 +233,19 @@ export default function SingleBlogPage() {
           <div className="pt-6 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3.5">
               <img
-                src={post.author.avatar}
-                alt={lang === "bn" ? post.author.nameBn : post.author.nameEn}
+                src={post.author?.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"}
+                alt={lang === "bn" ? post.author?.nameBn : post.author?.nameEn}
                 loading="lazy"
                 decoding="async"
                 className="w-12 h-12 rounded-full object-cover border-2 border-[#00A896] shadow-md"
               />
               <div>
                 <strong className="block font-sans text-base font-extrabold text-white">
-                  {lang === "bn" ? post.author.nameBn : post.author.nameEn}
+                  {lang === "bn" ? post.author?.nameBn : post.author?.nameEn}
                 </strong>
                 <span className="text-xs text-[#38BDF8] font-mono block">
-                  {lang === "bn" ? post.author.roleBn : post.author.roleEn} ·{" "}
-                  {lang === "bn" ? post.author.institutionBn : post.author.institutionEn}
+                  {lang === "bn" ? post.author?.roleBn : post.author?.roleEn} ·{" "}
+                  {lang === "bn" ? post.author?.institutionBn : post.author?.institutionEn}
                 </span>
               </div>
             </div>
@@ -185,31 +272,35 @@ export default function SingleBlogPage() {
         </div>
       </header>
 
-      {/* ===== ARTICLE BODY & STRUCTURED SECTIONS ===== */}
+      {/* ===== STANDALONE ARTICLE BODY & STRUCTURED SECTIONS ===== */}
       <article className="py-12 md:py-16">
         <div className="max-w-[1240px] mx-auto px-6 md:px-8 space-y-10">
           
           {/* Main Hero Cover Image */}
-          <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-[#0D2C4A]/10 h-[300px] sm:h-[420px] md:h-[500px] w-full">
-            <img
-              src={post.image}
-              alt={lang === "bn" ? post.titleBn : post.titleEn}
-              loading="lazy"
-              decoding="async"
-              className="w-full h-full object-cover"
-            />
-          </div>
+          {post.image && (
+            <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-[#0D2C4A]/10 h-[300px] sm:h-[420px] md:h-[500px] w-full bg-slate-100">
+              <img
+                src={post.image}
+                alt={lang === "bn" ? post.titleBn : post.titleEn}
+                loading="lazy"
+                decoding="async"
+                className="w-full h-full object-cover"
+              />
+            </div>
+          )}
 
           {/* INTRO SUMMARY BOX */}
-          <div className="bg-gradient-to-r from-[#00A896]/10 via-[#00A896]/5 to-transparent border-l-4 border-[#00A896] p-6 sm:p-8 rounded-2xl space-y-3 shadow-sm">
-            <div className="flex items-center gap-2 text-[#00A896] font-mono font-bold text-xs uppercase tracking-wider">
-              <Sparkles className="w-4 h-4" />
-              <span>{lang === "bn" ? "মূল বক্তব্য / এক নজরে" : "Executive Summary"}</span>
+          {intro && (
+            <div className="bg-gradient-to-r from-[#00A896]/10 via-[#00A896]/5 to-transparent border-l-4 border-[#00A896] p-6 sm:p-8 rounded-2xl space-y-3 shadow-sm">
+              <div className="flex items-center gap-2 text-[#00A896] font-mono font-bold text-xs uppercase tracking-wider">
+                <Sparkles className="w-4 h-4" />
+                <span>{lang === "bn" ? "মূল বক্তব্য / এক নজরে" : "Executive Summary"}</span>
+              </div>
+              <p className="font-semibold text-[#0D2C4A] text-base sm:text-xl leading-relaxed">
+                {intro}
+              </p>
             </div>
-            <p className="font-semibold text-[#0D2C4A] text-base sm:text-xl leading-relaxed">
-              {intro}
-            </p>
-          </div>
+          )}
 
           {/* DETAILED SECTIONS */}
           <div className="bg-white rounded-3xl p-7 sm:p-12 md:p-14 shadow-[0_4px_30px_-4px_rgba(13,44,74,0.08)] border border-[#0D2C4A]/8 space-y-12 text-[#12213D] leading-relaxed">
@@ -325,20 +416,22 @@ export default function SingleBlogPage() {
             )}
 
             {/* TAGS */}
-            <div className="pt-6 border-t border-[#0D2C4A]/10 flex flex-wrap items-center gap-2">
-              <Tag className="w-4 h-4 text-[#00A896]" />
-              <span className="text-xs font-mono font-bold text-[#64748B] mr-2">
-                {lang === "bn" ? "ট্যাগসমূহ:" : "Tags:"}
-              </span>
-              {(lang === "bn" ? post.tagsBn : post.tagsEn).map((tag, tIdx) => (
-                <span
-                  key={tIdx}
-                  className="bg-[#F1F5F9] text-[#0D2C4A] text-xs font-bold px-3.5 py-1.5 rounded-full border border-[#0D2C4A]/10"
-                >
-                  #{tag}
+            {tags && tags.length > 0 && (
+              <div className="pt-6 border-t border-[#0D2C4A]/10 flex flex-wrap items-center gap-2">
+                <Tag className="w-4 h-4 text-[#00A896]" />
+                <span className="text-xs font-mono font-bold text-[#64748B] mr-2">
+                  {lang === "bn" ? "ট্যাগসমূহ:" : "Tags:"}
                 </span>
-              ))}
-            </div>
+                {tags.map((tag, tIdx) => (
+                  <span
+                    key={tIdx}
+                    className="bg-[#F1F5F9] text-[#0D2C4A] text-xs font-bold px-3.5 py-1.5 rounded-full border border-[#0D2C4A]/10"
+                  >
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </article>
@@ -352,7 +445,7 @@ export default function SingleBlogPage() {
             </h3>
             <Link
               href="/blogs"
-              className="text-[#00A896] hover:text-[#0D2C4A] font-bold text-sm flex items-center gap-1.5 transition-colors"
+              className="text-[#00A896] hover:text-[#0D2C4A] font-bold text-sm flex items-center gap-1.5 transition-colors cursor-pointer"
             >
               <span>{lang === "bn" ? "সবগুলো দেখুন" : "View All"}</span>
               <ChevronRight className="w-4 h-4" />
@@ -364,7 +457,7 @@ export default function SingleBlogPage() {
               <Link
                 key={relPost.id}
                 href={`/blogs/${relPost.id}`}
-                className="bg-white rounded-2xl overflow-hidden border border-[#0D2C4A]/10 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group"
+                className="bg-white rounded-2xl overflow-hidden border border-[#0D2C4A]/10 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group cursor-pointer"
               >
                 <div>
                   <div className="relative h-48 overflow-hidden bg-slate-100">
