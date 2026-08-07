@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 :root {
+  --font-app-sans: var(--font-hind-siliguri);
   --ink: #0D2C4A;         /* Primary Navy from Tahzib Institute */
   --ink-2: #16385C;       /* Secondary Navy */
   --teal: #008075;        /* Deep Teal */
@@ -12,6 +13,21 @@
   --paper-dim: #F8FAFC;   /* Slate-50 Light Background */
   --line: rgba(13, 44, 74, 0.1);
   --line-light: rgba(255, 255, 255, 0.18);
+}
+
+/* BANGLA MODE: Hind Siliguri Font */
+html,
+html[lang="bn"],
+html[data-lang="bn"],
+.lang-bn {
+  --font-app-sans: var(--font-hind-siliguri);
+}
+
+/* ENGLISH MODE: Roboto Font */
+html[lang="en"],
+html[data-lang="en"],
+.lang-en {
+  --font-app-sans: var(--font-roboto);
 }
 
 * {
@@ -25,7 +41,7 @@ html {
 }
 
 body {
-  font-family: var(--font-hind-siliguri), var(--font-work-sans), sans-serif;
+  font-family: var(--font-app-sans), var(--font-hind-siliguri), sans-serif;
   background: var(--paper-dim);
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
@@ -59,13 +75,104 @@ p:last-child {
   padding: 0 32px;
 }
 
-/* Perfect Standard Line Height for Headings with Ample Breathing Room */
+/* Compact Line Height for Headings in Bengali Typography */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-hind-siliguri), sans-serif;
+  font-family: var(--font-app-sans), var(--font-hind-siliguri), sans-serif;
   font-weight: 700;
   letter-spacing: -0.01em;
-  line-height: 1.65;
+  line-height: 1.35 !important;
   margin-bottom: 1rem;
+}
+
+.leading-bengali,
+.leading-heading {
+  line-height: 1.35 !important;
+}
+
+/* English Version Font: Roboto */
+html[lang="en"] body,
+html[data-lang="en"] body,
+html[lang="en"] .font-sans,
+html[data-lang="en"] .font-sans,
+html[lang="en"] h1,
+html[data-lang="en"] h1,
+html[lang="en"] h2,
+html[data-lang="en"] h2,
+html[lang="en"] h3,
+html[data-lang="en"] h3,
+html[lang="en"] h4,
+html[data-lang="en"] h4,
+html[lang="en"] h5,
+html[data-lang="en"] h5,
+html[lang="en"] h6,
+html[data-lang="en"] h6,
+html[lang="en"] button,
+html[data-lang="en"] button,
+html[lang="en"] input,
+html[data-lang="en"] input,
+html[lang="en"] a,
+html[data-lang="en"] a,
+html[lang="en"] p,
+html[data-lang="en"] p,
+html[lang="en"] span,
+html[data-lang="en"] span,
+.lang-en body,
+.lang-en .font-sans,
+.lang-en h1,
+.lang-en h2,
+.lang-en h3,
+.lang-en h4,
+.lang-en h5,
+.lang-en h6,
+.lang-en button,
+.lang-en input,
+.lang-en a,
+.lang-en p,
+.lang-en span {
+  font-family: var(--font-roboto), system-ui, -apple-system, sans-serif !important;
+}
+
+/* Bangla Version Font: Hind Siliguri */
+html[lang="bn"] body,
+html[data-lang="bn"] body,
+html[lang="bn"] .font-sans,
+html[data-lang="bn"] .font-sans,
+html[lang="bn"] h1,
+html[data-lang="bn"] h1,
+html[lang="bn"] h2,
+html[data-lang="bn"] h2,
+html[lang="bn"] h3,
+html[data-lang="bn"] h3,
+html[lang="bn"] h4,
+html[data-lang="bn"] h4,
+html[lang="bn"] h5,
+html[data-lang="bn"] h5,
+html[lang="bn"] h6,
+html[data-lang="bn"] h6,
+html[lang="bn"] button,
+html[data-lang="bn"] button,
+html[lang="bn"] input,
+html[data-lang="bn"] input,
+html[lang="bn"] a,
+html[data-lang="bn"] a,
+html[lang="bn"] p,
+html[data-lang="bn"] p,
+html[lang="bn"] span,
+html[data-lang="bn"] span,
+.lang-bn body,
+.lang-bn .font-sans,
+.lang-bn h1,
+.lang-bn h2,
+.lang-bn h3,
+.lang-bn h4,
+.lang-bn h5,
+.lang-bn h6,
+.lang-bn button,
+.lang-bn input,
+.lang-bn a,
+.lang-bn p,
+.lang-bn span {
+  font-family: var(--font-hind-siliguri), system-ui, sans-serif !important;
 }
 
 /* Infinite Smooth Slow Horizontal Marquee Animation */

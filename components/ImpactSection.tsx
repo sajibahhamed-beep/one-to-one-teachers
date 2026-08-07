@@ -25,10 +25,7 @@ export default function ImpactSection() {
     <section id="impact" className="py-20 md:py-28 bg-[#0D2C4A] text-[#F8FAFC] font-sans">
       <div className="max-w-[1240px] mx-auto px-6 md:px-8">
         <div className="text-center max-w-[720px] mx-auto mb-16 space-y-3">
-          <span className="eyebrow inline-flex items-center gap-2 font-mono text-xs tracking-widest text-[#38BDF8] uppercase mb-2 font-bold bg-white/10 px-3.5 py-1 rounded-full border border-white/15">
-            {t.impactEyebrow}
-          </span>
-          <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#FFFFFF] leading-[1.65] tracking-tight mb-4">
+          <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#FFFFFF] leading-[1.35] tracking-tight mb-4">
             {t.impactTitle}
           </h2>
           <p className="text-base sm:text-lg text-[#F8FAFC]/80 leading-relaxed font-normal pt-2">

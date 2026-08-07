@@ -34,10 +34,7 @@ export default function HowItWorks() {
     <section id="how" className="py-24 md:py-32 bg-[#0D2C4A] text-[#F8FAFC] font-sans">
       <div className="max-w-[1240px] mx-auto px-6 md:px-8">
         <div className="text-center max-w-[780px] mx-auto mb-20 space-y-4">
-          <span className="eyebrow inline-flex items-center gap-2 font-mono text-xs tracking-widest text-[#38BDF8] uppercase mb-3 font-bold bg-white/10 px-4 py-1.5 rounded-full border border-white/15">
-            {t.howEyebrow}
-          </span>
-          <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#FFFFFF] leading-[1.65] tracking-normal mb-4">
+          <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#FFFFFF] leading-[1.35] tracking-normal mb-4">
             {t.howTitle}
           </h2>
           <p className="text-base sm:text-lg text-[#F8FAFC]/85 leading-[1.85] font-normal pt-1">
@@ -57,6 +54,8 @@ export default function HowItWorks() {
                   <img
                     src={step.img}
                     alt={step.title}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out opacity-90 group-hover:opacity-100"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#16385C] via-[#16385C]/30 to-transparent" />

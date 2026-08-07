@@ -28,9 +28,10 @@ const config: Config = {
       },
       fontFamily: {
         serif: ["var(--font-fraunces)", "serif"],
-        sans: ["var(--font-hind-siliguri)", "var(--font-work-sans)", "sans-serif"],
+        sans: ["var(--font-app-sans)", "var(--font-hind-siliguri)", "sans-serif"],
         mono: ["var(--font-jetbrains-mono)", "monospace"],
         bengali: ["var(--font-hind-siliguri)", "sans-serif"],
+        roboto: ["var(--font-roboto)", "sans-serif"],
       },
     },
   },

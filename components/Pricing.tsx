@@ -2,24 +2,34 @@
 
 import { useState } from "react";
 import { useLanguage } from "../context/LanguageContext";
-import { Check, AlertCircle, Sparkles, ArrowRight } from "lucide-react";
+import { Check, AlertCircle, Calendar, Clock, Star } from "lucide-react";
 
 interface PricingProps {
-  onOpenEnroll: () => void;
+  onOpenEnroll: (planName?: string, fee?: number) => void;
 }
 
 export default function Pricing({ onOpenEnroll }: PricingProps) {
   const { lang } = useLanguage();
-  const [fee, setFee] = useState<number>(1500);
+
+  // Interactive selectors state
+  const [selectedDaysIndex, setSelectedDaysIndex] = useState<number>(2); // Default: 3 days
+  const [selectedDurationIndex, setSelectedDurationIndex] = useState<number>(2); // Default: 1 hour
+
+  const daysBn = ["১ দিন", "২ দিন", "৩ দিন", "৪ দিন", "৫ দিন", "৬ দিন", "৭ দিন"];
+  const daysEn = ["1 Day", "2 Days", "3 Days", "4 Days", "5 Days", "6 Days", "7 Days"];
+
+  const durationBn = ["৩০ মিনিট", "৪৫ মিনিট", "১ ঘণ্টা", "দেড় ঘণ্টা", "২ ঘণ্টা"];
+  const durationEn = ["30 Min", "45 Min", "1 Hour", "1.5 Hours", "2 Hours"];
+
+  const currentDaysList = lang === "bn" ? daysBn : daysEn;
+  const currentDurationList = lang === "bn" ? durationBn : durationEn;
 
   return (
     <section id="pricing" className="py-20 bg-[#F8FAFC]">
       <div className="max-w-[1240px] mx-auto px-6 md:px-8">
+        {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <span className="eyebrow inline-flex items-center gap-2 font-mono text-xs tracking-widest text-[#00A896] uppercase mb-3 font-bold bg-[#00A896]/10 px-4 py-1.5 rounded-full border border-[#00A896]/20">
-            {lang === "bn" ? "প্রাইসিং ও ফি প্যাকেজ" : "Pricing & Fee Packages"}
-          </span>
-          <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0D2C4A] leading-[1.65] mb-4">
+          <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0D2C4A] leading-[1.35] mb-4">
             {lang === "bn" ? "আপনার জন্য উপযুক্ত প্ল্যান বেছে নিন" : "Choose the Plan That Fits You"}
           </h2>
           <p className="text-base sm:text-lg text-[#475569] leading-relaxed max-w-xl mx-auto">
@@ -33,7 +43,7 @@ export default function Pricing({ onOpenEnroll }: PricingProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto items-stretch">
           
           {/* PACKAGE 1: FREE PACKAGE (Currently Unavailable) */}
-          <div className="bg-[#F1F5F9] border border-slate-300 rounded-3xl p-8 flex flex-col justify-between relative shadow-sm opacity-90">
+          <div className="bg-[#F1F5F9] border border-slate-300 rounded-[28px] p-6 sm:p-8 flex flex-col justify-between relative shadow-sm opacity-90">
             <div>
               {/* Badge */}
               <div className="flex items-center justify-between gap-2 mb-6">
@@ -94,105 +104,163 @@ export default function Pricing({ onOpenEnroll }: PricingProps) {
             {/* Disabled Button */}
             <button
               disabled
-              className="w-full py-4 rounded-full bg-slate-300 text-slate-600 font-extrabold text-sm cursor-not-allowed flex items-center justify-center gap-2 border border-slate-400/40"
+              className="w-full py-4 rounded-2xl bg-slate-300 text-slate-600 font-extrabold text-sm cursor-not-allowed flex items-center justify-center gap-2 border border-slate-400/40"
             >
               <span>{lang === "bn" ? "currently unavailable now" : "currently unavailable now"}</span>
             </button>
           </div>
 
-          {/* PACKAGE 2: CURRENT SLIDING SCALE PACKAGE (Subject Wise Teacher Feature) */}
-          <div className="bg-white border-2 border-[#00A896] rounded-3xl p-8 flex flex-col justify-between relative shadow-xl">
-            {/* Top Popular Ribbon */}
-            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#00A896] text-white px-4 py-1 rounded-full text-xs font-extrabold uppercase font-mono tracking-wider shadow-md flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-white" />
-              <span>{lang === "bn" ? "জনপ্রিয় প্ল্যান" : "Most Popular"}</span>
-            </div>
-
+          {/* PACKAGE 2: ACTIVE CUSTOM PREMIUM PACKAGE */}
+          <div className="bg-white border-2 border-[#EAB308] rounded-[28px] p-6 sm:p-8 flex flex-col justify-between relative shadow-xl hover:shadow-2xl transition-all duration-300">
             <div>
-              {/* Badge */}
-              <div className="flex items-center justify-between gap-2 mb-6 pt-2">
-                <span className="font-mono text-xs uppercase font-extrabold text-[#00A896] bg-[#00A896]/10 px-3.5 py-1 rounded-full border border-[#00A896]/20">
-                  {lang === "bn" ? "সাধ্যমত ফি প্ল্যান" : "Sliding Scale Plan"}
-                </span>
-                <span className="text-xs text-[#00A896] font-mono font-bold">
-                  {lang === "bn" ? "ইনস্ট্যান্ট টিচার ম্যাচিং" : "Instant Teacher Matching"}
+              {/* Top Premium Badge */}
+              <div className="flex items-center justify-between gap-2 mb-4">
+                <span className="inline-flex items-center gap-1.5 font-bold text-xs sm:text-sm text-[#92400E] bg-[#FEF3C7] px-4 py-1.5 rounded-full border border-[#FDE68A]">
+                  <Star className="w-3.5 h-3.5 fill-[#F59E0B] text-[#F59E0B]" />
+                  <span>{lang === "bn" ? "প্রিমিয়াম" : "Premium"}</span>
                 </span>
               </div>
 
-              <h3 className="font-sans text-2xl font-extrabold text-[#0D2C4A] mb-2">
-                {lang === "bn" ? "স্ট্যান্ডার্ড ১-অন-১ টিচার প্যাকেজ" : "Standard 1-on-1 Teacher Package"}
+              {/* Title */}
+              <h3 className="font-sans text-2xl sm:text-3xl font-extrabold text-[#0D2C4A] mb-4">
+                {lang === "bn" ? "কাস্টম প্রিমিয়াম প্যাকেজ" : "Custom Premium Package"}
               </h3>
-              <p className="text-xs sm:text-sm text-[#475569] mb-6 leading-relaxed">
-                {lang === "bn"
-                  ? "আপনার পরিবারের সাধ্য অনুযায়ী ফি নির্ধারণ করুন (প্রতি ধাপে ৫০ টাকা পরিবর্তন, সর্বোচ্চ ৳১০,০০০)।"
-                  : "Set fee according to family budget (৳50 step distance, maximum limit ৳10,000)."}
-              </p>
 
-              {/* Dynamic Price Display */}
-              <div className="bg-[#E6F4F3] rounded-2xl p-4 text-center mb-6 border border-[#00A896]/20">
-                <div className="text-4xl sm:text-5xl font-extrabold text-[#0D2C4A]">
-                  ৳{fee.toLocaleString()}{" "}
-                  <span className="text-xs font-normal text-[#64748B] font-sans">
-                    /{lang === "bn" ? "মাস" : "month"}
+              {/* Highlighted Yellow Pricing Box */}
+              <div className="bg-[#FEFCE8] rounded-2xl p-4 text-center mb-6 border border-[#FDE68A] shadow-sm">
+                <div className="flex items-center justify-center gap-2 text-[#92400E] font-extrabold text-sm sm:text-base mb-1">
+                  <Star className="w-4 h-4 fill-[#F59E0B] text-[#F59E0B] flex-shrink-0" />
+                  <span>
+                    {lang === "bn"
+                      ? "আপনার পছন্দ অনুযায়ী মূল্য নির্ধারণ করা হবে"
+                      : "Pricing will be tailored according to your choice"}
                   </span>
                 </div>
-                <p className="text-xs text-[#00A896] font-mono font-bold mt-1">
-                  {lang === "bn" ? "আপনার ফি পরিবর্তন করুন (৫০ টাকা প্রতি স্টেপ, সর্বোচ্চ ৳১০,০০০)" : "Change fee (৳50 per step, max ৳10,000)"}
+                <p className="text-xs sm:text-sm text-[#B45309] font-medium italic">
+                  {lang === "bn"
+                    ? "“অর্থ যেন কোনো শিক্ষার্থীর শিক্ষার পথে বাধা না হয়”"
+                    : "“Money should never be a restriction for any student's education”"}
                 </p>
               </div>
 
-              {/* Interactive Fee Slider (Max 10,000, Step 50 Taka) */}
-              <div className="space-y-3 mb-8 bg-[#F8FAFC] p-4 rounded-2xl border border-[#0D2C4A]/10">
-                <div className="flex justify-between items-center text-xs font-mono font-bold text-[#0D2C4A]">
-                  <span>{lang === "bn" ? "ফি সিলেক্টর (৫০ টাকা ধাপে):" : "Fee Selector (৳50 step):"}</span>
-                  <span className="text-[#00A896]">৳{fee.toLocaleString()} / {lang === "bn" ? "মাস" : "mo"}</span>
+              {/* Day Selector Section */}
+              <div className="mb-6 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-[#0D2C4A]">
+                    <Calendar className="w-4 h-4 text-[#D97706]" />
+                    <span>{lang === "bn" ? "সাপ্তাহিক ক্লাস সংখ্যা বেছে নিন" : "Select Days Per Week"}</span>
+                  </div>
+                  <span className="text-xs font-bold text-[#92400E] bg-[#FEF3C7] px-3 py-1 rounded-full border border-[#FDE68A]">
+                    {currentDaysList[selectedDaysIndex]}
+                  </span>
                 </div>
-                <input
-                  type="range"
-                  min="50"
-                  max="10000"
-                  step="50"
-                  value={fee}
-                  onChange={(e) => setFee(Number(e.target.value))}
-                  className="w-full h-3 bg-[#0D2C4A]/10 rounded-lg appearance-none cursor-pointer accent-[#00A896]"
-                />
-                <div className="flex justify-between text-[11px] font-mono text-[#64748B]">
-                  <span>৳৫০ ({lang === "bn" ? "সর্বনিম্ন" : "Min"})</span>
-                  <span>৳৫,০০০ ({lang === "bn" ? "গড়" : "Avg"})</span>
-                  <span>৳১০,০০০ ({lang === "bn" ? "সর্বোচ্চ" : "Max Limit"})</span>
+
+                <div className="flex flex-wrap gap-2">
+                  {currentDaysList.map((day, idx) => {
+                    const isSelected = idx === selectedDaysIndex;
+                    return (
+                      <button
+                        key={day}
+                        type="button"
+                        onClick={() => setSelectedDaysIndex(idx)}
+                        className={`px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
+                          isSelected
+                            ? "bg-[#FEF3C7] text-[#92400E] border-2 border-[#F59E0B] font-extrabold shadow-sm scale-105"
+                            : "bg-[#F8FAFC] text-[#475569] hover:bg-slate-100 border border-slate-200"
+                        }`}
+                      >
+                        {day}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
-              {/* Features List with "Subject Wise Teacher" */}
+              {/* Class Duration Selector Section */}
+              <div className="mb-6 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-xs sm:text-sm font-bold text-[#0D2C4A]">
+                    <Clock className="w-4 h-4 text-[#D97706]" />
+                    <span>{lang === "bn" ? "ক্লাসের সময়কাল" : "Class Duration"}</span>
+                  </div>
+                  <span className="text-xs font-bold text-[#92400E] bg-[#FEF3C7] px-3 py-1 rounded-full border border-[#FDE68A]">
+                    {currentDurationList[selectedDurationIndex]}
+                  </span>
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  {currentDurationList.map((dur, idx) => {
+                    const isSelected = idx === selectedDurationIndex;
+                    return (
+                      <button
+                        key={dur}
+                        type="button"
+                        onClick={() => setSelectedDurationIndex(idx)}
+                        className={`px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
+                          isSelected
+                            ? "bg-[#FEF3C7] text-[#92400E] border-2 border-[#F59E0B] font-extrabold shadow-sm scale-105"
+                            : "bg-[#F8FAFC] text-[#475569] hover:bg-slate-100 border border-slate-200"
+                        }`}
+                      >
+                        {dur}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Divider */}
+              <hr className="border-slate-100 my-6" />
+
+              {/* Features List */}
               <div className="space-y-3 mb-8 text-xs sm:text-sm text-[#0D2C4A] font-medium">
                 <div className="flex items-center gap-2.5">
-                  <Check className="w-4 h-4 text-[#00A896] flex-shrink-0" />
-                  <span className="font-extrabold text-[#00A896]">
-                    {lang === "bn" ? "বিষয়ভিত্তিক ১-অন-১ শিক্ষক (Subject Wise Teacher)" : "Subject Wise 1-on-1 Teacher (BUET/DU/Medical)"}
+                  <Check className="w-4.5 h-4.5 text-[#D97706] flex-shrink-0 stroke-[2.5]" />
+                  <span>
+                    {lang === "bn" ? "ব্যক্তিগত (One-to-One) অনলাইন শিক্ষা" : "100% Online Personalized (One-to-One) Education"}
                   </span>
                 </div>
                 <div className="flex items-center gap-2.5">
-                  <Check className="w-4 h-4 text-[#00A896] flex-shrink-0" />
-                  <span>{lang === "bn" ? "সপ্তাহে ২-৪ দিন ১-অন-১ লাইভ ক্লাস" : "2-4 Live 1-on-1 Classes Per Week"}</span>
+                  <Check className="w-4.5 h-4.5 text-[#D97706] flex-shrink-0 stroke-[2.5]" />
+                  <span>
+                    {lang === "bn" ? "অগ্রাধিকারভিত্তিক অনলাইন সময় নির্বাচন" : "Priority Live Schedule Selection"}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2.5">
-                  <Check className="w-4 h-4 text-[#00A896] flex-shrink-0" />
-                  <span>{lang === "bn" ? "অভিভাবকদের নিয়মিত অগ্রগতি আপডেট" : "Regular Progress Updates to Parents"}</span>
+                  <Check className="w-4.5 h-4.5 text-[#D97706] flex-shrink-0 stroke-[2.5]" />
+                  <span>
+                    {lang === "bn" ? "ঘরে বসেই ১-অন-১ লাইভ সেশন" : "Flexible Online Sessions from Home"}
+                  </span>
                 </div>
-                <div className="flex items-center gap-2.5">
-                  <Check className="w-4 h-4 text-[#00A896] flex-shrink-0" />
-                  <span>{lang === "bn" ? "২জি স্লো নেটেও অডিও টিচিং মোড" : "Low Bandwidth Audio-Only Mode Included"}</span>
+                <div className="flex items-center gap-2.5 text-[#92400E] font-semibold bg-[#FEF3C7]/60 p-2 rounded-xl border border-[#FDE68A]/60">
+                  <Check className="w-4.5 h-4.5 text-[#D97706] flex-shrink-0 stroke-[2.5]" />
+                  <span>
+                    {lang === "bn"
+                      ? "অর্থ যেন কোনো শিক্ষার্থীর শিক্ষার পথে বাধা না হয়"
+                      : "Money should never be a restriction for any student"}
+                  </span>
                 </div>
               </div>
             </div>
 
             {/* Active CTA Button */}
             <button
-              onClick={onOpenEnroll}
-              className="w-full py-4 rounded-full bg-[#00A896] text-white font-extrabold text-sm hover:bg-[#008075] shadow-lg shadow-[#00A896]/30 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 cursor-pointer"
+              onClick={() => {
+                fetch("/api/pricing-requests", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    planName: "Pay-what-you-can",
+                    monthlyFee: 600,
+                    duration: currentDurationList[selectedDurationIndex],
+                    medium: currentDaysList[selectedDaysIndex],
+                  }),
+                }).catch(() => {});
+                onOpenEnroll("Pay-what-you-can", 600);
+              }}
+              className="w-full py-4 rounded-2xl bg-[#C05621] hover:bg-[#9C4221] text-white font-extrabold text-base sm:text-lg shadow-lg shadow-[#C05621]/25 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
-              <span>{lang === "bn" ? "আমার শিক্ষক স্পেসিফাই করুন" : "Specify My Teacher"}</span>
-              <ArrowRight className="w-4.5 h-4.5 text-white" />
+              <span>{lang === "bn" ? "এখনই ভর্তি হন" : "Enroll Now"}</span>
             </button>
           </div>
 
@@ -201,3 +269,4 @@ export default function Pricing({ onOpenEnroll }: PricingProps) {
     </section>
   );
 }
+

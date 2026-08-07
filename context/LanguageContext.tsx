@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { translations, Language } from "@/lib/translations";
 
 interface LanguageContextType {
@@ -14,6 +14,25 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [lang, setLangState] = useState<Language>("bn"); // DEFAULT LANGUAGE IS BANGLA
+
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      document.documentElement.setAttribute("lang", lang);
+      document.documentElement.setAttribute("data-lang", lang);
+      document.body.setAttribute("data-lang", lang);
+      if (lang === "en") {
+        document.documentElement.classList.add("lang-en");
+        document.documentElement.classList.remove("lang-bn");
+        document.body.classList.add("lang-en");
+        document.body.classList.remove("lang-bn");
+      } else {
+        document.documentElement.classList.add("lang-bn");
+        document.documentElement.classList.remove("lang-en");
+        document.body.classList.add("lang-bn");
+        document.body.classList.remove("lang-en");
+      }
+    }
+  }, [lang]);
 
   const setLang = (newLang: Language) => {
     setLangState(newLang);

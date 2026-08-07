@@ -1,28 +1,24 @@
 import type { Metadata, Viewport } from "next";
-import { Hind_Siliguri, Fraunces, Work_Sans, JetBrains_Mono } from "next/font/google";
+import { Hind_Siliguri, Roboto, JetBrains_Mono } from "next/font/google";
 import { LanguageProvider } from "@/context/LanguageContext";
+import WhatsAppButton from "@/components/WhatsAppButton";
 import "./globals.css";
 
+// ─── Fonts — only load what we actually use ─────────────────────────────────
 const hindSiliguri = Hind_Siliguri({
   subsets: ["bengali", "latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700"],   // dropped unused 300
   variable: "--font-hind-siliguri",
   display: "swap",
+  preload: true,
 });
 
-const fraunces = Fraunces({
+const roboto = Roboto({
   subsets: ["latin"],
-  weight: ["300", "500", "600", "700"],
-  style: ["normal", "italic"],
-  variable: "--font-fraunces",
+  weight: ["400", "500", "700"],          // dropped unused 300 & 900
+  variable: "--font-roboto",
   display: "swap",
-});
-
-const workSans = Work_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-work-sans",
-  display: "swap",
+  preload: false,                          // only preload primary (Bangla) font
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -30,37 +26,59 @@ const jetbrainsMono = JetBrains_Mono({
   weight: ["400", "500"],
   variable: "--font-jetbrains-mono",
   display: "swap",
+  preload: false,
 });
 
+// ─── SEO Metadata ────────────────────────────────────────────────────────────
 export const metadata: Metadata = {
-  title: "আলো শিক্ষা — ১-অন-১ অনলাইন মেন্টর প্রদানকারী প্ল্যাটফর্ম | Alo Shikkha",
+  title: {
+    default: "ototeacher — ১-অন-১ অনলাইন শিক্ষক | One-to-One Teacher for All",
+    template: "%s | ototeacher",
+  },
   description:
-    "আলো শিক্ষা হলো বাংলাদেশের প্রথম ১-অন-১ ডেডিকেটেড মেন্টর প্রদানকারী প্ল্যাটফর্ম। নিম্ন আয়ের পরিবারের শিক্ষার্থীদের জন্য বুয়েট, ঢাবি ও মেডিকেল শিক্ষার্থীদের ব্যক্তিগত মেন্টরশিপ।",
+    "বাংলাদেশের ১-অন-১ অনলাইন শিক্ষক প্ল্যাটফর্ম। বুয়েট, ঢাবি ও মেডিকেলের যাচাইকৃত শিক্ষকদের সাথে সরাসরি লাইভ ক্লাস — ঘরে বসে। প্রথম ক্লাস বিনামূল্যে।",
   keywords: [
-    "Alo Shikkha",
-    "আলো শিক্ষা",
-    "১-অন-১ মেন্টর",
-    "Bangladesh Mentor Provider",
-    "Private Tutor Bangladesh",
-    "SSC Math Mentor",
-    "HSC Science Mentor",
-    "Spoken English Mentor",
+    "online teacher Bangladesh",
+    "১-অন-১ শিক্ষক",
+    "ototeacher",
+    "alo shikkha",
+    "private tutor Bangladesh",
+    "online tutor Bangla",
+    "SSC HSC math teacher",
+    "buet teacher online",
+    "1 on 1 online class Bangladesh",
+    "গৃহশিক্ষক অনলাইন",
   ],
-  authors: [{ name: "Alo Shikkha Initiative" }],
+  authors: [{ name: "ototeacher — One-to-One Teacher for All" }],
+  metadataBase: new URL("https://ototeacher.com"),
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
-    title: "আলো শিক্ষা — ১-অন-১ ডেডিকেটেড অনলাইন মেন্টরশিপ",
+    title: "ototeacher — ১-অন-১ অনলাইন শিক্ষক প্ল্যাটফর্ম",
     description:
-      "প্রতিটি শিক্ষার্থীর জন্য একজন ব্যক্তিগত অনলাইন মেন্টর — কোনো কোর্স বিক্রি নয়, ১০০% মেন্টরশিপ।",
+      "প্রতিটি শিক্ষার্থীর জন্য একজন ডেডিকেটেড অনলাইন শিক্ষক। প্রথম ক্লাস বিনামূল্যে।",
     type: "website",
     locale: "bn_BD",
-    siteName: "Alo Shikkha",
+    siteName: "ototeacher",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ototeacher — ১-অন-১ অনলাইন শিক্ষক",
+    description: "বাংলাদেশ জুড়ে ১-অন-১ লাইভ অনলাইন ক্লাস। প্রথম ক্লাস ফ্রি।",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large" },
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#12213D",
+  themeColor: "#0D2C4A",
   width: "device-width",
   initialScale: 1,
+  maximumScale: 5,
 };
 
 export default function RootLayout({
@@ -70,10 +88,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="bn" className="scroll-smooth">
+      <head>
+        {/* DNS prefetch & preconnect for external image CDNs */}
+        <link rel="preconnect" href="https://images.unsplash.com" />
+        <link rel="dns-prefetch" href="https://images.unsplash.com" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      </head>
       <body
-        className={`${hindSiliguri.variable} ${fraunces.variable} ${workSans.variable} ${jetbrainsMono.variable} antialiased bg-[#FBF7EF] text-[#12213D]`}
+        className={`${hindSiliguri.variable} ${roboto.variable} ${jetbrainsMono.variable} antialiased bg-[#FBF7EF] text-[#12213D]`}
       >
-        <LanguageProvider>{children}</LanguageProvider>
+        <LanguageProvider>
+          {children}
+          <WhatsAppButton />
+        </LanguageProvider>
       </body>
     </html>
   );

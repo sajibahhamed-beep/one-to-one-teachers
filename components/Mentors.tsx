@@ -3,7 +3,11 @@
 import { useLanguage } from "../context/LanguageContext";
 import { Quote, CheckCircle2, Award } from "lucide-react";
 
-export default function Mentors() {
+interface MentorsProps {
+  onOpenEnroll?: () => void;
+}
+
+export default function Mentors({ onOpenEnroll }: MentorsProps) {
   const { t, lang } = useLanguage();
 
   const mentors = [
@@ -74,6 +78,7 @@ export default function Mentors() {
           {mentors.map((m, i) => (
             <div
               key={i}
+              onClick={() => onOpenEnroll?.()}
               className="bg-white border border-[#0D2C4A]/12 rounded-3xl p-7 shadow-[0_4px_20px_-4px_rgba(13,44,74,0.06)] hover:shadow-[0_20px_40px_-10px_rgba(13,44,74,0.14)] hover:-translate-y-1.5 transition-all duration-300 flex items-center gap-5 group cursor-pointer"
             >
               <div className="relative flex-shrink-0">

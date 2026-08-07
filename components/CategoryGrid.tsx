@@ -59,10 +59,7 @@ export default function CategoryGrid({ onOpenEnroll }: CategoryGridProps) {
     <section className="py-14 md:py-18 bg-[#F8FAFC] border-y border-[#0D2C4A]/10 font-sans">
       <div className="max-w-[1240px] mx-auto px-6 md:px-8">
         <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
-          <span className="eyebrow inline-flex items-center gap-2 font-mono text-xs tracking-widest text-[#00A896] uppercase mb-3 font-bold bg-[#00A896]/10 px-4 py-1.5 rounded-full border border-[#00A896]/20">
-            {t.catHeaderTitle}
-          </span>
-          <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0D2C4A] leading-[1.65] tracking-tight mb-4">
+          <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0D2C4A] leading-[1.35] tracking-tight mb-4">
             {t.catHeaderDesc}
           </h2>
         </div>
@@ -74,7 +71,7 @@ export default function CategoryGrid({ onOpenEnroll }: CategoryGridProps) {
             return (
               <div
                 key={idx}
-                onClick={onOpenEnroll}
+                onClick={() => onOpenEnroll?.()}
                 className="bg-white border border-[#0D2C4A]/12 rounded-3xl overflow-hidden shadow-[0_4px_20px_-4px_rgba(13,44,74,0.06)] hover:shadow-[0_20px_40px_-10px_rgba(13,44,74,0.15)] hover:-translate-y-1.5 transition-all duration-300 cursor-pointer group flex flex-col justify-between"
               >
                 {/* Image Header with Gradient & Floating Glass Pill Badge */}
@@ -82,12 +79,14 @@ export default function CategoryGrid({ onOpenEnroll }: CategoryGridProps) {
                   <img
                     src={cat.img}
                     alt={cat.title}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0D2C4A]/80 via-[#0D2C4A]/20 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0D2C4A]/80 via-[#0D2C4A]/20 to-transparent pointer-events-none" />
                   
                   {/* Floating Glassmorphism Badge */}
-                  <span className="absolute top-4 left-4 bg-[#0D2C4A]/80 backdrop-blur-md text-white px-3.5 py-1 rounded-full text-xs font-mono font-bold tracking-wide shadow-md border border-white/20">
+                  <span className="absolute top-4 left-4 bg-[#0D2C4A]/80 backdrop-blur-md text-white px-3.5 py-1 rounded-full text-xs font-mono font-bold tracking-wide shadow-md border border-white/20 pointer-events-none">
                     {cat.badge}
                   </span>
 
@@ -100,16 +99,7 @@ export default function CategoryGrid({ onOpenEnroll }: CategoryGridProps) {
                 {/* Card Content with Generous Padding & Smooth Line Height */}
                 <div className="p-6 sm:p-7 flex-grow flex flex-col justify-between space-y-4">
                   <div className="space-y-2.5">
-                    <div className="flex items-center gap-2 text-[#00A896]">
-                      <div className="p-1.5 rounded-lg bg-[#00A896]/10 text-[#00A896]">
-                        <IconComp className="w-4 h-4" />
-                      </div>
-                      <span className="font-mono text-xs font-bold uppercase tracking-wider">
-                        {lang === "bn" ? "১-অন-১ টিচিং" : "1-on-1 Teaching"}
-                      </span>
-                    </div>
-
-                    <h3 className="font-sans text-xl font-extrabold text-[#0D2C4A] leading-snug tracking-tight group-hover:text-[#00A896] transition-colors">
+                    <h3 className="font-sans text-xl font-extrabold text-[#0D2C4A] leading-[1.35] tracking-tight group-hover:text-[#00A896] transition-colors">
                       {cat.title}
                     </h3>
 

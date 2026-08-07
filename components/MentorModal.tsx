@@ -32,8 +32,14 @@ export default function MentorModal({ isOpen, onClose }: MentorModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#12213D]/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-[#FBF7EF] rounded-3xl max-w-xl w-full p-6 sm:p-8 relative shadow-2xl border border-[#12213D]/10 my-8 animate-in zoom-in-95 duration-200">
+    <div
+      onClick={resetForm}
+      className="fixed inset-0 z-[9999] bg-[#12213D]/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto cursor-pointer"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="bg-[#FBF7EF] rounded-3xl max-w-xl w-full p-6 sm:p-8 relative shadow-2xl border border-[#12213D]/10 my-8 animate-in zoom-in-95 duration-200 cursor-default"
+      >
         <button
           onClick={resetForm}
           className="absolute top-5 right-5 p-2 rounded-full hover:bg-[#12213D]/10 text-[#12213D] transition-colors"

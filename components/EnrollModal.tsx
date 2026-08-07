@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLanguage } from "../context/LanguageContext";
 import { X, CheckCircle2, ArrowRight, ArrowLeft, Sparkles, UserCheck } from "lucide-react";
 
@@ -26,9 +26,18 @@ export default function EnrollModal({
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>(["Mathematics"]);
   const [preferredTime, setPreferredTime] = useState("7:00 PM Evening");
   const [medium, setMedium] = useState("Bangla Medium");
-  const [selectedPlan] = useState(initialPlan);
-  const [fee] = useState(initialFee);
+  const [selectedPlan, setSelectedPlan] = useState(initialPlan);
+  const [fee, setFee] = useState(initialFee);
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setStep(1);
+      setIsSubmitted(false);
+      setSelectedPlan(initialPlan);
+      setFee(initialFee);
+    }
+  }, [isOpen, initialPlan, initialFee]);
 
   if (!isOpen) return null;
 
@@ -42,8 +51,27 @@ export default function EnrollModal({
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    try {
+      await fetch("/api/enrollments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          studentName,
+          phone,
+          grade,
+          district,
+          selectedSubjects,
+          preferredTime,
+          medium,
+          selectedPlan,
+          fee,
+        }),
+      });
+    } catch (err) {
+      console.error("Enrollment POST error", err);
+    }
     setIsSubmitted(true);
   };
 
@@ -54,8 +82,14 @@ export default function EnrollModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#0D2C4A]/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto font-sans">
-      <div className="bg-[#FFFFFF] rounded-3xl max-w-xl w-full p-6 sm:p-8 relative shadow-2xl border border-[#0D2C4A]/10 my-8 animate-in zoom-in-95 duration-200">
+    <div
+      onClick={resetForm}
+      className="fixed inset-0 z-[9999] bg-[#0D2C4A]/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto font-sans cursor-pointer"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="bg-[#FFFFFF] rounded-3xl max-w-xl w-full p-6 sm:p-8 relative shadow-2xl border border-[#0D2C4A]/10 my-8 animate-in zoom-in-95 duration-200 cursor-default"
+      >
         <button
           onClick={resetForm}
           className="absolute top-5 right-5 p-2 rounded-full hover:bg-[#0D2C4A]/10 text-[#0D2C4A] transition-colors"

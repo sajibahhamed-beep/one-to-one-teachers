@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Link from "next/link";
 import { useLanguage } from "../context/LanguageContext";
 import { Send, CheckCircle, Heart, MapPin, Phone, Mail, ChevronRight } from "lucide-react";
 
@@ -8,6 +9,26 @@ export default function Footer() {
   const { t, lang } = useLanguage();
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
+  const [settings, setSettings] = useState({
+    facebookUrl: "https://facebook.com",
+    instagramUrl: "https://instagram.com",
+    youtubeUrl: "https://youtube.com",
+    phone: "01775551325",
+    email: "support@aloshikkha.org",
+    addressBn: "ধানমণ্ডি, ঢাকা, বাংলাদেশ",
+    addressEn: "Dhanmondi, Dhaka, Bangladesh",
+  });
+
+  useEffect(() => {
+    fetch("/api/settings")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.facebookUrl) {
+          setSettings(data);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,55 +89,61 @@ export default function Footer() {
             </h5>
             <ul className="space-y-3 text-sm">
               <li>
-                <a href="#subjects" className="hover:text-[#00A896] transition-colors flex items-center gap-2">
+                <Link href="/subjects" className="hover:text-[#00A896] transition-colors flex items-center gap-2">
                   <ChevronRight className="w-4 h-4 text-[#00A896]" />
                   <span>{t.navSubjects}</span>
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#pricing" className="hover:text-[#00A896] transition-colors flex items-center gap-2">
+                <Link href="/blogs" className="hover:text-[#00A896] transition-colors flex items-center gap-2">
+                  <ChevronRight className="w-4 h-4 text-[#00A896]" />
+                  <span>{t.navBlogs || "ব্লগ ও গাইডলাইন"}</span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/#pricing" className="hover:text-[#00A896] transition-colors flex items-center gap-2">
                   <ChevronRight className="w-4 h-4 text-[#00A896]" />
                   <span>{t.navPricing}</span>
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#testimonials" className="hover:text-[#00A896] transition-colors flex items-center gap-2">
+                <Link href="/#testimonials" className="hover:text-[#00A896] transition-colors flex items-center gap-2">
                   <ChevronRight className="w-4 h-4 text-[#00A896]" />
                   <span>{t.navTestimonials}</span>
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#how" className="hover:text-[#00A896] transition-colors flex items-center gap-2">
+                <Link href="/subjects#how" className="hover:text-[#00A896] transition-colors flex items-center gap-2">
                   <ChevronRight className="w-4 h-4 text-[#00A896]" />
                   <span>{t.navHow}</span>
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
 
           {/* Col 2: About Us */}
           <div>
-            <h5 className="font-sans text-lg font-bold text-[#FFFFFF] mb-5 pb-2 border-b border-white/10">
+            <Link href="/about" className="font-sans text-lg font-bold text-[#FFFFFF] mb-5 pb-2 border-b border-white/10 hover:text-[#00A896] transition-colors block">
               {lang === "bn" ? "আমাদের সম্পর্কে" : "About Us"}
-            </h5>
+            </Link>
             <ul className="space-y-3 text-sm">
               <li>
-                <a href="#mentors" className="hover:text-[#00A896] transition-colors flex items-center gap-2">
+                <Link href="/become-teacher" className="hover:text-[#00A896] transition-colors flex items-center gap-2">
                   <ChevronRight className="w-4 h-4 text-[#00A896]" />
                   <span>{t.btnBecomeMentor}</span>
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#batches" className="hover:text-[#00A896] transition-colors flex items-center gap-2">
+                <Link href="/#batches" className="hover:text-[#00A896] transition-colors flex items-center gap-2">
                   <ChevronRight className="w-4 h-4 text-[#00A896]" />
                   <span>{t.navBatches}</span>
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#impact" className="hover:text-[#00A896] transition-colors flex items-center gap-2">
+                <Link href="/about" className="hover:text-[#00A896] transition-colors flex items-center gap-2">
                   <ChevronRight className="w-4 h-4 text-[#00A896]" />
                   <span>{t.navImpact}</span>
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -128,49 +155,96 @@ export default function Footer() {
             </h5>
             <ul className="space-y-3 text-sm">
               <li>
-                <a href="#" className="hover:text-[#00A896] transition-colors flex items-center gap-2">
+                <Link href="/refund-policy" className="hover:text-[#00A896] transition-colors flex items-center gap-2">
                   <ChevronRight className="w-4 h-4 text-[#00A896]" />
                   <span>{lang === "bn" ? "রিফান্ড পলিসি" : "Refund Policy"}</span>
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-[#00A896] transition-colors flex items-center gap-2">
+                <Link href="/terms" className="hover:text-[#00A896] transition-colors flex items-center gap-2">
                   <ChevronRight className="w-4 h-4 text-[#00A896]" />
                   <span>{lang === "bn" ? "টার্মস অ্যান্ড কন্ডিশনস" : "Terms & Conditions"}</span>
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-[#00A896] transition-colors flex items-center gap-2">
+                <Link href="/privacy" className="hover:text-[#00A896] transition-colors flex items-center gap-2">
                   <ChevronRight className="w-4 h-4 text-[#00A896]" />
                   <span>{lang === "bn" ? "গোপনীয় নীতি" : "Privacy Policy"}</span>
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
 
           {/* Col 4: Contact Us */}
           <div>
-            <h5 className="font-sans text-lg font-bold text-[#FFFFFF] mb-5 pb-2 border-b border-white/10">
+            <Link href="/contact" className="font-sans text-lg font-bold text-[#FFFFFF] mb-5 pb-2 border-b border-white/10 hover:text-[#00A896] transition-colors block">
               {t.navContact}
-            </h5>
+            </Link>
             <ul className="space-y-3.5 text-sm">
               <li className="flex items-center gap-2.5 text-[#F8FAFC]/90">
                 <Mail className="w-4.5 h-4.5 text-[#00A896] flex-shrink-0" />
-                <a href="mailto:support@aloshikkha.org" className="hover:text-[#00A896] transition-colors">
-                  support@aloshikkha.org
+                <a href={`mailto:${settings.email}`} className="hover:text-[#00A896] transition-colors">
+                  {settings.email}
                 </a>
               </li>
               <li className="flex items-center gap-2.5 text-[#F8FAFC]/90">
                 <Phone className="w-4.5 h-4.5 text-[#00A896] flex-shrink-0" />
-                <a href="tel:09610883388" className="hover:text-[#00A896] transition-colors">
-                  {lang === "bn" ? "০৯৬১০৮৮৩৩৮৮" : "09610883388"}
+                <a href={`tel:${settings.phone}`} className="hover:text-[#00A896] transition-colors">
+                  {settings.phone}
                 </a>
               </li>
               <li className="flex items-center gap-2.5 text-[#F8FAFC]/90">
                 <MapPin className="w-4.5 h-4.5 text-[#00A896] flex-shrink-0" />
-                <span>{lang === "bn" ? "ধানমণ্ডি, ঢাকা, বাংলাদেশ" : "Dhanmondi, Dhaka, Bangladesh"}</span>
+                <span>{lang === "bn" ? settings.addressBn : settings.addressEn}</span>
               </li>
             </ul>
+
+            {/* Social Media Icons */}
+            <div className="pt-5 space-y-2.5">
+              <span className="text-xs font-bold text-white/90 block font-mono">
+                {lang === "bn" ? "সোশ্যাল মিডিয়ায় আমরা:" : "Follow Us:"}
+              </span>
+              <div className="flex items-center gap-3">
+                {/* Facebook */}
+                <a
+                  href={settings.facebookUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Facebook"
+                  className="w-9 h-9 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-[#1877F2] hover:scale-110 transition-all shadow-sm border border-white/10"
+                >
+                  <svg className="w-4.5 h-4.5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                  </svg>
+                </a>
+
+                {/* Instagram */}
+                <a
+                  href={settings.instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Instagram"
+                  className="w-9 h-9 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-gradient-to-tr hover:from-[#F58529] hover:via-[#DD2A7B] hover:to-[#833AB4] hover:scale-110 transition-all shadow-sm border border-white/10"
+                >
+                  <svg className="w-4.5 h-4.5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                  </svg>
+                </a>
+
+                {/* YouTube */}
+                <a
+                  href={settings.youtubeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="YouTube"
+                  className="w-9 h-9 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-[#FF0000] hover:scale-110 transition-all shadow-sm border border-white/10"
+                >
+                  <svg className="w-4.5 h-4.5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -180,9 +254,11 @@ export default function Footer() {
             {t.footRights}{" "}
             <Heart className="w-3.5 h-3.5 text-[#00A896] inline mx-1 fill-[#00A896]" />
           </span>
-          <span className="font-mono text-xs text-[#38BDF8] font-bold">
-            ototeacher — One-to-One Teacher for All
-          </span>
+          <div className="flex items-center gap-4">
+            <span className="font-mono text-xs text-[#38BDF8] font-bold">
+              ototeacher — One-to-One Teacher for All
+            </span>
+          </div>
         </div>
       </div>
     </footer>

@@ -26,7 +26,6 @@ interface SubjectItem {
 export default function Subjects({ onOpenEnroll }: { onOpenEnroll: () => void }) {
   const { t, lang } = useLanguage();
   const [activeCategory, setActiveCategory] = useState<string>("all");
-  const [searchQuery, setSearchQuery] = useState("");
   const [selectedSubject, setSelectedSubject] = useState<SubjectItem | null>(null);
 
   const subjectList: SubjectItem[] = [
@@ -145,38 +144,20 @@ export default function Subjects({ onOpenEnroll }: { onOpenEnroll: () => void })
   ];
 
   const filteredSubjects = subjectList.filter((item) => {
-    const matchesCategory = activeCategory === "all" || item.category === activeCategory;
-    const matchesSearch =
-      item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.tag.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
+    return activeCategory === "all" || item.category === activeCategory;
   });
 
   return (
     <section id="subjects" className="py-20 md:py-24 bg-[#F8FAFC]">
       <div className="max-w-[1240px] mx-auto px-6 md:px-8">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+        <div className="mb-12">
           <div className="max-w-[700px] space-y-4">
-            <span className="eyebrow inline-flex items-center gap-2 font-mono text-xs tracking-widest text-[#00A896] uppercase mb-3 font-bold bg-[#00A896]/10 px-4 py-1.5 rounded-full border border-[#00A896]/20">
-              {t.subjEyebrow}
-            </span>
-            <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0D2C4A] leading-[1.65] tracking-tight mb-4">
+            <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0D2C4A] leading-[1.35] tracking-tight mb-4">
               {t.subjTitle}
             </h2>
             <p className="text-base sm:text-lg text-[#475569] leading-relaxed font-normal pt-1">
               {t.subjDesc}
             </p>
-          </div>
-
-          <div className="relative min-w-[280px]">
-            <Search className="w-4 h-4 text-[#0D2C4A]/40 absolute left-4 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              placeholder={t.topbarSearchPlaceholder}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-white rounded-2xl border border-[#0D2C4A]/15 text-sm text-[#0D2C4A] placeholder-[#0D2C4A]/40 outline-none focus:border-[#00A896] focus:ring-2 focus:ring-[#00A896]/20 shadow-sm"
-            />
           </div>
         </div>
 
@@ -202,10 +183,22 @@ export default function Subjects({ onOpenEnroll }: { onOpenEnroll: () => void })
           {filteredSubjects.map((subject) => (
             <div
               key={subject.id}
-              className="bg-white rounded-3xl border border-[#0D2C4A]/12 p-7 sm:p-8 shadow-[0_4px_20px_-4px_rgba(13,44,74,0.06)] hover:shadow-[0_20px_40px_-10px_rgba(13,44,74,0.14)] hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group"
+              className="bg-white rounded-3xl border border-[#0D2C4A]/12 p-6 sm:p-7 shadow-[0_4px_20px_-4px_rgba(13,44,74,0.06)] hover:shadow-[0_20px_40px_-10px_rgba(13,44,74,0.14)] hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group"
             >
               <div>
-                <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
+                {/* Subject Header Image Banner (Clean, no badges overlaying) */}
+                <div className="relative h-44 sm:h-48 w-full mb-5 rounded-2xl overflow-hidden bg-slate-100">
+                  <img
+                    src={subject.img}
+                    alt={subject.title}
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+
+                {/* Badges placed cleanly under the image */}
+                <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
                   <span className="font-mono text-xs font-bold uppercase text-[#00A896] bg-[#00A896]/10 px-3.5 py-1 rounded-full border border-[#00A896]/20">
                     {subject.tag}
                   </span>
@@ -214,7 +207,7 @@ export default function Subjects({ onOpenEnroll }: { onOpenEnroll: () => void })
                   </span>
                 </div>
 
-                <h3 className="font-sans text-xl sm:text-2xl font-extrabold text-[#0D2C4A] leading-snug tracking-tight mb-3 group-hover:text-[#00A896] transition-colors">
+                <h3 className="font-sans text-xl sm:text-2xl font-extrabold text-[#0D2C4A] leading-[1.35] tracking-tight mb-3 group-hover:text-[#00A896] transition-colors">
                   {subject.title}
                 </h3>
 
@@ -235,20 +228,13 @@ export default function Subjects({ onOpenEnroll }: { onOpenEnroll: () => void })
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 pt-4 border-t border-[#0D2C4A]/10">
+              <div className="pt-4 border-t border-[#0D2C4A]/10">
                 <button
                   onClick={onOpenEnroll}
-                  className="flex-1 py-3.5 rounded-full bg-[#00A896] text-white font-extrabold text-xs sm:text-sm hover:bg-[#008075] transition-all shadow-md shadow-[#00A896]/20 flex items-center justify-center gap-2 cursor-pointer hover:-translate-y-0.5"
+                  className="w-full py-3.5 rounded-full bg-[#00A896] text-white font-extrabold text-sm sm:text-base hover:bg-[#008075] transition-all shadow-md shadow-[#00A896]/20 flex items-center justify-center gap-2 cursor-pointer hover:-translate-y-0.5"
                 >
                   <span>{t.subjEnrollBtn}</span>
                   <ArrowRight className="w-4 h-4 text-white" />
-                </button>
-
-                <button
-                  onClick={() => setSelectedSubject(subject)}
-                  className="px-5 py-3.5 rounded-full bg-white text-[#0D2C4A] border border-[#0D2C4A]/20 font-bold text-xs sm:text-sm hover:bg-[#F8FAFC] transition-colors cursor-pointer"
-                >
-                  {t.subjLearnMore}
                 </button>
               </div>
             </div>

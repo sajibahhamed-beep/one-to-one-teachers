@@ -19,6 +19,7 @@ export default function BatchSchedule({ onOpenEnroll }: BatchScheduleProps) {
       startDate: lang === "bn" ? "১০ আগস্ট, ২০২৬" : "August 10, 2026",
       seats: lang === "bn" ? "২টি শিক্ষার্থী স্লট খালি" : "2 Learner Slots Open",
       track: lang === "bn" ? "বোর্ড মেন্টরিং" : "Board Mentorship",
+      img: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=600&q=80",
     },
     {
       id: "b2",
@@ -28,6 +29,7 @@ export default function BatchSchedule({ onOpenEnroll }: BatchScheduleProps) {
       startDate: lang === "bn" ? "১২ আগস্ট, ২০২৬" : "August 12, 2026",
       seats: lang === "bn" ? "১টি শিক্ষার্থী স্লট খালি" : "1 Learner Slot Open",
       track: lang === "bn" ? "স্পোকেন মেন্টরিং" : "Spoken Mentorship",
+      img: "https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=600&q=80",
     },
     {
       id: "b3",
@@ -37,6 +39,7 @@ export default function BatchSchedule({ onOpenEnroll }: BatchScheduleProps) {
       startDate: lang === "bn" ? "১৫ আগস্ট, ২০২৬" : "August 15, 2026",
       seats: lang === "bn" ? "৩টি শিক্ষার্থী স্লট খালি" : "3 Learner Slots Open",
       track: lang === "bn" ? "সায়েন্স মেন্টরিং" : "Science Mentorship",
+      img: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=600&q=80",
     },
     {
       id: "b4",
@@ -46,51 +49,54 @@ export default function BatchSchedule({ onOpenEnroll }: BatchScheduleProps) {
       startDate: lang === "bn" ? "১৮ আগস্ট, ২০২৬" : "August 18, 2026",
       seats: lang === "bn" ? "২টি শিক্ষার্থী স্লট খালি" : "2 Learner Slots Open",
       track: lang === "bn" ? "আইসিটি মেন্টরিং" : "ICT Mentorship",
+      img: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=600&q=80",
     },
   ];
 
   return (
     <section id="batches" className="py-20 bg-[#F8FAFC]">
       <div className="max-w-[1240px] mx-auto px-6 md:px-8">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+        <div className="mb-12">
           <div className="space-y-3 max-w-2xl">
-            <span className="eyebrow inline-flex items-center gap-2 font-mono text-xs tracking-widest text-[#00A896] uppercase mb-3 font-bold bg-[#00A896]/10 px-4 py-1.5 rounded-full border border-[#00A896]/20">
-              {t.batchEyebrow}
-            </span>
-            <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0D2C4A] leading-[1.65] mb-4">
+            <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0D2C4A] leading-[1.35] mb-4">
               {t.batchTitle}
             </h2>
             <p className="text-base text-[#475569] leading-relaxed max-w-xl">
               {t.batchDesc}
             </p>
           </div>
-          <button
-            onClick={onOpenEnroll}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#0D2C4A] text-white font-semibold text-xs hover:bg-[#16385C] transition-colors"
-          >
-            <span>{lang === "bn" ? "সব মেন্টর স্লট দেখুন" : "View All Mentor Slots"}</span>
-            <ArrowRight className="w-4 h-4 text-[#00A896]" />
-          </button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
           {slots.map((slot) => (
             <div
               key={slot.id}
-              className="bg-white border border-[#0D2C4A]/12 rounded-3xl p-7 shadow-[0_4px_20px_-4px_rgba(13,44,74,0.06)] hover:shadow-[0_20px_40px_-10px_rgba(13,44,74,0.14)] hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group"
+              className="bg-white border border-[#0D2C4A]/12 rounded-3xl p-6 sm:p-7 shadow-[0_4px_20px_-4px_rgba(13,44,74,0.06)] hover:shadow-[0_20px_40px_-10px_rgba(13,44,74,0.14)] hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group overflow-hidden"
             >
               <div>
+                {/* Slot Header Image Banner (Clean, no badges overlaying) */}
+                <div className="relative h-44 sm:h-48 w-full mb-5 rounded-2xl overflow-hidden bg-slate-100">
+                  <img
+                    src={slot.img}
+                    alt={slot.subject}
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+
+                {/* Badges placed cleanly under the image */}
                 <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
                   <span className="font-mono text-xs uppercase font-bold tracking-wider px-3 py-1 rounded-full bg-[#00A896]/10 text-[#00A896] border border-[#00A896]/20">
                     {slot.track}
                   </span>
-                  <span className="font-mono text-xs font-bold text-[#00A896] bg-[#00A896]/10 px-3 py-1 rounded-full flex items-center gap-1.5">
+                  <span className="font-mono text-xs font-bold text-[#00A896] bg-[#00A896]/10 px-3 py-1 rounded-full flex items-center gap-1.5 border border-[#00A896]/20">
                     <CheckCircle2 className="w-3.5 h-3.5" />
                     {slot.seats}
                   </span>
                 </div>
 
-                <h3 className="font-sans text-xl font-extrabold text-[#0D2C4A] leading-snug mb-4 group-hover:text-[#00A896] transition-colors">
+                <h3 className="font-sans text-xl sm:text-2xl font-extrabold text-[#0D2C4A] leading-snug mb-4 group-hover:text-[#00A896] transition-colors">
                   {slot.subject}
                 </h3>
 
@@ -135,3 +141,4 @@ export default function BatchSchedule({ onOpenEnroll }: BatchScheduleProps) {
     </section>
   );
 }
+
