@@ -638,11 +638,8 @@ export default function AdminDashboardPage() {
           </div>
         </header>
 
-        {/* BODY CONTAINER (3-Column Grid Layout matching reference) */}
-        <div className="p-6 md:p-8 grid grid-cols-1 xl:grid-cols-12 gap-8">
-          
-          {/* CENTER COLUMN (XL 8 Columns) */}
-          <div className="xl:col-span-8 space-y-8">
+        {/* BODY CONTAINER */}
+        <div className="p-6 md:p-8 space-y-8 max-w-7xl w-full">
             
             {/* GREETING & HERO HEADER */}
             <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#0D2C4A]/10 shadow-sm flex items-center justify-between gap-6">
@@ -1323,51 +1320,7 @@ export default function AdminDashboardPage() {
                 </div>
               )}
 
-            </div>
-          </div>
-
-          {/* ===== RIGHT SIDE ANALYTICS & QUICK TASK COLUMN (XL 4 Columns) ===== */}
-          <div className="xl:col-span-4 space-y-6">
-
-            {/* CARD 3: LEARNING STATISTICS / MONTHLY BAR CHART GRAPHIC */}
-            <div className="bg-white rounded-3xl p-6 border border-[#0D2C4A]/10 shadow-sm space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="font-extrabold text-base text-[#0D2C4A]">Learning Statistic</h3>
-                <span className="text-xs font-bold text-[#00A896] bg-[#00A896]/10 px-3 py-1 rounded-full font-mono">
-                  Yearly
-                </span>
-              </div>
-
-              {/* Chart Legends */}
-              <div className="flex items-center justify-center gap-4 text-[10px] font-mono font-bold">
-                <span className="flex items-center gap-1.5 text-[#0D2C4A]">
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#0D2C4A]" /> SSC/HSC
-                </span>
-                <span className="flex items-center gap-1.5 text-[#00A896]">
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#00A896]" /> Science
-                </span>
-                <span className="flex items-center gap-1.5 text-[#38BDF8]">
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#38BDF8]" /> Spoken English
-                </span>
-              </div>
-
-              {/* Multi-Bar Graphic Visualization */}
-              <div className="pt-4 flex items-end justify-between h-40 px-2 border-b border-slate-100 font-mono text-[9px] text-slate-400">
-                {["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].map((m, idx) => {
-                  const h1 = [30, 45, 60, 40, 75, 50, 65, 80, 55, 70, 85, 90][idx];
-                  const h2 = [20, 30, 40, 25, 50, 35, 45, 60, 40, 50, 60, 70][idx];
-                  return (
-                    <div key={m} className="flex flex-col items-center gap-1">
-                      <div className="w-2 rounded-t-full bg-[#38BDF8]" style={{ height: `${h2}%` }} />
-                      <div className="w-2 rounded-t-full bg-[#00A896]" style={{ height: `${h1}%` }} />
-                      <span className="pt-1">{m}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-          </div>
+        </div>
 
         </div>
 

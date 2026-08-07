@@ -1,9 +1,15 @@
 "use client";
 
 import { useLanguage } from "@/context/LanguageContext";
+import { usePathname } from "next/navigation";
 
 export default function WhatsAppButton() {
   const { lang } = useLanguage();
+  const pathname = usePathname();
+
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
 
   const phone = "8801775551325";
   const defaultText =
