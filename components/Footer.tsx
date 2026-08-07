@@ -113,13 +113,13 @@ export default function Footer() {
               <li>
                 <Link href="/become-teacher" className="hover:text-[#00A896] transition-colors flex items-center gap-2">
                   <ChevronRight className="w-4 h-4 text-[#00A896]" />
-                  <span>{t.btnBecomeMentor}</span>
+                  <span suppressHydrationWarning>{t.btnBecomeMentor}</span>
                 </Link>
               </li>
               <li>
                 <Link href="/about" className="hover:text-[#00A896] transition-colors flex items-center gap-2">
                   <ChevronRight className="w-4 h-4 text-[#00A896]" />
-                  <span>{t.navAboutUs}</span>
+                  <span suppressHydrationWarning>{t.navAboutUs}</span>
                 </Link>
               </li>
             </ul>

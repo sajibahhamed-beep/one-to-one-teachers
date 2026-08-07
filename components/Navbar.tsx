@@ -109,19 +109,19 @@ export default function Navbar({ onOpenEnroll, onOpenMentor }: NavbarProps) {
           </Link>
 
           <Link href="/subjects" className={getDesktopLinkClass("/subjects")}>
-            <span>{t.navSubjects}</span>
+            <span suppressHydrationWarning>{t.navSubjects}</span>
           </Link>
 
           <Link href="/blogs" className={getDesktopLinkClass("/blogs")}>
-            <span>{t.navBlogs || "ব্লগ"}</span>
+            <span suppressHydrationWarning>{t.navBlogs || "ব্লগ"}</span>
           </Link>
 
           <a href="/#pricing" className={getDesktopLinkClass("/#pricing")}>
-            <span>{t.navPricingPlan}</span>
+            <span suppressHydrationWarning>{t.navPricingPlan}</span>
           </a>
 
           <Link href="/contact" className={getDesktopLinkClass("/contact")}>
-            <span>{t.navContactUs}</span>
+            <span suppressHydrationWarning>{t.navContactUs}</span>
           </Link>
         </div>
 
