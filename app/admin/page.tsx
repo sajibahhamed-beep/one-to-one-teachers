@@ -63,6 +63,7 @@ export default function AdminDashboardPage() {
     | "payments"
     | "blogs"
     | "faqs"
+    | "seo"
     | "settings"
   >("dashboard");
   const [loading, setLoading] = useState(true);
@@ -85,6 +86,9 @@ export default function AdminDashboardPage() {
     email: "support@aloshikkha.org",
     addressBn: "ধানমণ্ডি, ঢাকা, বাংলাদেশ",
     addressEn: "Dhanmondi, Dhaka, Bangladesh",
+    metaTitle: "Muhammad Sajib — Lead UI/UX & Product Designer",
+    metaDescription: "Crafting intuitive digital experiences, mobile apps, SaaS dashboards, and design systems.",
+    keywords: "UI/UX Designer, Product Designer, Figma, Next.js, Tailwind CSS",
   });
 
   // Filter & Search states
@@ -134,6 +138,7 @@ export default function AdminDashboardPage() {
   const [newPaymentMethod, setNewPaymentMethod] = useState<"bKash" | "Nagad" | "Bank Transfer" | "Cash">("bKash");
 
   const [settingsSaved, setSettingsSaved] = useState(false);
+  const [seoSaved, setSeoSaved] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -175,7 +180,7 @@ export default function AdminDashboardPage() {
       if (Array.isArray(resBlg)) setBlogs(resBlg);
       if (Array.isArray(resFaq)) setFaqs(resFaq);
       if (Array.isArray(resTch)) setTeachers(resTch);
-      if (resSet && resSet.facebookUrl) setSettings(resSet);
+      if (resSet && (resSet.facebookUrl || resSet.phone || resSet.metaTitle)) setSettings((prev) => ({ ...prev, ...resSet }));
       if (Array.isArray(resApp)) setTeacherApplications(resApp);
       if (Array.isArray(resInq)) setInquiries(resInq);
       if (Array.isArray(resPay)) setPayments(resPay);
@@ -327,6 +332,18 @@ export default function AdminDashboardPage() {
     });
     setSettingsSaved(true);
     setTimeout(() => setSettingsSaved(false), 3000);
+  };
+
+  // Save SEO Settings
+  const handleSaveSeo = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await fetch("/api/settings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(settings),
+    });
+    setSeoSaved(true);
+    setTimeout(() => setSeoSaved(false), 3000);
   };
 
   // Update Teacher Application Status
@@ -508,6 +525,7 @@ export default function AdminDashboardPage() {
               { id: "payments", label: "Transactions", icon: CreditCard },
               { id: "blogs", label: "Blog Posts", icon: FileText },
               { id: "faqs", label: "FAQ Items", icon: HelpCircle },
+              { id: "seo", label: "SEO and Metadata", icon: Search },
               { id: "settings", label: "Settings", icon: Settings },
             ].map((item) => {
               const IconComp = item.icon;
@@ -1234,6 +1252,73 @@ export default function AdminDashboardPage() {
                       Save Settings
                     </button>
                     {settingsSaved && <p className="text-xs text-emerald-600 font-bold">Settings saved successfully!</p>}
+                  </form>
+                </div>
+              )}
+
+              {/* ===== TAB 12: SEO AND METADATA ===== */}
+              {activeTab === "seo" && (
+                <div className="space-y-6">
+                  <div className="flex items-center gap-2.5 pb-2 border-b border-slate-100">
+                    <Search className="w-5 h-5 text-[#00A896]" />
+                    <h2 className="text-xl font-extrabold text-[#0D2C4A]">Global Meta & Search Tags</h2>
+                  </div>
+
+                  <form onSubmit={handleSaveSeo} className="space-y-5 max-w-2xl">
+                    <div>
+                      <label className="block text-xs font-mono font-bold text-slate-500 uppercase tracking-wider mb-2">
+                        DEFAULT META TITLE
+                      </label>
+                      <input
+                        type="text"
+                        value={settings.metaTitle || ""}
+                        onChange={(e) => setSettings({ ...settings, metaTitle: e.target.value })}
+                        placeholder="Muhammad Sajib — Lead UI/UX & Product Designer"
+                        className="w-full p-3.5 rounded-2xl bg-white border border-[#0D2C4A]/10 text-sm font-sans font-semibold text-[#0D2C4A] focus:outline-none focus:border-[#00A896] shadow-sm transition-all"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-mono font-bold text-slate-500 uppercase tracking-wider mb-2">
+                        DEFAULT META DESCRIPTION
+                      </label>
+                      <textarea
+                        rows={4}
+                        value={settings.metaDescription || ""}
+                        onChange={(e) => setSettings({ ...settings, metaDescription: e.target.value })}
+                        placeholder="Crafting intuitive digital experiences, mobile apps, SaaS dashboards, and design systems."
+                        className="w-full p-3.5 rounded-2xl bg-white border border-[#0D2C4A]/10 text-sm font-sans font-semibold text-[#0D2C4A] focus:outline-none focus:border-[#00A896] shadow-sm transition-all resize-y"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-mono font-bold text-slate-500 uppercase tracking-wider mb-2">
+                        KEYWORDS (COMMA SEPARATED)
+                      </label>
+                      <input
+                        type="text"
+                        value={settings.keywords || ""}
+                        onChange={(e) => setSettings({ ...settings, keywords: e.target.value })}
+                        placeholder="UI/UX Designer, Product Designer, Figma, Next.js, Tailwind CSS"
+                        className="w-full p-3.5 rounded-2xl bg-white border border-[#0D2C4A]/10 text-sm font-sans font-semibold text-[#0D2C4A] focus:outline-none focus:border-[#00A896] shadow-sm transition-all"
+                      />
+                    </div>
+
+                    <div className="flex items-center gap-4 pt-2">
+                      <button
+                        type="submit"
+                        className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-[#00A896] text-white font-extrabold text-xs hover:bg-[#008075] active:scale-95 transition-all shadow-md cursor-pointer"
+                      >
+                        <CheckCircle className="w-4 h-4" />
+                        <span>Save SEO Settings</span>
+                      </button>
+
+                      {seoSaved && (
+                        <span className="text-xs font-extrabold text-emerald-600 flex items-center gap-1">
+                          ✓ SEO settings saved successfully!
+                        </span>
+                      )}
+                    </div>
                   </form>
                 </div>
               )}

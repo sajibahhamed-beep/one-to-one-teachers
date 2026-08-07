@@ -59,13 +59,16 @@ export interface FAQItem {
 }
 
 export interface SettingData {
-  facebookUrl: string;
-  instagramUrl: string;
-  youtubeUrl: string;
-  phone: string;
-  email: string;
-  addressBn: string;
-  addressEn: string;
+  facebookUrl?: string;
+  instagramUrl?: string;
+  youtubeUrl?: string;
+  phone?: string;
+  email?: string;
+  addressBn?: string;
+  addressEn?: string;
+  metaTitle?: string;
+  metaDescription?: string;
+  keywords?: string;
 }
 
 export interface TeacherApplication {
@@ -265,6 +268,9 @@ const initialData: DBData = {
     email: "support@aloshikkha.org",
     addressBn: "ধানমণ্ডি, ঢাকা, বাংলাদেশ",
     addressEn: "Dhanmondi, Dhaka, Bangladesh",
+    metaTitle: "Muhammad Sajib — Lead UI/UX & Product Designer",
+    metaDescription: "Crafting intuitive digital experiences, mobile apps, SaaS dashboards, and design systems.",
+    keywords: "UI/UX Designer, Product Designer, Figma, Next.js, Tailwind CSS",
   },
 };
 
