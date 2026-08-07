@@ -101,6 +101,7 @@ export default function AdminDashboardPage() {
     keywords: "online teacher Bangladesh, ১-অন-১ শিক্ষক, ototeacher, private tutor Bangladesh",
   });
   const [whatsappSaved, setWhatsappSaved] = useState(false);
+  const [seoSaved, setSeoSaved] = useState(false);
 
   // Filter & Search states
   const [searchQuery, setSearchQuery] = useState("");
@@ -156,7 +157,6 @@ export default function AdminDashboardPage() {
   const [newPaymentMethod, setNewPaymentMethod] = useState<"bKash" | "Nagad" | "Bank Transfer" | "Cash">("bKash");
 
   const [settingsSaved, setSettingsSaved] = useState(false);
-  const [seoSaved, setSeoSaved] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -639,7 +639,6 @@ export default function AdminDashboardPage() {
               { id: "payments", label: "Transactions", icon: CreditCard },
               { id: "blogs", label: "Blog Posts", icon: FileText },
               { id: "faqs", label: "FAQ Items", icon: HelpCircle },
-              { id: "seo", label: "SEO and Metadata", icon: Search },
               { id: "settings", label: "Settings", icon: Settings },
             ].map((item) => {
               const IconComp = item.icon;
@@ -1364,10 +1363,10 @@ export default function AdminDashboardPage() {
                     <div>
                       <div className="flex items-center gap-2.5">
                         <Settings className="w-5.5 h-5.5 text-[#00A896]" />
-                        <h2 className="admin-heading-md text-[#0D2C4A]">Platform Settings & Contacts</h2>
+                        <h2 className="admin-heading-md text-[#0D2C4A]">Platform Settings & SEO Controls</h2>
                       </div>
                       <p className="admin-body-text text-slate-500 pt-0.5">
-                        Manage your Floating WhatsApp Hotline number, custom Social Media links, Support Phone number, and Physical Address.
+                        Configure Search Engine SEO metadata, Floating WhatsApp Hotline number, custom Social Media links, Support Phone number, and Physical Address.
                       </p>
                     </div>
 
@@ -1381,7 +1380,79 @@ export default function AdminDashboardPage() {
                     </button>
                   </div>
 
-                  {/* SECTION 1: FLOATING WHATSAPP HOTLINE SETTINGS */}
+                  {/* SECTION 1: SEO & METADATA CONFIGURATION */}
+                  <div className="bg-white p-6 sm:p-7 rounded-3xl border border-[#0D2C4A]/10 shadow-sm space-y-6">
+                    <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-9 h-9 rounded-2xl bg-[#E6F4F3] text-[#00A896] flex items-center justify-center border border-[#00A896]/20">
+                          <Search className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <h3 className="admin-heading-sm text-[#0D2C4A]">SEO & Search Engine Optimization</h3>
+                          <p className="text-xs text-slate-500 font-normal">Configure website Title Tag, Meta Description & Keywords for Google ranking</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <form onSubmit={handleSaveSeo} className="space-y-5">
+                      <div>
+                        <label className="admin-kicker text-slate-500 block mb-2">WEBSITE META TITLE (GOOGLE SEARCH TITLE)</label>
+                        <input
+                          type="text"
+                          placeholder="ototeacher — ১-অন-১ অনলাইন শিক্ষক | One-to-One Teacher for All"
+                          value={settings.metaTitle || ""}
+                          onChange={(e) => setSettings({ ...settings, metaTitle: e.target.value })}
+                          className="w-full p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-sans font-bold text-[#0D2C4A] focus:outline-none focus:border-[#00A896] shadow-sm"
+                        />
+                        <span className="text-[11px] text-slate-400 font-mono pt-1 block">
+                          Recommended length: 50-60 characters
+                        </span>
+                      </div>
+
+                      <div>
+                        <label className="admin-kicker text-slate-500 block mb-2">WEBSITE META DESCRIPTION (SEARCH RESULT SUMMARY)</label>
+                        <textarea
+                          rows={3}
+                          value={settings.metaDescription || ""}
+                          onChange={(e) => setSettings({ ...settings, metaDescription: e.target.value })}
+                          placeholder="বাংলাদেশের ১-অন-১ অনলাইন শিক্ষক প্ল্যাটফর্ম। বুয়েট, ঢাবি ও মেডিকেলের যাচাইকৃত শিক্ষকদের সাথে সরাসরি লাইভ ক্লাস — ঘরে বসে।"
+                          className="w-full p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-sans font-semibold text-[#0D2C4A] focus:outline-none focus:border-[#00A896] shadow-sm"
+                        />
+                        <span className="text-[11px] text-slate-400 font-mono pt-1 block">
+                          Recommended length: 140-160 characters
+                        </span>
+                      </div>
+
+                      <div>
+                        <label className="admin-kicker text-slate-500 block mb-2">TARGET SEARCH KEYWORDS (COMMA SEPARATED)</label>
+                        <input
+                          type="text"
+                          placeholder="online teacher Bangladesh, ১-অন-১ শিক্ষক, ototeacher, private tutor Bangladesh"
+                          value={settings.keywords || ""}
+                          onChange={(e) => setSettings({ ...settings, keywords: e.target.value })}
+                          className="w-full p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-mono font-bold text-[#0D2C4A] focus:outline-none focus:border-[#00A896] shadow-sm"
+                        />
+                      </div>
+
+                      <div className="flex items-center gap-4 pt-2">
+                        <button
+                          type="submit"
+                          className="flex items-center gap-2 px-7 py-3 rounded-2xl bg-[#00A896] hover:bg-[#008075] text-white admin-caption-text font-extrabold transition-all shadow-md cursor-pointer active:scale-95"
+                        >
+                          <CheckCircle className="w-4 h-4" />
+                          <span>Save SEO Settings</span>
+                        </button>
+
+                        {seoSaved && (
+                          <span className="admin-caption-text text-emerald-600 font-extrabold flex items-center gap-1">
+                            ✓ SEO and Metadata updated successfully!
+                          </span>
+                        )}
+                      </div>
+                    </form>
+                  </div>
+
+                  {/* SECTION 2: FLOATING WHATSAPP HOTLINE SETTINGS */}
                   <div className="bg-white p-6 sm:p-7 rounded-3xl border border-[#0D2C4A]/10 shadow-sm space-y-6">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
                       <div className="flex items-center gap-2.5">
