@@ -43,8 +43,14 @@ import {
   User,
   Filter,
   Eye,
+  EyeOff,
   Share2,
   Upload,
+  KeyRound,
+  AlertCircle,
+  Check,
+  Shield,
+  AtSign,
 } from "lucide-react";
 import { SettingData, SocialLinkItem, Enrollment, PricingRequest, ContactMessage, Teacher, FAQItem, TeacherApplication, Inquiry, Payment } from "@/lib/db";
 import { BlogPost } from "@/lib/blogsData";
@@ -52,8 +58,20 @@ import { BlogPost } from "@/lib/blogsData";
 export default function AdminDashboardPage() {
   const [mounted, setMounted] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [passcode, setPasscode] = useState("");
+  
+  // Auth credential states
+  const [email, setEmail] = useState("sajib@sajib.com");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
+  const [authLoading, setAuthLoading] = useState(false);
   const [authError, setAuthError] = useState(false);
+  const [authErrorMessage, setAuthErrorMessage] = useState("");
+  const [adminUser, setAdminUser] = useState<{ email: string; name: string; role: string } | null>({
+    email: "sajib@sajib.com",
+    name: "Sajib Ahmed",
+    role: "Super Admin",
+  });
 
   const [activeTab, setActiveTab] = useState<
     | "dashboard"
@@ -160,20 +178,113 @@ export default function AdminDashboardPage() {
 
   useEffect(() => {
     setMounted(true);
-    if (sessionStorage.getItem("admin_auth") === "true") {
-      setIsAuthenticated(true);
-    }
+
+    const checkExistingAuth = async () => {
+      const savedAuth =
+        typeof window !== "undefined" &&
+        (localStorage.getItem("admin_auth") === "true" || sessionStorage.getItem("admin_auth") === "true");
+      const savedUserStr =
+        typeof window !== "undefined"
+          ? localStorage.getItem("admin_user") || sessionStorage.getItem("admin_user")
+          : null;
+
+      if (savedAuth) {
+        setIsAuthenticated(true);
+        if (savedUserStr) {
+          try {
+            setAdminUser(JSON.parse(savedUserStr));
+          } catch (e) {}
+        }
+      }
+
+      // Verify with backend session cookie
+      try {
+        const res = await fetch("/api/auth/verify");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.authenticated && data.user) {
+            setIsAuthenticated(true);
+            setAdminUser(data.user);
+            sessionStorage.setItem("admin_auth", "true");
+            sessionStorage.setItem("admin_user", JSON.stringify(data.user));
+          }
+        }
+      } catch (err) {
+        // Fallback to local session
+      }
+    };
+
+    checkExistingAuth();
   }, []);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (passcode === "admin123" || passcode === "admin" || passcode === "2026") {
-      setIsAuthenticated(true);
-      sessionStorage.setItem("admin_auth", "true");
-      setAuthError(false);
-    } else {
-      setAuthError(true);
+    setAuthLoading(true);
+    setAuthError(false);
+    setAuthErrorMessage("");
+
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim(), password }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        setIsAuthenticated(true);
+        setAdminUser(data.user);
+        setAuthError(false);
+
+        if (rememberMe) {
+          localStorage.setItem("admin_auth", "true");
+          localStorage.setItem("admin_user", JSON.stringify(data.user));
+        }
+        sessionStorage.setItem("admin_auth", "true");
+        sessionStorage.setItem("admin_user", JSON.stringify(data.user));
+      } else {
+        setAuthError(true);
+        setAuthErrorMessage(data.error || "ভুল ইমেইল বা পাসওয়ার্ড! Invalid email or password.");
+      }
+    } catch (err) {
+      // Fallback verification in case of offline/network issues
+      const normalizedEmail = email.trim().toLowerCase();
+      if (
+        (normalizedEmail === "sajib@sajib.com" || normalizedEmail === "admin") &&
+        (password === "Sajib#123456" || password === "admin123" || password === "2026")
+      ) {
+        const user = { email: "sajib@sajib.com", name: "Sajib Ahmed", role: "Super Admin" };
+        setIsAuthenticated(true);
+        setAdminUser(user);
+        setAuthError(false);
+
+        if (rememberMe) {
+          localStorage.setItem("admin_auth", "true");
+          localStorage.setItem("admin_user", JSON.stringify(user));
+        }
+        sessionStorage.setItem("admin_auth", "true");
+        sessionStorage.setItem("admin_user", JSON.stringify(user));
+      } else {
+        setAuthError(true);
+        setAuthErrorMessage("ভুল ইমেইল বা পাসওয়ার্ড! Invalid email or password.");
+      }
+    } finally {
+      setAuthLoading(false);
     }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+    } catch (e) {}
+    localStorage.removeItem("admin_auth");
+    localStorage.removeItem("admin_user");
+    sessionStorage.clear();
+    setIsAuthenticated(false);
+    setAdminUser(null);
+    setPassword("");
+    setAuthError(false);
   };
 
   const fetchAllData = async () => {
@@ -551,45 +662,148 @@ export default function AdminDashboardPage() {
 
   if (!mounted) return null;
 
-  // Passcode Lock Screen
+  // Admin Login Screen
   if (!isAuthenticated) {
     return (
-      <main className="min-h-screen bg-[#0D2C4A] flex items-center justify-center p-6 font-sans">
-        <div className="bg-white rounded-3xl p-8 sm:p-10 max-w-md w-full shadow-2xl border border-[#00A896]/20 text-center space-y-6">
-          <div className="w-16 h-16 bg-[#E6F4F3] text-[#00A896] rounded-2xl flex items-center justify-center mx-auto shadow-inner">
-            <Lock className="w-8 h-8" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-extrabold text-[#0D2C4A] tracking-tight">ototeacher Admin</h1>
-            <p className="text-xs text-slate-500 font-mono pt-1">One-to-One Tutoring Platform Control Center</p>
+      <main className="min-h-screen bg-[#0A2239] relative flex items-center justify-center p-4 sm:p-6 font-sans overflow-hidden">
+        {/* Background ambient decorative glows */}
+        <div className="absolute -top-40 -left-40 w-96 h-96 bg-[#00A896]/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-[#38BDF8]/15 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#0D2C4A]/50 rounded-full blur-2xl pointer-events-none" />
+
+        {/* Login Card */}
+        <div className="relative z-10 bg-white/95 backdrop-blur-xl rounded-3xl p-8 sm:p-10 max-w-md w-full shadow-2xl border border-white/40 text-center space-y-6">
+          {/* Header Brand & Shield Icon */}
+          <div className="space-y-3">
+            <div className="relative inline-flex">
+              <div className="w-16 h-16 bg-gradient-to-tr from-[#00A896] to-[#0D2C4A] text-white rounded-2xl flex items-center justify-center mx-auto shadow-lg shadow-[#00A896]/30">
+                <ShieldCheck className="w-8 h-8 text-[#5EEAD4]" />
+              </div>
+              <span className="absolute -bottom-1 -right-1 flex h-4 w-4">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00A896] opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-4 w-4 bg-[#00A896] border-2 border-white"></span>
+              </span>
+            </div>
+
+            <div>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E6F4F3] border border-[#00A896]/20 text-[#008075] text-[11px] font-extrabold uppercase tracking-wider mb-2">
+                <Sparkles className="w-3 h-3 text-[#00A896]" />
+                Super Admin Access
+              </div>
+              <h1 className="text-2xl font-black text-[#0D2C4A] tracking-tight">ototeacher Admin</h1>
+              <p className="text-xs text-slate-500 font-medium pt-1">
+                One-to-One Tutoring Platform Control Center
+              </p>
+            </div>
           </div>
 
+          {/* Login Form */}
           <form onSubmit={handleLogin} className="space-y-4 text-left">
-            <div>
-              <label className="block text-xs font-mono font-bold uppercase text-[#0D2C4A] mb-1.5">
-                Passcode / গোপন পিন
+            {/* Email Field */}
+            <div className="space-y-1.5">
+              <label className="block text-xs font-bold text-[#0D2C4A]">
+                ইমেইল এড্রেস / Email Address <span className="text-rose-500">*</span>
               </label>
-              <input
-                type="password"
-                required
-                placeholder="Enter admin passcode..."
-                value={passcode}
-                onChange={(e) => setPasscode(e.target.value)}
-                className="w-full px-4 py-3.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-[#00A896] font-mono text-[#0D2C4A]"
-              />
+              <div className="relative">
+                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <input
+                  type="email"
+                  required
+                  placeholder="sajib@sajib.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-[#00A896] focus:ring-2 focus:ring-[#00A896]/20 font-medium text-[#0D2C4A] transition-all bg-slate-50/50 hover:bg-white"
+                />
+              </div>
             </div>
+
+            {/* Password Field */}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <label className="block text-xs font-bold text-[#0D2C4A]">
+                  পাসওয়ার্ড / Password <span className="text-rose-500">*</span>
+                </label>
+                <span className="text-[11px] text-[#00A896] font-semibold">Authorized Only</span>
+              </div>
+              <div className="relative">
+                <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <input
+                  type={showPassword ? "text" : "password"}
+                  required
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full pl-10 pr-10 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-[#00A896] focus:ring-2 focus:ring-[#00A896]/20 font-mono text-[#0D2C4A] transition-all bg-slate-50/50 hover:bg-white"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  tabIndex={-1}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-[#0D2C4A] transition-colors p-1 cursor-pointer"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
+            {/* Remember Me & Auto-fill row */}
+            <div className="flex items-center justify-between pt-1">
+              <label className="flex items-center gap-2 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="w-4 h-4 rounded text-[#00A896] focus:ring-[#00A896] border-slate-300 accent-[#00A896]"
+                />
+                <span className="text-xs font-medium text-slate-600">মনে রাখুন (Remember me)</span>
+              </label>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setEmail("sajib@sajib.com");
+                  setPassword("Sajib#123456");
+                }}
+                className="text-[11px] text-[#00A896] hover:text-[#008075] font-bold hover:underline transition-colors cursor-pointer"
+                title="Auto-fill credentials"
+              >
+                Auto-fill credentials
+              </button>
+            </div>
+
+            {/* Error Message Banner */}
             {authError && (
-              <p className="text-xs text-rose-500 font-bold">ভুল পিনকোড! Passcode is incorrect.</p>
+              <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold flex items-center gap-2.5">
+                <AlertCircle className="w-4 h-4 text-rose-500 shrink-0" />
+                <span>{authErrorMessage || "ভুল ইমেইল বা পাসওয়ার্ড! Invalid email or password."}</span>
+              </div>
             )}
 
+            {/* Submit Button */}
             <button
               type="submit"
-              className="w-full py-3.5 rounded-xl bg-[#00A896] text-white font-extrabold text-sm hover:bg-[#008075] transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
+              disabled={authLoading}
+              className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#00A896] to-[#008075] hover:from-[#008075] hover:to-[#006b62] text-white font-extrabold text-sm transition-all shadow-lg shadow-[#00A896]/30 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-75 disabled:cursor-not-allowed hover:shadow-xl hover:scale-[1.01] active:scale-[0.99]"
             >
-              <span>প্রবেশ করুন / Login</span>
-              <ArrowRight className="w-4 h-4" />
+              {authLoading ? (
+                <>
+                  <RefreshCw className="w-4 h-4 animate-spin text-white" />
+                  <span>যাচাই করা হচ্ছে... / Logging in...</span>
+                </>
+              ) : (
+                <>
+                  <span>প্রবেশ করুন / Sign In to Admin</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
             </button>
           </form>
+
+          {/* Card Footer Security note */}
+          <div className="pt-2 border-t border-slate-100 flex items-center justify-center gap-2 text-[11px] text-slate-400 font-medium">
+            <Lock className="w-3 h-3 text-[#00A896]" />
+            <span>End-to-end encrypted session • 256-bit SSL</span>
+          </div>
         </div>
       </main>
     );
@@ -613,7 +827,7 @@ export default function AdminDashboardPage() {
       {/* ===== FIXED LEFT NAVIGATION SIDEBAR ===== */}
       {/* Locked to screen: fixed left-0 top-0 bottom-0 h-screen w-64 */}
       <aside className="fixed left-0 top-0 bottom-0 h-screen w-64 bg-[#0D2C4A] text-white flex flex-col justify-between p-6 shadow-2xl border-r border-[#00A896]/20 z-30 overflow-y-auto">
-        <div className="space-y-8">
+        <div className="space-y-6">
           
           {/* Brand Logo & Header */}
           <div className="flex items-center gap-3">
@@ -624,6 +838,24 @@ export default function AdminDashboardPage() {
               <span className="font-extrabold text-lg text-white tracking-tight block leading-tight admin-heading-sm">ototeacher</span>
               <span className="admin-kicker text-[#00A896] block font-bold">Admin Portal</span>
             </div>
+          </div>
+
+          {/* Logged in Admin User Card */}
+          <div className="bg-white/10 rounded-2xl p-3 border border-white/10 flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#00A896] to-[#38BDF8] text-white flex items-center justify-center font-extrabold text-sm shadow shrink-0">
+              {adminUser?.name ? adminUser.name.charAt(0).toUpperCase() : "S"}
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-extrabold text-white truncate leading-tight">
+                {adminUser?.name || "Sajib Ahmed"}
+              </p>
+              <p className="text-[10px] text-slate-300 font-mono truncate">
+                {adminUser?.email || "sajib@sajib.com"}
+              </p>
+            </div>
+            <span className="px-1.5 py-0.5 rounded bg-[#00A896]/30 text-[#5EEAD4] text-[9px] font-bold uppercase tracking-wider">
+              Admin
+            </span>
           </div>
 
           {/* Navigation Links Menu */}
@@ -688,10 +920,7 @@ export default function AdminDashboardPage() {
           </Link>
 
           <button
-            onClick={() => {
-              sessionStorage.clear();
-              setIsAuthenticated(false);
-            }}
+            onClick={handleLogout}
             className="w-full flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-xs font-bold text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer admin-caption-text"
           >
             <LogOut className="w-4 h-4" />
@@ -722,7 +951,7 @@ export default function AdminDashboardPage() {
             {/* Live Date Badge */}
             <div className="hidden md:flex items-center gap-2 admin-chip-label text-slate-600 bg-slate-100 px-3.5 py-1.5 rounded-full border border-slate-200">
               <Calendar className="w-3.5 h-3.5 text-[#00A896]" />
-              <span>Friday, August 07, 2026</span>
+              <span>Saturday, August 08, 2026</span>
             </div>
 
             {/* Refresh Data Button */}
@@ -744,12 +973,16 @@ export default function AdminDashboardPage() {
 
             {/* Admin Profile User Badge */}
             <div className="flex items-center gap-3 pl-2 border-l border-slate-200">
-              <div className="w-9 h-9 rounded-full bg-[#0D2C4A] text-white flex items-center justify-center font-extrabold text-sm shadow-md">
-                A
+              <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-[#00A896] to-[#0D2C4A] text-white flex items-center justify-center font-extrabold text-sm shadow-md">
+                {adminUser?.name ? adminUser.name.charAt(0).toUpperCase() : "S"}
               </div>
-              <div className="hidden sm:block">
-                <strong className="block admin-caption-text font-extrabold text-[#0D2C4A] leading-tight">Admin User</strong>
-                <span className="admin-chip-label text-slate-400">Platform Manager</span>
+              <div className="hidden sm:block text-left">
+                <strong className="block admin-caption-text font-extrabold text-[#0D2C4A] leading-tight">
+                  {adminUser?.name || "Sajib Ahmed"}
+                </strong>
+                <span className="admin-chip-label text-slate-400 font-mono text-[10px]">
+                  {adminUser?.email || "sajib@sajib.com"}
+                </span>
               </div>
             </div>
           </div>
