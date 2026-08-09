@@ -33,17 +33,17 @@ export default function Subjects({ onOpenEnroll }: { onOpenEnroll: () => void })
       id: "math",
       category: "board",
       tag: lang === "bn" ? "এসএসসি · এইচএসসি গণিত" : "SSC · HSC Math",
-      title: lang === "bn" ? "উচ্চতর গণিত ১-অন-১ মেন্টরিং" : "Higher Math 1-on-1 Mentorship",
+      title: lang === "bn" ? "উচ্চতর গণিত ব্যক্তিগত শিক্ষক" : "Higher Math 1-on-1 Mentorship",
       mentorInfo: lang === "bn" ? "মেন্টর: বুয়েট ও কয়েট গ্র্যাজুয়েট" : "Tutors: BUET & KUET Graduates",
       desc:
         lang === "bn"
-          ? "বীজগণিত, জ্যামিতি ও ক্যালকুলাসের গাণিতিক সমস্যা ধরে ধরে ১-অন-১ সমাধান।"
+          ? "বীজগণিত, জ্যামিতি ও ক্যালকুলাসের গাণিতিক সমস্যা ধরে ধরে সমাধান।"
           : "Personalized 1-on-1 problem solving from basic algebra to calculus.",
       img: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=600&q=80",
       syllabus:
         lang === "bn"
           ? [
-              "ব্যক্তিগত দূর্বলতা চিহ্নিতকরণ ও ১-অন-১ ক্লাস",
+              "ব্যক্তিগত দুর্বলতা চিহ্নিতকরণ ও একক মনোযোগে ক্লাস",
               "দ্বিঘাত সমীকরণ ও ত্রিকোণমিতিক প্রমাণ",
               "স্থানাঙ্ক জ্যামিতি ও ভেক্টর শর্টকাট",
               "সাপ্তাহিক ২ মিনিটের আত্ম-মূল্যায়ন কুইজ",
@@ -69,7 +69,7 @@ export default function Subjects({ onOpenEnroll }: { onOpenEnroll: () => void })
       syllabus:
         lang === "bn"
           ? [
-              "দৈনন্দিন ১-অন-১ স্পোকেন ইংলিশ প্র্যাকটিস",
+              "দৈনন্দিন স্পোকেন ইংলিশ প্র্যাকটিস সেশন",
               "ইংরেজি ব্যাকরণ ও ফ্রি-হ্যান্ড রাইটিং দক্ষতা",
               "ভোকাবুলারি ও উচ্চারণ শুদ্ধিকরণ সেশন",
               "বোর্ড পরীক্ষার ইংরেজি প্রশ্ন সমাধান",
@@ -85,11 +85,11 @@ export default function Subjects({ onOpenEnroll }: { onOpenEnroll: () => void })
       id: "science",
       category: "science",
       tag: lang === "bn" ? "পদার্থ · রসায়ন · জীব" : "Physics · Chem · Bio",
-      title: lang === "bn" ? "সায়েন্স অল-ইন-ওয়ান ১-অন-১ টিচিং" : "Science All-in-One 1-on-1 Teaching",
+      title: lang === "bn" ? "বিজ্ঞান বিষয়ভিত্তিক ব্যক্তিগত শিক্ষক" : "Science All-in-One 1-on-1 Teaching",
       mentorInfo: lang === "bn" ? "মেন্টর: বুয়েট ও মেডিকেল স্টুডেন্ট" : "Tutors: BUET & Medical Tutors",
       desc:
         lang === "bn"
-          ? "পদার্থবিজ্ঞান, রসায়ন ও জীববিজ্ঞানের জটিল থিওরি ও অংক সহজ ভাষায় ১-অন-১ বোঝা।"
+          ? "পদার্থবিজ্ঞান, রসায়ন ও জীববিজ্ঞানের জটিল থিওরি ও অংক সহজ ভাষায় বুঝে নেওয়া।"
           : "Master complex physics, chemistry & biology concepts with 1-on-1 guidance.",
       img: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=600&q=80",
       syllabus:
@@ -148,13 +148,18 @@ export default function Subjects({ onOpenEnroll }: { onOpenEnroll: () => void })
   });
 
   return (
-    <section id="subjects" className="py-20 md:py-24 bg-[#F8FAFC]">
+    <section id="subjects" className="py-20 md:py-24 bg-[#F8FAFC] scroll-mt-24">
       <div className="max-w-[1240px] mx-auto px-6 md:px-8">
         <div className="mb-12">
-          <div className="max-w-[700px] space-y-4">
-            <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0D2C4A] leading-[1.35] tracking-tight mb-4">
-              {t.subjTitle}
+          <div className="max-w-[760px] space-y-4">
+            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#00A896]/10 text-[#00A896] text-xs font-mono font-bold uppercase tracking-wider">
+              <span>{t.subjSectionH2 || "Subjects You Can Learn"}</span>
+            </span>
+
+            <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0D2C4A] leading-[1.35] tracking-tight">
+              {lang === "bn" ? "যেসব বিষয় ঘরে বসে শিখতে পারবেন" : "Subjects You Can Learn"}
             </h2>
+
             <p className="text-base sm:text-lg text-[#475569] leading-relaxed font-normal pt-1">
               {t.subjDesc}
             </p>
@@ -217,7 +222,7 @@ export default function Subjects({ onOpenEnroll }: { onOpenEnroll: () => void })
 
                 <div className="space-y-3 mb-8 bg-[#F8FAFC] p-5 sm:p-6 rounded-2xl border border-[#0D2C4A]/10">
                   <h4 className="text-xs font-mono font-bold uppercase text-[#0D2C4A] mb-3 tracking-wider">
-                    {lang === "bn" ? "১-অন-১ কোর্স সিলেবাস ও সুবিধা:" : "1-on-1 Syllabus & Highlights:"}
+                    {lang === "bn" ? "কোর্স সিলেবাস ও পড়ার সুবিধা:" : "1-on-1 Syllabus & Highlights:"}
                   </h4>
                   {subject.syllabus.map((item, idx) => (
                     <div key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm text-[#0D2C4A] leading-relaxed">
@@ -264,7 +269,7 @@ export default function Subjects({ onOpenEnroll }: { onOpenEnroll: () => void })
 
             <div className="space-y-3">
               <h4 className="text-xs font-mono font-bold uppercase text-[#00A896] tracking-wider">
-                {lang === "bn" ? "বিস্তারিত ১-অন-১ বিষয়সূচি:" : "Detailed 1-on-1 Syllabus:"}
+                {lang === "bn" ? "বিস্তারিত বিষয়সূচি:" : "Detailed 1-on-1 Syllabus:"}
               </h4>
               {selectedSubject.syllabus.map((item, i) => (
                 <div key={i} className="flex items-start gap-2.5 text-sm text-[#0D2C4A] bg-[#F8FAFC] p-3 rounded-xl border border-[#0D2C4A]/5">

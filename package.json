@@ -1,5 +1,5 @@
 {
-  "name": "alo-shikkha",
+  "name": "ototeachers",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -8,7 +8,7 @@
     "build": "node scripts/run-next.js build",
     "build:safe": "node scripts/run-next.js build:safe",
     "clean": "node scripts/run-next.js clean",
-    "start": "next start",
+    "start": "node scripts/run-next.js start",
     "lint": "next lint"
   },
   "dependencies": {

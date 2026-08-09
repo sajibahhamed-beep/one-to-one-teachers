@@ -7,7 +7,7 @@ import { ChevronDown, HelpCircle } from "lucide-react";
 const defaultFaqs = {
   bn: [
     {
-      q: "১-অন-১ অনলাইন ক্লাস কীভাবে কাজ করে?",
+      q: "ব্যক্তিগত অনলাইন ক্লাস কীভাবে পরিচালিত হয়?",
       a: "আপনি আপনার পছন্দের বিষয় ও সময় বেছে নেন। আমরা ৪৮ ঘণ্টার মধ্যে আপনার জন্য একজন উপযুক্ত যাচাইকৃত শিক্ষক খুঁজে দিই। ক্লাস হয় সম্পূর্ণ অনলাইনে — Zoom, Google Meet বা WhatsApp Call-এর মাধ্যমে, একদম ঘরে বসে।",
     },
     {
@@ -101,18 +101,23 @@ export default function FAQ() {
       : defaultItems;
 
   return (
-    <section id="faq" className="py-24 md:py-32 bg-white font-sans border-b border-[#0D2C4A]/10">
+    <section id="faq" className="py-24 md:py-32 bg-white font-sans border-b border-[#0D2C4A]/10 scroll-mt-24">
       <div className="max-w-[860px] mx-auto px-6 md:px-8">
 
         {/* Header */}
         <div className="text-center mb-16 space-y-4">
+          <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#00A896]/10 text-[#00A896] text-xs font-mono font-bold uppercase tracking-wider">
+            <span>{lang === "bn" ? "সাধারণ প্রশ্নোত্তর" : "Frequently Asked Questions"}</span>
+          </span>
+
           <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0D2C4A] leading-[1.35] tracking-tight">
-            {lang === "bn" ? "আপনার মনে যা প্রশ্ন আছে" : "Questions You Might Have"}
+            {lang === "bn" ? "সাধারণ জিজ্ঞাসা ও উত্তর (FAQ)" : "Frequently Asked Questions"}
           </h2>
+
           <p className="text-base sm:text-lg text-[#475569] leading-relaxed font-normal max-w-xl mx-auto">
             {lang === "bn"
-              ? "১-অন-১ অনলাইন শিক্ষক প্ল্যাটফর্ম সম্পর্কে সবচেয়ে বেশি জিজ্ঞেস করা প্রশ্নগুলোর উত্তর।"
-              : "Answers to the most common questions about our 1-on-1 online tutoring platform."}
+              ? "ব্যক্তিগত অনলাইন শিক্ষক প্ল্যাটফর্ম সম্পর্কে সবচেয়ে বেশি জিজ্ঞেস করা প্রশ্নগুলোর বিস্তারিত উত্তর।"
+              : "Answers to the most common questions about our affordable 1-on-1 online tutoring platform."}
           </p>
         </div>
 

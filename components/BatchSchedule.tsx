@@ -124,7 +124,7 @@ export default function BatchSchedule({ onOpenEnroll }: BatchScheduleProps) {
 
               <div className="flex items-center justify-between border-t border-[#0D2C4A]/10 pt-4 mt-2">
                 <span className="text-xs text-[#64748B] font-mono font-semibold">
-                  {lang === "bn" ? "১-অন-১ লাইভ সেশন" : "1-on-1 Live Session"}
+                  {lang === "bn" ? "ব্যক্তিগত লাইভ সেশন" : "1-on-1 Live Session"}
                 </span>
                 <button
                   onClick={onOpenEnroll}

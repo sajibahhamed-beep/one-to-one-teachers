@@ -15,7 +15,7 @@ export default function CategoryGrid({ onOpenEnroll }: CategoryGridProps) {
       title: t.catIelts,
       desc: t.catIeltsDesc,
       icon: UserCheck,
-      badge: lang === "bn" ? "১-অন-১ শিক্ষক" : "1-on-1 Tutor",
+      badge: lang === "bn" ? "ব্যক্তিগত শিক্ষক" : "Personal Tutor",
       img: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=500&q=80",
     },
     {
@@ -57,11 +57,17 @@ export default function CategoryGrid({ onOpenEnroll }: CategoryGridProps) {
 
   return (
     <section className="py-14 md:py-18 bg-[#F8FAFC] border-y border-[#0D2C4A]/10 font-sans">
-      <div className="max-w-[1240px] mx-auto px-6 md:px-8">
+      <div id="find-teacher" className="max-w-[1240px] mx-auto px-6 md:px-8 scroll-mt-24">
         <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
-          <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0D2C4A] leading-[1.35] tracking-tight mb-4">
-            {t.catHeaderDesc}
+          <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#00A896]/10 text-[#00A896] text-xs font-mono font-bold uppercase tracking-wider">
+            <span>{t.catSectionH2 || "Find the Right Online Teacher"}</span>
+          </span>
+          <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0D2C4A] leading-[1.35] tracking-tight">
+            {lang === "bn" ? "সঠিক অনলাইন শিক্ষক খুঁজুন" : "Find the Right Online Teacher"}
           </h2>
+          <p className="text-sm sm:text-base text-[#475569] leading-relaxed max-w-2xl mx-auto font-normal">
+            {t.catHeaderDesc}
+          </p>
         </div>
 
         {/* Redesigned Card Grid with generous breathing room & smooth interaction */}

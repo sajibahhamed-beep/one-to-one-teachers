@@ -131,7 +131,7 @@ export const BLOG_POSTS: BlogPost[] = [
         paragraphs: [
           "শুধু বিখ্যাত ব্র্যান্ডের পেছনে না ছুটে দেখুন আপনার সন্তান প্রতিদিনের ক্লাসে পড়া বুঝতে পারছে কিনা। একজন ভালো মেন্টর শিক্ষার্থীর আস্থা তৈরি করেন এবং পড়ার প্রতি ভয় দূর করেন।"
         ],
-        callout: "আলো শিক্ষা কোনো ভিডিও কোর্স বিক্রি করে না। আমরা আপনার সন্তানের সাথে বুয়েট, ঢাবি বা মেডিকেলের অভিজ্ঞ মেন্টরকে ১-অন-১ ক্লাসে যুক্ত করে দিই।"
+        callout: "ototeachers.com কোনো ভিডিও কোর্স বিক্রি করে না। আমরা আপনার সন্তানের সাথে বুয়েট, ঢাবি বা মেডিকেলের অভিজ্ঞ মেন্টরকে ১-অন-১ ক্লাসে যুক্ত করে দিই।"
       }
     ],
     sectionsEn: [
@@ -177,7 +177,7 @@ export const BLOG_POSTS: BlogPost[] = [
         paragraphs: [
           "Instead of chasing crowded coaching centers, evaluate whether your child is getting active practice and individualized guidance every day."
         ],
-        callout: "Alo Shikkha never sells pre-recorded videos. We connect your child directly with verified university tutors for 1-on-1 live interactive sessions."
+        callout: "ototeachers.com never sells pre-recorded videos. We connect your child directly with verified university tutors for 1-on-1 live interactive sessions."
       }
     ],
     keyTakeawaysBn: [
@@ -262,7 +262,7 @@ export const BLOG_POSTS: BlogPost[] = [
         paragraphs: [
           "প্রশ্নপত্র হাতে পেয়ে প্রথম ৫ মিনিট মনোযোগ দিয়ে সব প্রশ্ন রিডিং পড়ুন। সবচেয়ে সহজ ও ভালো জানা প্রশ্ন দিয়ে উত্তর লেখা শুরু করলে আত্মবিশ্বাস বহুগুণ বেড়ে যায়।"
         ],
-        callout: "আলো শিক্ষার ১-অন-১ মেন্টররা শিক্ষার্থীদের জন্য তৈরি করেন ব্যক্তিগত বোর্ড রিভিশন রুটিন এবং প্রতিটি মক টেস্টের লিখিত ফিডব্যাক।"
+        callout: "ototeachers.com-এর ১-অন-১ মেন্টররা শিক্ষার্থীদের জন্য তৈরি করেন ব্যক্তিগত বোর্ড রিভিশন রুটিন এবং প্রতিটি মক টেস্টের লিখিত ফিডব্যাক।"
       }
     ],
     sectionsEn: [
@@ -304,7 +304,7 @@ export const BLOG_POSTS: BlogPost[] = [
         paragraphs: [
           "Spend the first 5 minutes reading the question paper carefully. Start with your strongest answers to build momentum and calm your nerves."
         ],
-        callout: "Alo Shikkha provides dedicated 1-on-1 mock exam review sessions with personalized feedback for all SSC & HSC candidates."
+        callout: "ototeachers.com provides dedicated 1-on-1 mock exam review sessions with personalized feedback for all SSC & HSC candidates."
       }
     ],
     keyTakeawaysBn: [
@@ -385,7 +385,7 @@ export const BLOG_POSTS: BlogPost[] = [
         paragraphs: [
           "প্রতিদিন অন্তত ৩০ মিনিট হাতে-কলমে অংক প্র্যাকটিস করুন। উত্তর মিললে নিজেকে পুরস্কৃত করুন। মেন্টরের সহযোগিতা নিয়ে গণিতকে ভয় না পেয়ে জয়ের চ্যালেঞ্জ হিসেবে নিন।"
         ],
-        callout: "আলো শিক্ষার বুয়েট ও ঢাবি মেন্টররা ১-অন-১ ক্লাসে গণিতের সব কঠিন বিষয়কে সহজ পানির মতো বুঝিয়ে দিতে পারদর্শী।"
+        callout: "ototeachers.com-এর বুয়েট ও ঢাবি মেন্টররা ১-অন-১ ক্লাসে গণিতের সব কঠিন বিষয়কে সহজ পানির মতো বুঝিয়ে দিতে পারদর্শী।"
       }
     ],
     sectionsEn: [
@@ -423,7 +423,7 @@ export const BLOG_POSTS: BlogPost[] = [
         paragraphs: [
           "Dedicate 30 minutes every day to working out problems on paper. With patient 1-on-1 mentoring, math transforms from a scary subject into an engaging puzzle."
         ],
-        callout: "Alo Shikkha's BUET and DU engineering mentors specialize in turning math fear into academic excellence through patient 1-on-1 guidance."
+        callout: "ototeachers.com's BUET and DU engineering mentors specialize in turning math fear into academic excellence through patient 1-on-1 guidance."
       }
     ],
     keyTakeawaysBn: [
@@ -504,7 +504,7 @@ export const BLOG_POSTS: BlogPost[] = [
         paragraphs: [
           "ইংরেজি সিনেমা বা পডকাস্ট শুনুন এবং ছোট ছোট বাক্য আয়নার সামনে বা মেন্টরের সাথে বলুন। সপ্তাহে ৩ দিন ১-অন-১ সেশনে অংশ নিলেই ১ মাসের মধ্যে জড়তা কেটে যায়।"
         ],
-        callout: "আলো শিক্ষার ঢাকা বিশ্ববিদ্যালয়ের ইংরেজি বিভাগের মেন্টররা শিক্ষার্থীদের জড়তা কাটিয়ে তুলতে অত্যন্ত ধৈর্য ও আন্তরিকতার সাথে ১-অন-১ সেশন পরিচালনা করেন।"
+        callout: "ototeachers.com-এর ঢাকা বিশ্ববিদ্যালয়ের ইংরেজি বিভাগের মেন্টররা শিক্ষার্থীদের জড়তা কাটিয়ে তুলতে অত্যন্ত ধৈর্য ও আন্তরিকতার সাথে ১-অন-১ সেশন পরিচালনা করেন।"
       }
     ],
     sectionsEn: [
@@ -542,7 +542,7 @@ export const BLOG_POSTS: BlogPost[] = [
         paragraphs: [
           "Listen to English podcasts and repeat key phrases. Just 3 sessions a week with a dedicated 1-on-1 mentor eliminates speech hesitation within 30 days."
         ],
-        callout: "Alo Shikkha's English Language tutors from Dhaka University create a friendly, encouraging environment where speaking English becomes natural."
+        callout: "ototeachers.com's English Language tutors from Dhaka University create a friendly, encouraging environment where speaking English becomes natural."
       }
     ],
     keyTakeawaysBn: [
@@ -619,11 +619,11 @@ export const BLOG_POSTS: BlogPost[] = [
         ]
       },
       {
-        heading: "আলো শিক্ষার অভিভাবক ট্র্যাকিং সুবিধা",
+        heading: "ototeachers.com-এর অভিভাবক ট্র্যাকিং সুবিধা",
         paragraphs: [
           "আমাদের প্ল্যাটফর্মে প্রতি সপ্তাহে ক্লাসের উপস্থিতি, বাড়ির কাজ ও মক টেস্টের ফলাফল অভিভাবকদের হোয়াটসঅ্যাপে পৌঁছে দেওয়া হয়।"
         ],
-        callout: "আলো শিক্ষা বিশ্বাস করে অভিভাবক ও ১-অন-১ মেন্টরের যৌথ সহযোগিতাই একটি শিশুর উজ্জ্বল ভবিষ্যতের সেরা চাবিকাঠি।"
+        callout: "ototeachers.com বিশ্বাস করে অভিভাবক ও ১-অন-১ মেন্টরের যৌথ সহযোগিতাই একটি শিশুর উজ্জ্বল ভবিষ্যতের সেরা চাবিকাঠি।"
       }
     ],
     sectionsEn: [
@@ -657,11 +657,11 @@ export const BLOG_POSTS: BlogPost[] = [
         ]
       },
       {
-        heading: "Alo Shikkha Parent Progress Tracking",
+        heading: "ototeachers.com Parent Progress Tracking",
         paragraphs: [
           "We send weekly attendance, homework completion, and test score reports directly to parents via WhatsApp."
         ],
-        callout: "Alo Shikkha believes that strong partnership between parents and 1-on-1 mentors forms the foundation of every student's success."
+        callout: "ototeachers.com believes that strong partnership between parents and 1-on-1 mentors forms the foundation of every student's success."
       }
     ],
     keyTakeawaysBn: [
@@ -678,3 +678,93 @@ export const BLOG_POSTS: BlogPost[] = [
     ]
   }
 ];
+
+/**
+ * Get all blog posts combining static items and database items (if on server)
+ */
+export function getAllBlogs(): BlogPost[] {
+  try {
+    if (typeof window === "undefined") {
+      // Server-side: require getDB safely
+      const { getDB } = require("@/lib/db");
+      const db = getDB();
+      if (db && Array.isArray(db.blogs) && db.blogs.length > 0) {
+        const dbMapped: BlogPost[] = db.blogs.map((b: any) => ({
+          id: b.id || b.slug,
+          slug: b.slug || b.id,
+          titleBn: b.titleBn || "নিবন্ধ",
+          titleEn: b.titleEn || "Article",
+          category: b.category || "mentorship",
+          excerptBn: b.excerptBn || "",
+          excerptEn: b.excerptEn || "",
+          publishedDateBn: b.publishedDateBn || "০৬ আগস্ট, ২০২৬",
+          publishedDateEn: "06 August 2026",
+          readTimeBn: "৪ মিনিট পড়া",
+          readTimeEn: "4 min read",
+          image: b.image || "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=800&q=80",
+          author: {
+            nameBn: "OTOTeachers টিম",
+            nameEn: "OTOTeachers Team",
+            avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+            roleBn: "একাডেমিক পরামর্শক",
+            roleEn: "Academic Advisor",
+            institutionBn: "বুয়েট ও ঢাবি",
+            institutionEn: "BUET & DU",
+          },
+          tagsBn: ["১-অন-১ শিক্ষক", "পড়াশোনা", "পরামর্শ"],
+          tagsEn: ["1-on-1 Tutor", "Study", "Preparation"],
+          introBn: b.excerptBn || "১-অন-১ ব্যক্তিগত শিক্ষক এর মাধ্যমে আপনার সন্তানের পড়ালেখার অগ্রগতি নিশ্চিত করুন।",
+          introEn: b.excerptEn || "Ensure your child's learning progress with 1-on-1 personalized tutoring.",
+          sectionsBn: [
+            {
+              heading: "১-অন-১ শিক্ষাদানের বিশেষ সুবিধা",
+              subheading: "কেন একজন ডেডিকেটেড শিক্ষক প্রয়োজন?",
+              paragraphs: [
+                b.excerptBn || "১-অন-১ লাইভ ক্লাসে প্রতিটি শিক্ষার্থী তাদের নিজস্ব গতিতে শিখতে পারে এবং সকল জটিল প্রশ্নের সমাধান তাৎক্ষণিক পেয়ে থাকে।",
+                "আমাদের বুয়েট, ঢাবি ও মেডিকেলের শিক্ষকেরা প্রতিটি বিষয় ধরে ধরে ১-অন-১ সহজ ভাষায় বুঝিয়ে দেন。"
+              ],
+              callout: "অর্থ যেন কখনো কোনো শিক্ষার্থীর শিক্ষার পথে বাধা না হয়।"
+            }
+          ],
+          sectionsEn: [
+            {
+              heading: "Benefits of 1-on-1 Tutoring",
+              subheading: "Why a dedicated tutor matters?",
+              paragraphs: [
+                b.excerptEn || "In 1-on-1 live sessions, students learn at their own pace and get instant solutions to complex doubts.",
+                "Tutors from BUET, DU & DMC break down difficult concepts step by step."
+              ],
+              callout: "Money should never be a restriction for education."
+            }
+          ],
+          keyTakeawaysBn: [
+            "ব্যক্তিগত ১-অন-১ মনোযোগ",
+            "প্রথম ক্লাস সম্পূর্ণ ফ্রি",
+            "অনুকূল সময়সূচী বেছে নেওয়ার সুযোগ"
+          ],
+          keyTakeawaysEn: [
+            "Personalized 1-on-1 attention",
+            "First session completely free",
+            "Flexible schedule selection"
+          ]
+        }));
+        
+        const existingIds = new Set(dbMapped.map((p) => p.id));
+        const staticFiltered = BLOG_POSTS.filter((p) => !existingIds.has(p.id));
+        return [...dbMapped, ...staticFiltered];
+      }
+    }
+  } catch (e) {
+    // Fallback to static
+  }
+  return BLOG_POSTS;
+}
+
+/**
+ * Find a blog post by id or slug
+ */
+export function getBlogBySlug(slug: string): BlogPost | undefined {
+  const all = getAllBlogs();
+  return all.find((p) => p.slug === slug || p.id === slug);
+}
+

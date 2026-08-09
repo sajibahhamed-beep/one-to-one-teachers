@@ -8,8 +8,8 @@ export default function WhatsAppButton() {
   const { lang } = useLanguage();
   const pathname = usePathname();
   const [phone, setPhone] = useState("8801775551325");
-  const [msgBn, setMsgBn] = useState("হ্যালো আলো শিক্ষা টিম, ১-অন-১ অনলাইন শিক্ষক সম্পর্কে জানতে চাই।");
-  const [msgEn, setMsgEn] = useState("Hello Alo Shikkha team, I want to inquire about 1-on-1 online teachers.");
+  const [msgBn, setMsgBn] = useState("হ্যালো ototeachers.com টিম, ব্যক্তিগত অনলাইন শিক্ষক সম্পর্কে জানতে চাই।");
+  const [msgEn, setMsgEn] = useState("Hello ototeachers.com team, I want to inquire about 1-on-1 online teachers.");
 
   useEffect(() => {
     fetch("/api/settings")

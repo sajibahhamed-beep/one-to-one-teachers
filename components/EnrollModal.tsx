@@ -104,7 +104,7 @@ export default function EnrollModal({
                 <Sparkles className="w-4 h-4 text-[#00A896]" />
                 <span>
                   {lang === "bn"
-                    ? `ধাপ ${step} (মোট ৪) — ১-অন-১ মেন্টর রিকোয়েস্ট`
+                    ? `ধাপ ${step} (মোট ৪) — ব্যক্তিগত শিক্ষক রিকোয়েস্ট`
                     : `Step ${step} of 4 — Request 1-on-1 Mentor`}
                 </span>
               </div>

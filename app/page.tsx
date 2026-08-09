@@ -1,148 +1,98 @@
-"use client";
+import type { Metadata } from "next";
+import HomeClient from "./HomeClient";
+import JsonLd from "@/components/JsonLd";
+import { getFAQPageSchema, SITE_URL, SITE_NAME, DEFAULT_SEO } from "@/lib/seoConfig";
 
-import { useState, useEffect } from "react";
-import { useLanguage } from "@/context/LanguageContext";
-import Navbar from "@/components/Navbar";
-import Hero from "@/components/Hero";
-import CategoryGrid from "@/components/CategoryGrid";
-import SubjectMarquee from "@/components/SubjectMarquee";
-import ProblemSection from "@/components/ProblemSection";
-import HowItWorks from "@/components/HowItWorks";
-import Subjects from "@/components/Subjects";
-import BatchSchedule from "@/components/BatchSchedule";
-import SuccessStories from "@/components/SuccessStories";
-import Mentors from "@/components/Mentors";
-import Pricing from "@/components/Pricing";
-import ImpactSection from "@/components/ImpactSection";
-import FAQ from "@/components/FAQ";
-import EnrollModal from "@/components/EnrollModal";
-import MentorModal from "@/components/MentorModal";
-import Footer from "@/components/Footer";
-import { ArrowRight, HeartHandshake, Sparkles } from "lucide-react";
-
-export default function Home() {
-  const { lang } = useLanguage();
-  const [enrollModalOpen, setEnrollModalOpen] = useState(false);
-  const [mentorModalOpen, setMentorModalOpen] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<string>("Pay-what-you-can");
-  const [selectedFee, setSelectedFee] = useState<number>(600);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("show");
-            observer.unobserve(entry.target);
-          }
-        });
+export const metadata: Metadata = {
+  title: "Affordable One-to-One Online Teachers in Bangladesh | OTOTeachers",
+  description:
+    "বাংলাদেশে সাশ্রয়ী ১-অন-১ অনলাইন শিক্ষক প্ল্যাটফর্ম। বুয়েট, ঢাবি ও মেডিকেলের যাচাইকৃত শিক্ষকদের সাথে লাইভ ওয়ান-টু-ওয়ান ক্লাস — ঘরে বসে। প্রথম ট্রায়াল ক্লাস সম্পূর্ণ বিনামূল্যে।",
+  keywords: [
+    "Affordable one-to-one online teachers in Bangladesh",
+    "online tutor Bangladesh",
+    "online teacher Bangladesh",
+    "online tutoring Bangladesh",
+    "one-to-one online classes",
+    "affordable online tutor",
+    "online tuition Bangladesh",
+    "ব্যক্তিগত শিক্ষক",
+    "অনলাইন শিক্ষক",
+    "অনলাইন টিউশন",
+    "সাশ্রয়ী অনলাইন শিক্ষা",
+    "১-অন-১ শিক্ষক",
+    "SSC HSC online tutor Bangladesh",
+    "BUET DU online tutor",
+  ],
+  alternates: {
+    canonical: SITE_URL,
+  },
+  openGraph: {
+    title: "Affordable One-to-One Online Teachers in Bangladesh | OTOTeachers",
+    description: "Connect with verified online tutors from BUET, DU & Medical Colleges for 100% live 1-on-1 classes across Bangladesh. First session free.",
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    locale: "bn_BD",
+    alternateLocale: ["en_US"],
+    type: "website",
+    images: [
+      {
+        url: `${SITE_URL}/Assets/Group%202147229264.png`,
+        width: 1200,
+        height: 630,
+        alt: "Affordable One-to-One Online Teachers in Bangladesh - OTOTeachers",
       },
-      { threshold: 0.1 }
-    );
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Affordable One-to-One Online Teachers in Bangladesh | OTOTeachers",
+    description: "100% live one-to-one online classes with top university tutors. First session completely free.",
+    images: [`${SITE_URL}/Assets/Group%202147229264.png`],
+  },
+};
 
-    document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+const homeFaqs = [
+  {
+    q: "১-অন-১ অনলাইন ক্লাস কীভাবে কাজ করে?",
+    a: "আপনি আপনার পছন্দের বিষয় ও সময় বেছে নেন। আমরা ৪৮ ঘণ্টার মধ্যে আপনার জন্য একজন উপযুক্ত যাচাইকৃত শিক্ষক খুঁজে দিই। ক্লাস হয় সম্পূর্ণ অনলাইনে — Zoom, Google Meet বা WhatsApp Call-এর মাধ্যমে, একদম ঘরে বসে।",
+  },
+  {
+    q: "প্রথম ফ্রি ট্রায়াল ক্লাসটি কীভাবে পাবো?",
+    a: "শুধু ফর্মটি পূরণ করুন। আমরা আপনার সাথে যোগাযোগ করব এবং প্রথম সেশনটি সম্পূর্ণ বিনামূল্যে নেওয়ার ব্যবস্থা করব। কোনো কার্ড বা অগ্রিম পেমেন্টের প্রয়োজন নেই।",
+  },
+  {
+    q: "শিক্ষকরা কি সত্যিই বুয়েট, ঢাবি বা মেডিকেলের?",
+    a: "হ্যাঁ। আমাদের সকল শিক্ষক বাংলাদেশের শীর্ষস্থানীয় বিশ্ববিদ্যালয়ের ছাত্র বা সদ্য পাস করা গ্র্যাজুয়েট। তাদের একাডেমিক সনদ যাচাই করে তারপরই প্ল্যাটফর্মে যোগ দেওয়ার অনুমতি দেওয়া হয়।",
+  },
+  {
+    q: "ক্লাসের ফি কত? টাকা না থাকলে কী হবে?",
+    a: "আমাদের 'যা সাধ্যে কুলায় তাই দাও' (Pay-what-you-can) নীতি অনুযায়ী ফি নির্ধারিত হয়। আর্থিক সংকটে থাকা শিক্ষার্থীরা সম্পূর্ণ বিনামূল্যেও ক্লাস করতে পারবে — কারণ আমরা বিশ্বাস করি, অর্থ যেন কোনো শিক্ষার্থীর শিক্ষার পথে বাধা না হয়।",
+  },
+  {
+    q: "কোন কোন বিষয়ে শিক্ষক পাওয়া যাবে?",
+    a: "গণিত, পদার্থবিজ্ঞান, রসায়ন, জীববিজ্ঞান, ইংরেজি (স্পোকেন সহ), বাংলা, আইসিটি, হিসাববিজ্ঞান, এবং বোর্ড পরীক্ষার সকল বিষয়ে আমাদের যাচাইকৃত শিক্ষক রয়েছে।",
+  },
+  {
+    q: "ক্লাসের সময়সূচি কি নিজে ঠিক করা যাবে?",
+    a: "হ্যাঁ। শিক্ষার্থী ও শিক্ষক উভয়ের সুবিধামতো সময়ে ক্লাস নির্ধারিত হয়। সকাল, বিকেল বা রাতে — যেকোনো সময়ে নিতে পারবেন।",
+  },
+  {
+    q: "শিক্ষক পছন্দ না হলে কী করব?",
+    a: "কোনো সমস্যা নেই। ট্রায়াল ক্লাসের পরে শিক্ষক পছন্দ না হলে আমরা বিনামূল্যে নতুন শিক্ষক ম্যাচ করে দেব। আপনার সন্তুষ্টি আমাদের সর্বোচ্চ অগ্রাধিকার।",
+  },
+  {
+    q: "ঢাকার বাইরে থেকেও কি ক্লাস নেওয়া যাবে?",
+    a: "অবশ্যই। ক্লাস সম্পূর্ণ অনলাইনে হওয়ায় বাংলাদেশের যেকোনো জেলা — রংপুর, খুলনা, রাজশাহী, চট্টগ্রাম, বরিশাল যেখান থেকেই হোক — শুধু একটি স্মার্টফোন ও ইন্টারনেট সংযোগ থাকলেই চলবে।",
+  },
+];
 
-    return () => observer.disconnect();
-  }, []);
-
-  const handleOpenEnroll = (plan?: string | any, fee?: number | any) => {
-    const validPlan = typeof plan === "string" ? plan : "Pay-what-you-can";
-    const validFee = typeof fee === "number" ? fee : 600;
-    setSelectedPlan(validPlan);
-    setSelectedFee(validFee);
-    setEnrollModalOpen(true);
-  };
+export default function HomePage() {
+  const faqSchema = getFAQPageSchema(homeFaqs);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FBF7EF]">
-      {/* Navbar with mentors.com.bd Topbar & Language Switcher */}
-      <Navbar
-        onOpenEnroll={() => handleOpenEnroll("Pay-what-you-can", 600)}
-        onOpenMentor={() => setMentorModalOpen(true)}
-      />
-
-      {/* Hero Visual Section */}
-      <Hero onOpenEnroll={() => handleOpenEnroll("Pay-what-you-can", 600)} />
-
-      {/* Category Icons Grid (mentors.com.bd style) */}
-      <CategoryGrid onOpenEnroll={() => handleOpenEnroll("Pay-what-you-can", 600)} />
-
-      {/* Marquee Ticker */}
-      <SubjectMarquee />
-
-      {/* Educational Gap & Vision */}
-      <ProblemSection onOpenEnroll={() => handleOpenEnroll("Pay-what-you-can", 600)} />
-
-      {/* How it works */}
-      <HowItWorks />
-
-      {/* Subjects & Syllabus Gallery */}
-      <Subjects onOpenEnroll={() => handleOpenEnroll("Pay-what-you-can", 600)} />
-
-      {/* Live Batch Schedule (mentors.com.bd style) */}
-      <BatchSchedule onOpenEnroll={() => handleOpenEnroll("Pay-what-you-can", 600)} />
-
-      {/* Student Success Stories & Scorecards */}
-      <SuccessStories />
-
-      {/* Mentor Spotlight */}
-      <Mentors onOpenEnroll={() => handleOpenEnroll("Pay-what-you-can", 600)} />
-
-      {/* Flexible Fee & Sliding Scale Calculator */}
-      <Pricing onOpenEnroll={handleOpenEnroll} />
-
-      {/* Impact Statistics */}
-      <ImpactSection />
-
-      {/* FAQ Section */}
-      <FAQ />
-
-      {/* Call to Action */}
-      <section className="cta-final bg-[#12213D] text-[#FBF7EF] text-center py-24 relative overflow-hidden">
-        <div className="wrap max-w-[1160px] mx-auto px-6 md:px-8 relative z-10">
-          <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#FBF7EF] max-w-2xl mx-auto mb-6 leading-[1.35]">
-            {lang === "bn" ? "আপনার সন্তানের মেন্টর মাত্র একটি ফরম দূরে।" : "Your child's mentor is one form away."}
-          </h2>
-          <p className="text-base sm:text-lg text-[#FBF7EF]/75 max-w-lg mx-auto mb-10 leading-relaxed">
-            {lang === "bn"
-              ? "সাইন আপ করতে মাত্র ৪ মিনিট সময় লাগবে। প্রথম সেশনটি সম্পূর্ণ ফ্রি!"
-              : "Four minutes to sign up. A match within 48 hours. The first session is always free."}
-          </p>
-          <div className="hero-actions flex flex-wrap items-center justify-center gap-4">
-            <button
-              onClick={() => handleOpenEnroll("Pay-what-you-can", 600)}
-              className="btn btn-gold flex items-center gap-2 px-7 py-4 rounded-full bg-[#FFB627] text-[#12213D] font-bold text-sm hover:-translate-y-0.5 hover:shadow-xl transition-all"
-            >
-              <span>{lang === "bn" ? "ফ্রি ট্রায়াল সেশনে শুরু করুন" : "Start with a free first session"}</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => setMentorModalOpen(true)}
-              className="btn btn-outline flex items-center gap-2 px-7 py-4 rounded-full border border-[#FBF7EF]/30 text-[#FBF7EF] font-semibold text-sm hover:bg-[#FBF7EF]/10 transition-colors"
-            >
-              <HeartHandshake className="w-4 h-4 text-[#FFB627]" />
-              <span>{lang === "bn" ? "মেন্টর হতে আবেদন করুন" : "Become a mentor instead"}</span>
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <Footer />
-
-      {/* Student Registration Modal */}
-      <EnrollModal
-        isOpen={enrollModalOpen}
-        onClose={() => setEnrollModalOpen(false)}
-        initialPlan={selectedPlan}
-        initialFee={selectedFee}
-      />
-
-      {/* Mentor Application Modal */}
-      <MentorModal
-        isOpen={mentorModalOpen}
-        onClose={() => setMentorModalOpen(false)}
-      />
-    </div>
+    <>
+      <JsonLd data={faqSchema} />
+      <HomeClient />
+    </>
   );
 }

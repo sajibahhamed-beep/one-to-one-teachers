@@ -1,95 +1,61 @@
-"use client";
+import type { Metadata } from "next";
+import SubjectsClient from "./SubjectsClient";
+import JsonLd from "@/components/JsonLd";
+import { getBreadcrumbSchema, getSubjectCoursesSchema, SITE_URL, SITE_NAME } from "@/lib/seoConfig";
 
-import { useState } from "react";
-import Navbar from "@/components/Navbar";
-import Subjects from "@/components/Subjects";
-import HowItWorks from "@/components/HowItWorks";
-import Mentors from "@/components/Mentors";
-import SuccessStories from "@/components/SuccessStories";
-import Footer from "@/components/Footer";
-import EnrollModal from "@/components/EnrollModal";
-import MentorModal from "@/components/MentorModal";
-import { useLanguage } from "@/context/LanguageContext";
-import { ArrowRight, GraduationCap, ShieldCheck, Sparkles } from "lucide-react";
+export const metadata: Metadata = {
+  title: "বিষয়ভিত্তিক ১-অন-১ শিক্ষক ডিরেক্টরি — গণিত, ইংরেজি, সায়েন্স ও আইসিটি",
+  description: "গণিত, ইংরেজি, পদার্থবিজ্ঞান, রসায়ন, জীববিজ্ঞান বা আইসিটি — প্রতিটি বিষয়ে বুয়েট, ঢাবি ও মেডিকেলের অভিজ্ঞ শিক্ষক থেকে ১-অন-১ লাইভ ক্লাসে অংশ নিন।",
+  keywords: [
+    "অনলাইন শিক্ষক বিষয়ভিত্তিক",
+    "গণিত প্রাইভেট টিউটর",
+    "স্পোকেন ইংলিশ ১-অন-১",
+    "পদার্থবিজ্ঞান শিক্ষক",
+    "রসায়ন টিউটর",
+    "আইসিটি শিক্ষক",
+    "বুয়েট শিক্ষক অনলাইন",
+    "ঢাবি শিক্ষক অনলাইন",
+    "SSC HSC Subject Tutors",
+  ],
+  alternates: {
+    canonical: `${SITE_URL}/subjects`,
+  },
+  openGraph: {
+    title: "বিষয়ভিত্তিক ১-অন-১ শিক্ষক ডিরেক্টরি | OTOTeachers",
+    description: "বুয়েট, ঢাবি ও মেডিকেলের অভিজ্ঞ শিক্ষকদের সাথে আপনার পছন্দের বিষয়ে ১-অন-১ লাইভ ক্লাসে শিখুন।",
+    url: `${SITE_URL}/subjects`,
+    siteName: SITE_NAME,
+    locale: "bn_BD",
+    type: "website",
+    images: [
+      {
+        url: `${SITE_URL}/Assets/Group%202147229264.png`,
+        width: 1200,
+        height: 630,
+        alt: "Subject Wise 1-on-1 Tutors - OTOTeachers",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "বিষয়ভিত্তিক ১-অন-১ শিক্ষক ডিরেক্টরি | OTOTeachers",
+    description: "গণিত, ইংরেজি, সায়েন্স ও আইসিটিতে ১-অন-১ ডেডিকেটেড অনলাইন শিক্ষক।",
+    images: [`${SITE_URL}/Assets/Group%202147229264.png`],
+  },
+};
 
 export default function SubjectTeachersPage() {
-  const { lang } = useLanguage();
-  const [enrollModalOpen, setEnrollModalOpen] = useState(false);
-  const [mentorModalOpen, setMentorModalOpen] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState("Pay-what-you-can");
-  const [selectedFee, setSelectedFee] = useState(600);
-
-  const handleOpenEnroll = (planName?: string | any, fee?: number | any) => {
-    const validPlan = typeof planName === "string" ? planName : "Pay-what-you-can";
-    const validFee = typeof fee === "number" ? fee : 600;
-    setSelectedPlan(validPlan);
-    setSelectedFee(validFee);
-    setEnrollModalOpen(true);
-  };
+  const breadcrumbSchema = getBreadcrumbSchema([
+    { name: "হোম", url: "/" },
+    { name: "বিষয়ভিত্তিক শিক্ষক", url: "/subjects" },
+  ]);
+  const coursesSchema = getSubjectCoursesSchema();
 
   return (
-    <main className="min-h-screen bg-[#F8FAFC] font-sans">
-      {/* Top Sticky Header */}
-      <Navbar
-        onOpenEnroll={() => handleOpenEnroll()}
-        onOpenMentor={() => setMentorModalOpen(true)}
-      />
-
-      {/* Subject Teachers Page Hero Banner */}
-      <section className="bg-gradient-to-b from-[#0D2C4A] via-[#16385C] to-[#00A896] text-white py-16 md:py-20">
-        <div className="max-w-[1240px] mx-auto px-6 md:px-8 text-center max-w-3xl space-y-4">
-          <h1 className="font-sans text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-[1.35] mb-4">
-            {lang === "bn"
-              ? "আপনার সন্তানের প্রিয় বিষয়ের জন্য ১-অন-১ শিক্ষক"
-              : "Dedicated 1-on-1 Tutors for Every Subject"}
-          </h1>
-
-          <p className="text-base sm:text-lg text-white/85 leading-relaxed">
-            {lang === "bn"
-              ? "গণিত, ইংরেজি, পদার্থবিজ্ঞান, রসায়ন বা আইসিটি — প্রতিটি বিষয়ে বুয়েট, ঢাবি ও মেডিকেলের অভিজ্ঞ শিক্ষক থেকে ১-অন-১ টিচিং নিন।"
-              : "Get personalized 1-on-1 guidance in Math, English, Physics, Chemistry & ICT from BUET, DU & Medical graduates."}
-          </p>
-
-          <div className="pt-4 flex flex-wrap justify-center gap-4">
-            <button
-              onClick={() => handleOpenEnroll()}
-              className="px-8 py-3.5 rounded-full bg-[#00A896] text-white font-bold text-sm hover:bg-[#008075] shadow-lg shadow-[#00A896]/30 flex items-center gap-2 cursor-pointer"
-            >
-              <span>{lang === "bn" ? "আমার শিক্ষক রিকোয়েস্ট করুন" : "Request My Tutor"}</span>
-              <ArrowRight className="w-4.5 h-4.5 text-white" />
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* Section 1: How 1-on-1 Teaching Works (১-অন-১ পড়াশোনা কীভাবে কাজ করে - First Position) */}
-      <HowItWorks />
-
-      {/* Section 2: Subject Wise Teachers Directory (বিষয়ভিত্তিক টিচার্স) */}
-      <Subjects onOpenEnroll={() => handleOpenEnroll()} />
-
-      {/* Section 3: About Our Teachers (আমাদের শিক্ষকবৃন্দ) */}
-      <Mentors onOpenEnroll={() => handleOpenEnroll()} />
-
-      {/* Section 4: Testimonials (টেস্টিমোনিয়াল) */}
-      <SuccessStories />
-
-      {/* Footer */}
-      <Footer />
-
-      {/* Request Teacher Modal */}
-      <EnrollModal
-        isOpen={enrollModalOpen}
-        onClose={() => setEnrollModalOpen(false)}
-        initialPlan={selectedPlan}
-        initialFee={selectedFee}
-      />
-
-      {/* Become a Teacher Modal */}
-      <MentorModal
-        isOpen={mentorModalOpen}
-        onClose={() => setMentorModalOpen(false)}
-      />
-    </main>
+    <>
+      <JsonLd data={breadcrumbSchema} />
+      <JsonLd data={coursesSchema} />
+      <SubjectsClient />
+    </>
   );
 }

@@ -11,24 +11,19 @@ export default function ProblemSection({ onOpenEnroll }: ProblemSectionProps) {
   const { t, lang } = useLanguage();
 
   return (
-    <section id="problem" className="py-20 md:py-24 bg-[#F8FAFC] text-[#0D2C4A] font-sans border-b border-[#0D2C4A]/10">
+    <section id="why-choose-us" className="py-20 md:py-24 bg-[#F8FAFC] text-[#0D2C4A] font-sans border-b border-[#0D2C4A]/10 scroll-mt-24">
       <div className="max-w-[1240px] mx-auto px-6 md:px-8">
-        <div className="text-center max-w-[780px] mx-auto mb-16 space-y-4">
-          <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0D2C4A] leading-[1.35] tracking-tight mb-5">
-            {lang === "bn" ? (
-              <>
-                আপনার সন্তানের মেন্টর মাত্র <br className="hidden sm:inline" />
-                একটি ফরম দূরে।
-              </>
-            ) : (
-              <>Your child's mentor is one form away.</>
-            )}
+        <div className="text-center max-w-[820px] mx-auto mb-16 space-y-4">
+          <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#00A896]/10 text-[#00A896] text-xs font-mono font-bold uppercase tracking-wider">
+            <span>{t.probSectionH2 || "Why Choose One-to-One Online Classes"}</span>
+          </span>
+
+          <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0D2C4A] leading-[1.35] tracking-tight">
+            {lang === "bn" ? "কেন ব্যক্তিগত অনলাইন ক্লাস বেছে নেবেন?" : "Why Choose One-to-One Online Classes"}
           </h2>
 
-          <p className="text-base sm:text-lg text-[#475569] leading-relaxed font-normal max-w-xl mx-auto pt-1">
-            {lang === "bn"
-              ? "সাইন আপ করতে মাত্র ৪ মিনিট সময় লাগবে। প্রথম সেশনটি সম্পূর্ণ ফ্রি!"
-              : "Four minutes to sign up. A match within 48 hours. The first session is always free."}
+          <p className="text-base sm:text-lg text-[#475569] leading-relaxed font-normal max-w-2xl mx-auto pt-1">
+            {t.probDesc}
           </p>
         </div>
 

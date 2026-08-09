@@ -25,17 +25,22 @@ export default function Pricing({ onOpenEnroll }: PricingProps) {
   const currentDurationList = lang === "bn" ? durationBn : durationEn;
 
   return (
-    <section id="pricing" className="py-20 bg-[#F8FAFC]">
+    <section id="pricing" className="py-20 bg-[#F8FAFC] scroll-mt-24">
       <div className="max-w-[1240px] mx-auto px-6 md:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0D2C4A] leading-[1.35] mb-4">
-            {lang === "bn" ? "আপনার জন্য উপযুক্ত প্ল্যান বেছে নিন" : "Choose the Plan That Fits You"}
+          <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#00A896]/10 text-[#00A896] text-xs font-mono font-bold uppercase tracking-wider">
+            <span>{lang === "bn" ? "সাধ্যের মধ্যে স্বচ্ছ ফি মডেল" : "Affordable One-to-One Learning"}</span>
+          </span>
+
+          <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0D2C4A] leading-[1.35] tracking-tight">
+            {lang === "bn" ? "সাশ্রয়ী অনলাইন শিক্ষা" : "Affordable One-to-One Learning"}
           </h2>
-          <p className="text-base sm:text-lg text-[#475569] leading-relaxed max-w-xl mx-auto">
+
+          <p className="text-base sm:text-lg text-[#475569] leading-relaxed max-w-2xl mx-auto font-normal">
             {lang === "bn"
-              ? "কোনো গোপন ফি বা হিডেন চার্জ নেই। প্রতিটি প্ল্যানে বিষয়ভিত্তিক ১-অন-১ শিক্ষক সুনিশ্চিত।"
-              : "No hidden charges. Subject wise 1-on-1 teacher guaranteed with every plan."}
+              ? "পারিবারিক সাধ্যের সাথে মানানসই ও স্বচ্ছ ফি ব্যবস্থা। কোনো হিডেন চার্জ নেই — সপ্তাহের দিন ও ক্লাসের সময় অনুযায়ী ফি নির্ধারণ করুন।"
+              : "Transparent and affordable sliding scale fees tailored to Bangladeshi families. Zero hidden costs — customize weekly class days and session duration."}
           </p>
         </div>
 
@@ -61,7 +66,7 @@ export default function Pricing({ onOpenEnroll }: PricingProps) {
               </h3>
               <p className="text-xs sm:text-sm text-slate-500 mb-6 leading-relaxed">
                 {lang === "bn"
-                  ? "নিম্ন আয়ের অসচ্ছল পরিবারের শিক্ষার্থীদের জন্য ডোনার-ফান্ডেড ১০০% ফ্রি বিষয়ভিত্তিক ১-অন-১ শিক্ষক।"
+                  ? "নিম্ন আয়ের অসচ্ছল পরিবারের শিক্ষার্থীদের জন্য ডোনার-ফান্ডেড ১০০% ফ্রি বিষয়ভিত্তিক ব্যক্তিগত শিক্ষক।"
                   : "100% Donor-funded free subject wise 1-on-1 teachers for low-income background learners."}
               </p>
 
@@ -83,12 +88,12 @@ export default function Pricing({ onOpenEnroll }: PricingProps) {
                 <div className="flex items-center gap-2.5">
                   <Check className="w-4 h-4 text-slate-400 flex-shrink-0" />
                   <span className="font-bold text-slate-800">
-                    {lang === "bn" ? "বিষয়ভিত্তিক ১-অন-১ শিক্ষক (Subject Wise Teacher)" : "Subject Wise 1-on-1 Teacher"}
+                    {lang === "bn" ? "বিষয়ভিত্তিক ব্যক্তিগত শিক্ষক (Subject Wise Teacher)" : "Subject Wise 1-on-1 Teacher"}
                   </span>
                 </div>
                 <div className="flex items-center gap-2.5">
                   <Check className="w-4 h-4 text-slate-400 flex-shrink-0" />
-                  <span>{lang === "bn" ? "সাপ্তাহিক ১-অন-১ লাইভ ক্লাস সেশন" : "Weekly Live 1-on-1 Class Sessions"}</span>
+                  <span>{lang === "bn" ? "সাপ্তাহিক লাইভ অনলাইন ক্লাস সেশন" : "Weekly Live 1-on-1 Class Sessions"}</span>
                 </div>
                 <div className="flex items-center gap-2.5">
                   <Check className="w-4 h-4 text-slate-400 flex-shrink-0" />
@@ -229,7 +234,7 @@ export default function Pricing({ onOpenEnroll }: PricingProps) {
                 <div className="flex items-center gap-2.5">
                   <Check className="w-4.5 h-4.5 text-[#D97706] flex-shrink-0 stroke-[2.5]" />
                   <span>
-                    {lang === "bn" ? "ঘরে বসেই ১-অন-১ লাইভ সেশন" : "Flexible Online Sessions from Home"}
+                    {lang === "bn" ? "ঘরে বসেই শিক্ষকের সাথে লাইভ সেশন" : "Flexible Online Sessions from Home"}
                   </span>
                 </div>
                 <div className="flex items-center gap-2.5 text-[#92400E] font-semibold bg-[#FEF3C7]/60 p-2 rounded-xl border border-[#FDE68A]/60">

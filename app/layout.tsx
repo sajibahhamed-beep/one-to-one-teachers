@@ -2,12 +2,14 @@ import type { Metadata, Viewport } from "next";
 import { Hind_Siliguri, Roboto, JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import { LanguageProvider } from "@/context/LanguageContext";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import JsonLd from "@/components/JsonLd";
+import { getOrganizationSchema, getWebSiteSchema, SITE_URL, SITE_NAME, DEFAULT_SEO } from "@/lib/seoConfig";
 import "./globals.css";
 
-// ─── Fonts — only load what we actually use ─────────────────────────────────
+// ─── Fonts ───────────────────────────────────────────────────────────────────
 const hindSiliguri = Hind_Siliguri({
   subsets: ["bengali", "latin"],
-  weight: ["400", "500", "600", "700"],   // dropped unused 300
+  weight: ["400", "500", "600", "700"],
   variable: "--font-hind-siliguri",
   display: "swap",
   preload: true,
@@ -15,10 +17,10 @@ const hindSiliguri = Hind_Siliguri({
 
 const roboto = Roboto({
   subsets: ["latin"],
-  weight: ["400", "500", "700"],          // dropped unused 300 & 900
+  weight: ["400", "500", "700"],
   variable: "--font-roboto",
   display: "swap",
-  preload: false,                          // only preload primary (Bangla) font
+  preload: false,
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -39,47 +41,58 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 
 // ─── SEO Metadata ────────────────────────────────────────────────────────────
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "ototeachers.com — ১-অন-১ অনলাইন শিক্ষক | One-to-One Teacher for All",
-    template: "%s | ototeachers.com",
+    default: DEFAULT_SEO.title,
+    template: `%s | ${SITE_NAME}`,
   },
-  description:
-    "বাংলাদেশের ১-অন-১ অনলাইন শিক্ষক প্ল্যাটফর্ম। বুয়েট, ঢাবি ও মেডিকেলের যাচাইকৃত শিক্ষকদের সাথে সরাসরি লাইভ ক্লাস — ঘরে বসে। প্রথম ক্লাস বিনামূল্যে।",
-  keywords: [
-    "ototeachers.com",
-    "ototeachers",
-    "online teacher Bangladesh",
-    "১-অন-১ শিক্ষক",
-    "১-অন-১ অনলাইন শিক্ষক",
-    "private tutor Bangladesh",
-    "online tutor Bangla",
-    "SSC HSC math teacher",
-    "buet teacher online",
-    "1 on 1 online class Bangladesh",
-    "গৃহশিক্ষক অনলাইন",
-  ],
-  authors: [{ name: "ototeachers.com — One-to-One Teacher for All" }],
-  metadataBase: new URL("https://ototeachers.com"),
+  description: DEFAULT_SEO.description,
+  keywords: DEFAULT_SEO.keywords,
+  authors: [{ name: "OTOTeachers — One-to-One Teacher for All", url: SITE_URL }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  applicationName: SITE_NAME,
   alternates: {
-    canonical: "/",
+    canonical: SITE_URL,
   },
   openGraph: {
-    title: "ototeachers.com — ১-অন-১ অনলাইন শিক্ষক প্ল্যাটফর্ম",
-    description:
-      "প্রতিটি শিক্ষার্থীর জন্য একজন ডেডিকেটেড অনলাইন শিক্ষক। প্রথম ক্লাস বিনামূল্যে।",
-    type: "website",
+    title: "OTOTeachers — ১-অন-১ অনলাইন শিক্ষক প্ল্যাটফর্ম",
+    description: "প্রতিটি শিক্ষার্থীর জন্য একজন ডেডিকেটেড অনলাইন শিক্ষক। বুয়েট, ঢাবি ও মেডিকেলের শিক্ষকদের সাথে লাইভ ক্লাস। প্রথম ক্লাস সম্পূর্ণ বিনামূল্যে।",
+    url: SITE_URL,
+    siteName: SITE_NAME,
     locale: "bn_BD",
-    siteName: "ototeachers.com",
+    alternateLocale: ["en_US"],
+    type: "website",
+    images: [
+      {
+        url: `${SITE_URL}/Assets/Group%202147229264.png`,
+        width: 1200,
+        height: 630,
+        alt: "OTOTeachers — ১-অন-১ অনলাইন শিক্ষক প্ল্যাটফর্ম",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "ototeachers.com — ১-অন-১ অনলাইন শিক্ষক",
-    description: "বাংলাদেশ জুড়ে ১-অন-১ লাইভ অনলাইন ক্লাস। প্রথম ক্লাস ফ্রি।",
+    title: "OTOTeachers — ১-অন-১ অনলাইন শিক্ষক",
+    description: "বাংলাদেশ জুড়ে ১-অন-১ লাইভ অনলাইন ক্লাস। প্রথম সেশন সম্পূর্ণ ফ্রি।",
+    images: [`${SITE_URL}/Assets/Group%202147229264.png`],
+  },
+  icons: {
+    icon: "/Assets/Group 2147229264.png",
+    shortcut: "/Assets/Group 2147229264.png",
+    apple: "/Assets/Group 2147229264.png",
   },
   robots: {
     index: true,
     follow: true,
-    googleBot: { index: true, follow: true, "max-image-preview": "large" },
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
   },
 };
 
@@ -95,14 +108,21 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const orgSchema = getOrganizationSchema();
+  const webSiteSchema = getWebSiteSchema();
+
   return (
     <html lang="bn" className="scroll-smooth">
       <head>
-        {/* DNS prefetch & preconnect for external image CDNs */}
+        {/* DNS prefetch & preconnect for external CDNs */}
         <link rel="preconnect" href="https://images.unsplash.com" />
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
         <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+
+        {/* Global Structured Data (Organization & WebSite) */}
+        <JsonLd data={orgSchema} />
+        <JsonLd data={webSiteSchema} />
       </head>
       <body
         className={`${hindSiliguri.variable} ${roboto.variable} ${jetbrainsMono.variable} ${plusJakartaSans.variable} antialiased bg-[#FBF7EF] text-[#12213D]`}

@@ -24,7 +24,7 @@ export default function Footer() {
       { id: "soc-4", name: "LinkedIn", iconUrl: "linkedin", url: "https://linkedin.com" },
     ],
     phone: "01775551325",
-    email: "support@aloshikkha.org",
+    email: "support@ototeachers.com",
     addressBn: "ধানমণ্ডি, ঢাকা, বাংলাদেশ",
     addressEn: "Dhanmondi, Dhaka, Bangladesh",
   });
@@ -59,8 +59,8 @@ export default function Footer() {
             </h4>
             <p className="text-xs text-white/80 font-normal">
               {lang === "bn"
-                ? "১-অন-১ মেন্টরিং ও শিক্ষার নিয়মিত পরামর্শ পেতে আপনার ইমেইল দিন"
-                : "Enter your email for regular 1-on-1 teaching updates"}
+                ? "ব্যক্তিগত অনলাইন শিক্ষা ও নিয়মিত পরামর্শ পেতে আপনার ইমেইল দিন"
+                : "Enter your email for regular online teaching updates"}
             </p>
           </div>
 
@@ -97,11 +97,29 @@ export default function Footer() {
             <h5 className="font-sans text-lg font-bold text-[#FFFFFF] mb-5 pb-2 border-b border-white/10">
               {lang === "bn" ? "প্রধান মেনু" : "Main Menu"}
             </h5>
-            <ul className="space-y-3 text-sm">
+            <ul className="space-y-2.5 text-sm">
               <li>
                 <Link href="/subjects" className="hover:text-[#00A896] transition-colors flex items-center gap-2">
                   <ChevronRight className="w-4 h-4 text-[#00A896]" />
                   <span>{t.navSubjects}</span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/ssc-online-tuition" className="hover:text-[#00A896] transition-colors flex items-center gap-2 text-xs sm:text-sm text-white/90">
+                  <ChevronRight className="w-4 h-4 text-[#FFB627]" />
+                  <span>{lang === "bn" ? "এসএসসি অনলাইন টিউশন" : "SSC Online Tuition"}</span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/hsc-online-tuition" className="hover:text-[#00A896] transition-colors flex items-center gap-2 text-xs sm:text-sm text-white/90">
+                  <ChevronRight className="w-4 h-4 text-[#FFB627]" />
+                  <span>{lang === "bn" ? "এইচএসসি অনলাইন টিউশন" : "HSC Online Tuition"}</span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/female-online-tutors" className="hover:text-[#00A896] transition-colors flex items-center gap-2 text-xs sm:text-sm text-white/90">
+                  <ChevronRight className="w-4 h-4 text-[#FFB627]" />
+                  <span>{lang === "bn" ? "অনলাইন নারী শিক্ষক" : "Female Online Tutors"}</span>
                 </Link>
               </li>
               <li>
@@ -190,7 +208,7 @@ export default function Footer() {
             </h5>
             <p className="text-xs text-[#F8FAFC]/70 leading-relaxed mb-4">
               {lang === "bn"
-                ? "বুয়েট, ঢাবি ও সরকারি মেডিকেলের যাচাইকৃত শিক্ষকদের সাথে ১-অন-১ লাইভ অনলাইন টিউটরিং।"
+                ? "বুয়েট, ঢাবি ও সরকারি মেডিকেলের যাচাইকৃত শিক্ষকদের সাথে লাইভ অনলাইন ব্যক্তিগত শিক্ষা।"
                 : "Dedicated 1-on-1 online tutoring with top tutors from BUET, DU & Medical Colleges."}
             </p>
 
@@ -316,7 +334,7 @@ export default function Footer() {
           </span>
           <div className="flex items-center gap-4">
             <span className="font-mono text-xs text-[#38BDF8] font-bold">
-              ototeacher — One-to-One Teacher for All
+              ototeachers.com — One-to-One Teacher for All
             </span>
           </div>
         </div>

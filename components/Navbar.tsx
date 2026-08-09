@@ -55,7 +55,7 @@ export default function Navbar({ onOpenEnroll, onOpenMentor }: NavbarProps) {
             <span className="hidden lg:inline text-white/30 font-light">|</span>
             <span className="hidden lg:inline text-white/90 font-semibold text-sm sm:text-[15px]">
               {lang === "bn"
-                ? "বাংলাদেশ জুড়ে ১-অন-১ অনলাইন মেন্টরশিপ"
+                ? "বাংলাদেশ জুড়ে ব্যক্তিগত অনলাইন শিক্ষা ও মেন্টরশিপ"
                 : "Online 1-on-1 Mentorship Across Bangladesh"}
             </span>
           </div>
@@ -89,10 +89,12 @@ export default function Navbar({ onOpenEnroll, onOpenMentor }: NavbarProps) {
       {/* ===== MAIN NAVBAR ===== */}
       <nav className="flex items-center justify-between py-3.5 px-6 md:px-8 max-w-[1240px] mx-auto bg-[#FFFFFF]">
         {/* Brand Logo */}
-        <Link href="/" className="brand flex items-center gap-3 group">
+        <Link href="/" className="brand flex items-center gap-3 group" aria-label="OTOTeachers Home">
           <img
             src="/Assets/Group 2147229264.png"
-            alt="OTOTeacher Logo"
+            alt="OTOTeachers — ১-অন-১ অনলাইন শিক্ষক প্ল্যাটফর্ম"
+            width={180}
+            height={50}
             style={{ height: "50px", width: "auto", maxHeight: "50px" }}
             className="h-12 w-auto object-contain group-hover:scale-105 transition-transform duration-300"
           />
@@ -189,6 +191,14 @@ export default function Navbar({ onOpenEnroll, onOpenMentor }: NavbarProps) {
             >
               <span>{t.navPricingPlan}</span>
             </a>
+
+            <Link
+              href="/become-teacher"
+              onClick={() => setMobileMenuOpen(false)}
+              className={getMobileLinkClass("/become-teacher")}
+            >
+              <span>{lang === "bn" ? "শিক্ষক হতে আবেদন" : "Become a Teacher"}</span>
+            </Link>
 
             <Link
               href="/contact"

@@ -31,13 +31,18 @@ export default function HowItWorks() {
   ];
 
   return (
-    <section id="how" className="py-24 md:py-32 bg-[#0D2C4A] text-[#F8FAFC] font-sans">
+    <section id="how-it-works" className="py-24 md:py-32 bg-[#0D2C4A] text-[#F8FAFC] font-sans scroll-mt-24">
       <div className="max-w-[1240px] mx-auto px-6 md:px-8">
-        <div className="text-center max-w-[780px] mx-auto mb-20 space-y-4">
-          <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#FFFFFF] leading-[1.35] tracking-normal mb-4">
-            {t.howTitle}
+        <div className="text-center max-w-[800px] mx-auto mb-20 space-y-4">
+          <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#00A896]/20 text-[#38BDF8] text-xs font-mono font-bold uppercase tracking-wider border border-[#00A896]/30">
+            <span>{t.howSectionH2 || "How OTOTeachers Works"}</span>
+          </span>
+
+          <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#FFFFFF] leading-[1.35] tracking-tight">
+            {t.howTitle || "OTOTeachers যেভাবে কাজ করে"}
           </h2>
-          <p className="text-base sm:text-lg text-[#F8FAFC]/85 leading-[1.85] font-normal pt-1">
+
+          <p className="text-base sm:text-lg text-[#F8FAFC]/85 leading-[1.85] font-normal pt-1 max-w-2xl mx-auto">
             {t.howDesc}
           </p>
         </div>

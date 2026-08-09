@@ -1,4 +1,4 @@
-# Alo Shikkha — Next.js site
+# ototeachers.com — Next.js site
 
 A one-to-one online tutoring platform landing page for underprivileged students,
 built with Next.js 14 (App Router).

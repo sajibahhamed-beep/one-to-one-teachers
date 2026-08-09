@@ -34,7 +34,11 @@ if (action === "clean") {
 
 // Do NOT pass rootDir as positional CLI arg because Next 14 App Router misresolves routes if absolute dir is passed on Windows.
 // process.chdir(rootDir) above already guarantees cwd is project root.
-const command = action.includes("build") ? "npx next build" : "npx next dev";
+const command = action.includes("build")
+  ? "npx next build"
+  : action === "start"
+  ? "npx next start"
+  : "npx next dev";
 
 console.log(`Starting Next.js from root directory: ${rootDir}`);
 

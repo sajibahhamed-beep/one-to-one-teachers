@@ -12,7 +12,7 @@ export default function SuccessStories() {
       location: lang === "bn" ? "রংপুর সদর" : "Rangpur Sadar",
       quote:
         lang === "bn"
-          ? "আমার ছেলে গণিতে খুবই দুর্বল ছিল। আলো শিক্ষার বুয়েট মেন্টরের ৬ মাসের ১-অন-১ গাইডে সে টেস্ট পরীক্ষায় জিপিএ-৫ পেয়েছে।"
+          ? "আমার ছেলে গণিতে খুবই দুর্বল ছিল। ototeachers.com-এর বুয়েট শিক্ষকের ৬ মাসের ব্যক্তিগত নিবিড় তত্ত্বাবধানে সে টেস্ট পরীক্ষায় জিপিএ-৫ পেয়েছে।"
           : "My son was struggling in Math. With 6 months of 1-on-1 tutoring from a BUET teacher, he achieved GPA-5 in test exams.",
       grade: lang === "bn" ? "অংকে অ গ্রেড অর্জন" : "Achieved A Grade in Math",
       rating: 5,
@@ -23,7 +23,7 @@ export default function SuccessStories() {
       location: lang === "bn" ? "যমুনার চর এলাকা, বগুড়া" : "Jamuna Char Lands, Bogura",
       quote:
         lang === "bn"
-          ? "আমাদের চরে কোনো কোচিং বা প্রাইভেট টিচার নেই। অডিও মোডে সপ্তাহে ৩ দিন ১-অন-১ স্যারের ক্লাসে ইংরেজি স্পোকেন এখন অনেক সহজ।"
+          ? "আমাদের চরে কোনো কোচিং বা প্রাইভেট টিচার নেই। অডিও মোডে সপ্তাহে ৩ দিন স্যারের সাথে ব্যক্তিগত ক্লাসে ইংরেজি স্পোকেন এখন অনেক সহজ।"
           : "We have no coaching centers in our remote char land. Audio 1-on-1 classes 3 days a week made English speaking natural for me.",
       grade: lang === "bn" ? "এসএসসি বোর্ড প্রস্তুতি সম্পন্ন" : "SSC Board Prep Completed",
       rating: 5,
@@ -34,7 +34,7 @@ export default function SuccessStories() {
       location: lang === "bn" ? "কুড়িগ্রাম" : "Kurigram",
       quote:
         lang === "bn"
-          ? "সাধ্যমত ফি দেওয়ার সুযোগ থাকায় আমি একজন নিম্ন আয়ের বাবা হয়েও আমার মেয়েকে ঢাবির অভিজ্ঞ ১-অন-১ শিক্ষকের কাছে পড়াতে পারছি।"
+          ? "সাধ্যমত ফি দেওয়ার সুযোগ থাকায় আমি একজন নিম্ন আয়ের বাবা হয়েও আমার মেয়েকে ঢাবির অভিজ্ঞ শিক্ষকের কাছে ব্যক্তিগতভাবে পড়াতে পারছি।"
           : "Thanks to the sliding scale fee model, as a low-income father I can afford a dedicated DU tutor for my daughter.",
       grade: lang === "bn" ? "এইচএসসি বোর্ড প্রস্তুতি" : "HSC Board Prep",
       rating: 5,

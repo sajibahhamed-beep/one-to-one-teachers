@@ -68,7 +68,7 @@ export default function MentorModal({ isOpen, onClose }: MentorModalProps) {
             <div className="mb-6">
               <div className="flex items-center gap-2 font-mono text-xs text-[#0B4F4A] uppercase tracking-wider mb-2">
                 <HeartHandshake className="w-4 h-4 text-[#F2542D]" />
-                <span>Join Alo Shikkha as a Mentor</span>
+                <span>Join ototeachers.com as a Teacher</span>
               </div>
               <h3 className="font-serif text-2xl sm:text-3xl font-semibold text-[#12213D]">
                 {step === 1 && "Personal & Academic Info"}

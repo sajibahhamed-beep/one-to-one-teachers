@@ -24,15 +24,36 @@ export default function Hero({ onOpenEnroll }: HeroProps) {
       <div className="max-w-[1240px] mx-auto px-4 sm:px-6 md:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
         {/* Left Text Column */}
         <div className="lg:col-span-7 space-y-4 sm:space-y-5">
-          {/* Title */}
-          <h1 className="font-sans text-3xl sm:text-5xl lg:text-6xl font-extrabold text-[#0D2C4A] tracking-tight leading-[1.3] sm:leading-[1.35] mb-4 sm:mb-6">
-            {t.heroTitlePart1}{" "}
-            <br className="hidden sm:inline" />
-            <span className="text-[#00A896]">{t.heroTitleHighlight}</span>
+          {/* SEO Eyebrow Badge */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#00A896]/10 text-[#00A896] text-xs font-mono font-bold tracking-wide border border-[#00A896]/20">
+            <ShieldCheck className="w-4 h-4 text-[#00A896]" />
+            <span>{t.heroBadge || "OTOTeachers — একজন শিক্ষার্থী, একজন শিক্ষক"}</span>
+          </div>
+
+          {/* Primary SEO H1 Heading */}
+          <h1 className="font-sans text-3xl sm:text-5xl lg:text-[54px] font-extrabold text-[#0D2C4A] tracking-tight leading-[1.22] sm:leading-[1.25] mb-3 sm:mb-4">
+            {lang === "bn" ? (
+              <>
+                একজন শিক্ষার্থী, একজন শিক্ষক — <br className="hidden sm:inline" />
+                <span className="text-[#00A896]">সাশ্রয়ী অনলাইন শিক্ষক</span>
+              </>
+            ) : (
+              <>
+                Affordable One-to-One <br className="hidden sm:inline" />
+                <span className="text-[#00A896]">Online Teachers in Bangladesh</span>
+              </>
+            )}
           </h1>
 
+          {/* Supporting Brand Message */}
+          <p className="text-base sm:text-xl font-bold text-[#008075] leading-snug mb-3">
+            {lang === "bn"
+              ? "নিজের শিক্ষকের সাথে ব্যক্তিগতভাবে শিখুন, নিজের গতিতে এগিয়ে যান।"
+              : "Learn individually with your personal tutor, progress at your own pace."}
+          </p>
+
           {/* Subtitle / Paragraph */}
-          <p className="text-sm sm:text-lg leading-relaxed text-[#475569] max-w-[580px] font-normal mb-6 sm:mb-8">
+          <p className="text-sm sm:text-base md:text-lg leading-relaxed text-[#475569] max-w-[620px] font-normal mb-6 sm:mb-8">
             {t.heroLede}
           </p>
 
@@ -114,7 +135,7 @@ export default function Hero({ onOpenEnroll }: HeroProps) {
             <div className="relative w-full h-full rounded-2xl overflow-hidden">
               <img
                 src="https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=800&q=80"
-                alt="ototeacher Mentoring"
+                alt="OTOTeachers — ১-অন-১ লাইভ অনলাইন শিক্ষক মেন্টরিং"
                 // @ts-ignore
                 fetchPriority="high"
                 decoding="async"
@@ -125,15 +146,15 @@ export default function Hero({ onOpenEnroll }: HeroProps) {
               {/* Badge */}
               <div className="absolute top-4 left-4 bg-[#02554d] text-white px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-2 shadow-md max-w-[90%]">
                 <ShieldCheck className="w-4 h-4 text-white flex-shrink-0" />
-                <span className="truncate">{lang === "bn" ? "১-অন-১ ভেরিফাইড টিচার" : "1-on-1 Verified Teacher"}</span>
+                <span className="truncate">{lang === "bn" ? "ভেরিফাইড ব্যক্তিগত শিক্ষক" : "1-on-1 Verified Teacher"}</span>
               </div>
 
               {/* Text on Image */}
               <div className="absolute bottom-4 left-4 right-4 sm:bottom-5 sm:left-5 sm:right-5 text-white space-y-1">
                 <p className="font-sans text-base sm:text-lg font-bold leading-[1.35] text-white drop-shadow-md">
                   {lang === "bn"
-                    ? "এখনই নির্বাচিত শিক্ষকের সাথে শুরু করুন ১-অন-১ ক্লাস"
-                    : "Start Your 1-on-1 Classes with Selected Tutors Today"}
+                    ? "নিজের শিক্ষকের সাথে শুরু করুন ব্যক্তিগত লাইভ ক্লাস"
+                    : "Start Your Personal Live Classes with Selected Tutors Today"}
                 </p>
               </div>
             </div>

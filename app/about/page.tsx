@@ -1,64 +1,62 @@
-"use client";
+import type { Metadata } from "next";
+import AboutClient from "./AboutClient";
+import JsonLd from "@/components/JsonLd";
+import { getBreadcrumbSchema, SITE_URL, SITE_NAME } from "@/lib/seoConfig";
 
-import { useState } from "react";
-import Navbar from "@/components/Navbar";
-import ProblemSection from "@/components/ProblemSection";
-import ImpactSection from "@/components/ImpactSection";
-import Mentors from "@/components/Mentors";
-import Footer from "@/components/Footer";
-import EnrollModal from "@/components/EnrollModal";
-import MentorModal from "@/components/MentorModal";
-import { useLanguage } from "@/context/LanguageContext";
-import { Heart, Target, Users, Award, ShieldCheck } from "lucide-react";
+export const metadata: Metadata = {
+  title: "আমাদের সম্পর্কে — ১-অন-১ শিক্ষা সবার জন্য",
+  description: "OTOTeachers কোনো গণ-কোচিং সেন্টার নয়। প্রতিটি শিক্ষার্থীর মেধা ও দুর্বলতার দিকে লক্ষ্য রেখে বুয়েট, ঢাবি বা মেডিকেল শিক্ষককে সরাসরি ১-অন-১ মিলিয়ে দেয় আমাদের প্ল্যাটফর্ম।",
+  alternates: {
+    canonical: `${SITE_URL}/about`,
+  },
+  openGraph: {
+    title: "আমাদের সম্পর্কে — ১-অন-১ শিক্ষা সবার জন্য | OTOTeachers",
+    description: "প্রতিটি শিক্ষার্থীর জন্য ডেডিকেটেড ১-অন-১ অনলাইন শিক্ষক। বুয়েট, ঢাবি ও মেডিকেল টিউটরদের সাথে পার্সোনালাইজড ক্লাস।",
+    url: `${SITE_URL}/about`,
+    siteName: SITE_NAME,
+    locale: "bn_BD",
+    type: "website",
+    images: [
+      {
+        url: `${SITE_URL}/Assets/Group%202147229264.png`,
+        width: 1200,
+        height: 630,
+        alt: "About OTOTeachers - One-to-One Online Teachers",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "আমাদের সম্পর্কে | OTOTeachers",
+    description: "বাংলাদেশের ১-অন-১ অনলাইন শিক্ষক প্ল্যাটফর্ম। প্রথম ক্লাস সম্পূর্ণ ফ্রি।",
+    images: [`${SITE_URL}/Assets/Group%202147229264.png`],
+  },
+};
 
 export default function AboutPage() {
-  const { lang } = useLanguage();
-  const [enrollModalOpen, setEnrollModalOpen] = useState(false);
-  const [mentorModalOpen, setMentorModalOpen] = useState(false);
+  const breadcrumbSchema = getBreadcrumbSchema([
+    { name: "হোম", url: "/" },
+    { name: "আমাদের সম্পর্কে", url: "/about" },
+  ]);
+
+  const aboutPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    name: "আমাদের সম্পর্কে — OTOTeachers",
+    description: "OTOTeachers প্ল্যাটফর্মের পরিচিতি, উদ্দেশ্য ও ১-অন-১ শিক্ষাদান কার্যক্রম।",
+    url: `${SITE_URL}/about`,
+    mainEntity: {
+      "@type": "EducationalOrganization",
+      name: SITE_NAME,
+      url: SITE_URL,
+    },
+  };
 
   return (
-    <main className="min-h-screen bg-[#F8FAFC] font-sans">
-      <Navbar
-        onOpenEnroll={() => setEnrollModalOpen(true)}
-        onOpenMentor={() => setMentorModalOpen(true)}
-      />
-
-      {/* Hero Banner */}
-      <section className="bg-gradient-to-b from-[#0D2C4A] via-[#16385C] to-[#00A896] text-white py-16 md:py-24">
-        <div className="max-w-[1240px] mx-auto px-6 md:px-8 text-center max-w-3xl space-y-4">
-          <h1 className="font-sans text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-[1.35]">
-            {lang === "bn"
-              ? "আমাদের সম্পর্কে — ১-অন-১ শিক্ষা সবার জন্য"
-              : "About Us — One-to-One Teacher for All"}
-          </h1>
-
-          <p className="text-base sm:text-lg text-white/85 leading-relaxed">
-            {lang === "bn"
-              ? "আমরা কোনো গণ-কোচিং সুবিধা নই। প্রতিটি শিক্ষার্থীর মেধা ও দুর্বলতার দিকে লক্ষ্য রেখে একজন বুয়েট, ঢাবি বা মেডিকেল শিক্ষককে সরাসরি ১-অন-১ মিলিয়ে দেয় আমাদের সামাজিক শিক্ষা কার্যক্রম।"
-              : "We aren't a traditional coaching center. We connect students directly with verified mentors for individualized 1-on-1 education."}
-          </p>
-        </div>
-      </section>
-
-      {/* Problem & Educational Gap Section */}
-      <ProblemSection onOpenEnroll={() => setEnrollModalOpen(true)} />
-
-      {/* Impact Section */}
-      <ImpactSection />
-
-      {/* Verified Mentors Spotlight */}
-      <Mentors />
-
-      <Footer />
-
-      <EnrollModal
-        isOpen={enrollModalOpen}
-        onClose={() => setEnrollModalOpen(false)}
-      />
-      <MentorModal
-        isOpen={mentorModalOpen}
-        onClose={() => setMentorModalOpen(false)}
-      />
-    </main>
+    <>
+      <JsonLd data={breadcrumbSchema} />
+      <JsonLd data={aboutPageSchema} />
+      <AboutClient />
+    </>
   );
 }
