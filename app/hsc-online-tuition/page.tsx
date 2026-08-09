@@ -7,16 +7,6 @@ export const metadata: Metadata = {
   title: "এইচএসসি অনলাইন টিউশন — বুয়েট ও মেডিকেল শিক্ষক ও বোর্ড প্রস্তুতি",
   description:
     "একাদশ ও দ্বাদশ শ্রেণির উচ্চতর গণিত, পদার্থবিজ্ঞান, রসায়ন, জীববিজ্ঞান ও আইসিটি বিষয়ে বুয়েট, ঢাবি ও মেডিকেলের অভিজ্ঞ শিক্ষকের সাথে ১-অন-১ লাইভ অনলাইন ক্লাস।",
-  keywords: [
-    "HSC online tuition Bangladesh",
-    "এইচএসসি অনলাইন শিক্ষক",
-    "এইচএসসি বিজ্ঞান টিউশন",
-    "HSC physics online tutor",
-    "HSC chemistry teacher",
-    "HSC higher math tutor BUET",
-    "HSC admission foundation",
-    "class 11 12 online tutor",
-  ],
   alternates: {
     canonical: `${SITE_URL}/hsc-online-tuition`,
   },

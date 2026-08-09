@@ -7,22 +7,6 @@ export const metadata: Metadata = {
   title: "Affordable One-to-One Online Teachers in Bangladesh | OTOTeachers",
   description:
     "বাংলাদেশে সাশ্রয়ী ১-অন-১ অনলাইন শিক্ষক প্ল্যাটফর্ম। বুয়েট, ঢাবি ও মেডিকেলের যাচাইকৃত শিক্ষকদের সাথে লাইভ ওয়ান-টু-ওয়ান ক্লাস — ঘরে বসে। প্রথম ট্রায়াল ক্লাস সম্পূর্ণ বিনামূল্যে।",
-  keywords: [
-    "Affordable one-to-one online teachers in Bangladesh",
-    "online tutor Bangladesh",
-    "online teacher Bangladesh",
-    "online tutoring Bangladesh",
-    "one-to-one online classes",
-    "affordable online tutor",
-    "online tuition Bangladesh",
-    "ব্যক্তিগত শিক্ষক",
-    "অনলাইন শিক্ষক",
-    "অনলাইন টিউশন",
-    "সাশ্রয়ী অনলাইন শিক্ষা",
-    "১-অন-১ শিক্ষক",
-    "SSC HSC online tutor Bangladesh",
-    "BUET DU online tutor",
-  ],
   alternates: {
     canonical: SITE_URL,
   },

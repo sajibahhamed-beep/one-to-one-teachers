@@ -7,16 +7,6 @@ export const metadata: Metadata = {
   title: "নারী শিক্ষার্থীদের জন্য ভেরিফাইড অনলাইন শিক্ষিকা ও গৃহশিক্ষক | OTOTeachers",
   description:
     "মেয়ে শিক্ষার্থীদের নিরাপদ ও স্বাচ্ছন্দ্যপূর্ণ পড়াশোনার জন্য বুয়েট, ঢাবি ও সরকারি মেডিকেলের যাচাইকৃত নারী শিক্ষক। ১-অন-১ লাইভ অনলাইন ক্লাস, পূর্ণ গোপনীয়তা ও ১০০% নিরাপত্তা নিশ্চয়তা।",
-  keywords: [
-    "female online tutor Bangladesh",
-    "অনলাইন নারী শিক্ষক",
-    "মহিলা গৃহশিক্ষক অনলাইন",
-    "female private tutor Dhaka",
-    "মেয়েদের জন্য শিক্ষক",
-    "female tutor BUET DU",
-    "নিরাপদ অনলাইন টিউশন",
-    "female home tutor online",
-  ],
   alternates: {
     canonical: `${SITE_URL}/female-online-tutors`,
   },

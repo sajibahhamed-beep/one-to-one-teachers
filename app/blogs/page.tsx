@@ -7,15 +7,6 @@ import { getBreadcrumbSchema, SITE_URL, SITE_NAME } from "@/lib/seoConfig";
 export const metadata: Metadata = {
   title: "১-অন-১ শিক্ষাদান, পরীক্ষা প্রস্তুতি ও পড়াশোনার কৌশল ব্লগ",
   description: "বুয়েট, ঢাবি ও মেডিকেল শিক্ষকদের বাস্তব অভিজ্ঞতা, বোর্ড পরীক্ষার সেরা প্রস্তুতি কৌশল, গণিতের ভয় কাটানোর উপায় এবং ১-অন-১ মেন্টরিং নির্দেশিকা।",
-  keywords: [
-    "১-অন-১ শিক্ষাদান ব্লগ",
-    "বোর্ড পরীক্ষা প্রস্তুতি টিপস",
-    "এসএসসি এইচএসসি পড়াশোনা",
-    "গণিতের ভয় দূর করার উপায়",
-    "স্পোকেন ইংলিশ গাইড",
-    "বুয়েট মেন্টর টিপস",
-    "Education Blog Bangladesh",
-  ],
   alternates: {
     canonical: `${SITE_URL}/blogs`,
   },

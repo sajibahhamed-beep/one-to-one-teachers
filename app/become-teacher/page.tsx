@@ -6,14 +6,6 @@ import { getBreadcrumbSchema, SITE_URL, SITE_NAME } from "@/lib/seoConfig";
 export const metadata: Metadata = {
   title: "শিক্ষক হিসেবে যুক্ত হন — ১-অন-১ অনলাইন মেন্টর আবেদন",
   description: "আপনি কি বুয়েট, ঢাবি, মেডিকেল বা নামকরা বিশ্ববিদ্যালয়ের শিক্ষার্থী বা শিক্ষক? OTOTeachers প্ল্যাটফর্মে যুক্ত হয়ে সুবিধাজনক সময়ে ১-অন-১ টিউশন নিন ও সম্মানজনক আয় করুন।",
-  keywords: [
-    "অনলাইন শিক্ষক নিয়োগ",
-    "টিচার হতে আবেদন",
-    "গৃহশিক্ষক আবেদন",
-    "বুয়েট ঢাবি প্রাইভেট টিউশন",
-    "Become a Teacher Bangladesh",
-    "Online Tutor Jobs Dhaka",
-  ],
   alternates: {
     canonical: `${SITE_URL}/become-teacher`,
   },

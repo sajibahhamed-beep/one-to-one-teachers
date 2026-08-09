@@ -7,16 +7,6 @@ export const metadata: Metadata = {
   title: "এসএসসি অনলাইন টিউশন — অভিজ্ঞ ব্যক্তিগত শিক্ষক ও বোর্ড প্রস্তুতি",
   description:
     "৯ম ও ১০ম শ্রেণির শিক্ষার্থীদের জন্য বুয়েট, ঢাবি ও মেডিকেলের অভিজ্ঞ ব্যক্তিগত শিক্ষক। উচ্চতর গণিত, পদার্থ, রসায়ন ও ইংরেজি বিষয়ে বোর্ড পরীক্ষার সেরা প্রস্তুতি ও ১-অন-১ লাইভ ক্লাস।",
-  keywords: [
-    "SSC online tuition Bangladesh",
-    "এসএসসি অনলাইন শিক্ষক",
-    "এসএসসি প্রাইভেট টিউশন",
-    "এসএসসি গণিত শিক্ষক",
-    "এসএসসি পদার্থবিজ্ঞান শিক্ষক",
-    "class 9 10 online tutor",
-    "SSC board exam preparation",
-    "SSC GPA 5 tips",
-  ],
   alternates: {
     canonical: `${SITE_URL}/ssc-online-tuition`,
   },

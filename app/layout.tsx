@@ -47,7 +47,6 @@ export const metadata: Metadata = {
     template: `%s | ${SITE_NAME}`,
   },
   description: DEFAULT_SEO.description,
-  keywords: DEFAULT_SEO.keywords,
   authors: [{ name: "OTOTeachers — One-to-One Teacher for All", url: SITE_URL }],
   creator: SITE_NAME,
   publisher: SITE_NAME,

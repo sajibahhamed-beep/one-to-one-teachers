@@ -42,7 +42,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: post.titleBn,
     description,
-    keywords: post.tagsBn || ["১-অন-১ শিক্ষক", "পড়াশোনা", "পরীক্ষা প্রস্তুতি"],
     authors: [{ name: post.author?.nameBn || "OTOTeachers টিম" }],
     alternates: {
       canonical: postUrl,

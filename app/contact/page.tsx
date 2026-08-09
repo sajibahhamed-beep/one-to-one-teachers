@@ -6,13 +6,6 @@ import { getBreadcrumbSchema, SITE_URL, SITE_NAME } from "@/lib/seoConfig";
 export const metadata: Metadata = {
   title: "যোগাযোগ করুন — হটলাইন ও ১-অন-১ শিক্ষক সহায়তা",
   description: "১-অন-১ অনলাইন শিক্ষক বুকিং, আবেদন বা যেকোনো সহায়তার জন্য সরাসরি কল করুন 01775551325 অথবা মেসেজ পাঠান। প্রধান অফিস: ধানমন্ডি ৩২, ঢাকা।",
-  keywords: [
-    "OTOTeachers যোগাযোগ",
-    "অনলাইন শিক্ষক হটলাইন",
-    "প্রাইভেট টিউটর ফোন নম্বর",
-    "Contact OTOTeachers",
-    "Tutor Helpline Bangladesh",
-  ],
   alternates: {
     canonical: `${SITE_URL}/contact`,
   },
