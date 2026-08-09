@@ -53,7 +53,7 @@ export default function BecomeTeacherPage() {
         <div className="max-w-[1140px] mx-auto px-6 md:px-8">
           <div className="text-center max-w-2xl mx-auto mb-14 space-y-3">
             <h2 className="font-sans text-3xl sm:text-4xl font-extrabold text-[#0D2C4A]">
-              {lang === "bn" ? "কেন আলো শিক্ষায় শিক্ষক হিসেবে যুক্ত হবেন?" : "Why Join Alo Shikkha as a Mentor?"}
+              {lang === "bn" ? "কেন ototeachers.com-এ শিক্ষক হিসেবে যুক্ত হবেন?" : "Why Join ototeachers.com as a Teacher?"}
             </h2>
             <p className="text-slate-600 text-sm sm:text-base">
               {lang === "bn"

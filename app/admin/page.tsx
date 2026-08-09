@@ -108,15 +108,15 @@ export default function AdminDashboardPage() {
       { id: "soc-4", name: "LinkedIn", iconUrl: "linkedin", url: "https://linkedin.com" },
     ],
     whatsappPhone: "8801775551325",
-    whatsappMessageBn: "হ্যালো আলো শিক্ষা টিম, ১-অন-১ অনলাইন শিক্ষক সম্পর্কে জানতে চাই।",
-    whatsappMessageEn: "Hello Alo Shikkha team, I want to inquire about 1-on-1 online teachers.",
+    whatsappMessageBn: "হ্যালো ototeachers.com টিম, ১-অন-১ অনলাইন শিক্ষক সম্পর্কে জানতে চাই।",
+    whatsappMessageEn: "Hello ototeachers.com team, I want to inquire about 1-on-1 online teachers.",
     phone: "01775551325",
-    email: "support@aloshikkha.org",
+    email: "support@ototeachers.com",
     addressBn: "ধানমণ্ডি, ঢাকা, বাংলাদেশ",
     addressEn: "Dhanmondi, Dhaka, Bangladesh",
-    metaTitle: "ototeacher — ১-অন-১ অনলাইন শিক্ষক | One-to-One Teacher for All",
+    metaTitle: "ototeachers.com — ১-অন-১ অনলাইন শিক্ষক | One-to-One Teacher for All",
     metaDescription: "বাংলাদেশের ১-অন-১ অনলাইন শিক্ষক প্ল্যাটফর্ম। বুয়েট, ঢাবি ও মেডিকেলের যাচাইকৃত শিক্ষকদের সাথে সরাসরি লাইভ ক্লাস — ঘরে বসে।",
-    keywords: "online teacher Bangladesh, ১-অন-১ শিক্ষক, ototeacher, private tutor Bangladesh",
+    keywords: "ototeachers.com, ototeachers, online teacher Bangladesh, ১-অন-১ শিক্ষক, private tutor Bangladesh",
   });
   const [whatsappSaved, setWhatsappSaved] = useState(false);
   const [seoSaved, setSeoSaved] = useState(false);
@@ -690,7 +690,7 @@ export default function AdminDashboardPage() {
                 <Sparkles className="w-3 h-3 text-[#00A896]" />
                 Super Admin Access
               </div>
-              <h1 className="text-2xl font-black text-[#0D2C4A] tracking-tight">ototeacher Admin</h1>
+              <h1 className="text-2xl font-black text-[#0D2C4A] tracking-tight">ototeachers.com Admin</h1>
               <p className="text-xs text-slate-500 font-medium pt-1">
                 One-to-One Tutoring Platform Control Center
               </p>
@@ -835,7 +835,7 @@ export default function AdminDashboardPage() {
               <Sparkles className="w-5 h-5 text-white" />
             </div>
             <div>
-              <span className="font-extrabold text-lg text-white tracking-tight block leading-tight admin-heading-sm">ototeacher</span>
+              <span className="font-extrabold text-lg text-white tracking-tight block leading-tight admin-heading-sm">ototeachers.com</span>
               <span className="admin-kicker text-[#00A896] block font-bold">Admin Portal</span>
             </div>
           </div>
@@ -1632,7 +1632,7 @@ export default function AdminDashboardPage() {
                         <label className="admin-kicker text-slate-500 block mb-2">WEBSITE META TITLE (GOOGLE SEARCH TITLE)</label>
                         <input
                           type="text"
-                          placeholder="ototeacher — ১-অন-১ অনলাইন শিক্ষক | One-to-One Teacher for All"
+                          placeholder="ototeachers.com — ১-অন-১ অনলাইন শিক্ষক | One-to-One Teacher for All"
                           value={settings.metaTitle || ""}
                           onChange={(e) => setSettings({ ...settings, metaTitle: e.target.value })}
                           className="w-full p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-sans font-bold text-[#0D2C4A] focus:outline-none focus:border-[#00A896] shadow-sm"
@@ -1660,7 +1660,7 @@ export default function AdminDashboardPage() {
                         <label className="admin-kicker text-slate-500 block mb-2">TARGET SEARCH KEYWORDS (COMMA SEPARATED)</label>
                         <input
                           type="text"
-                          placeholder="online teacher Bangladesh, ১-অন-১ শিক্ষক, ototeacher, private tutor Bangladesh"
+                          placeholder="ototeachers.com, ototeachers, online teacher Bangladesh, ১-অন-১ শিক্ষক, private tutor Bangladesh"
                           value={settings.keywords || ""}
                           onChange={(e) => setSettings({ ...settings, keywords: e.target.value })}
                           className="w-full p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-mono font-bold text-[#0D2C4A] focus:outline-none focus:border-[#00A896] shadow-sm"
@@ -1730,7 +1730,7 @@ export default function AdminDashboardPage() {
                           rows={2}
                           value={settings.whatsappMessageBn || ""}
                           onChange={(e) => setSettings({ ...settings, whatsappMessageBn: e.target.value })}
-                          placeholder="হ্যালো আলো শিক্ষা টিম, ১-অন-১ অনলাইন শিক্ষক সম্পর্কে জানতে চাই।"
+                          placeholder="হ্যালো ototeachers.com টিম, ১-অন-১ অনলাইন শিক্ষক সম্পর্কে জানতে চাই।"
                           className="w-full p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-sans font-semibold text-[#0D2C4A] focus:outline-none focus:border-[#25D366] shadow-sm"
                         />
                       </div>
@@ -1741,7 +1741,7 @@ export default function AdminDashboardPage() {
                           rows={2}
                           value={settings.whatsappMessageEn || ""}
                           onChange={(e) => setSettings({ ...settings, whatsappMessageEn: e.target.value })}
-                          placeholder="Hello Alo Shikkha team, I want to inquire about 1-on-1 online teachers."
+                          placeholder="Hello ototeachers.com team, I want to inquire about 1-on-1 online teachers."
                           className="w-full p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-sans font-semibold text-[#0D2C4A] focus:outline-none focus:border-[#25D366] shadow-sm"
                         />
                       </div>

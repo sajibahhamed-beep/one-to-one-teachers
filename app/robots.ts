@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: '/private/',
     },
-    sitemap: 'https://aloshikkha.org/sitemap.xml',
+    sitemap: 'https://ototeachers.com/sitemap.xml',
   };
 }

@@ -48,8 +48,8 @@ export default function BlogsPage() {
             readTimeEn: "4 min read",
             image: b.image || "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=800&q=80",
             author: {
-              nameBn: "আলো শিক্ষা টিম",
-              nameEn: "Alo Shikkha Team",
+              nameBn: "ototeachers.com টিম",
+              nameEn: "ototeachers.com Team",
               avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
               roleBn: "পরামর্শক",
               roleEn: "Academic Advisor",

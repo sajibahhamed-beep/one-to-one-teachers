@@ -40,16 +40,17 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 // ─── SEO Metadata ────────────────────────────────────────────────────────────
 export const metadata: Metadata = {
   title: {
-    default: "ototeacher — ১-অন-১ অনলাইন শিক্ষক | One-to-One Teacher for All",
-    template: "%s | ototeacher",
+    default: "ototeachers.com — ১-অন-১ অনলাইন শিক্ষক | One-to-One Teacher for All",
+    template: "%s | ototeachers.com",
   },
   description:
     "বাংলাদেশের ১-অন-১ অনলাইন শিক্ষক প্ল্যাটফর্ম। বুয়েট, ঢাবি ও মেডিকেলের যাচাইকৃত শিক্ষকদের সাথে সরাসরি লাইভ ক্লাস — ঘরে বসে। প্রথম ক্লাস বিনামূল্যে।",
   keywords: [
+    "ototeachers.com",
+    "ototeachers",
     "online teacher Bangladesh",
     "১-অন-১ শিক্ষক",
-    "ototeacher",
-    "alo shikkha",
+    "১-অন-১ অনলাইন শিক্ষক",
     "private tutor Bangladesh",
     "online tutor Bangla",
     "SSC HSC math teacher",
@@ -57,22 +58,22 @@ export const metadata: Metadata = {
     "1 on 1 online class Bangladesh",
     "গৃহশিক্ষক অনলাইন",
   ],
-  authors: [{ name: "ototeacher — One-to-One Teacher for All" }],
-  metadataBase: new URL("https://ototeacher.com"),
+  authors: [{ name: "ototeachers.com — One-to-One Teacher for All" }],
+  metadataBase: new URL("https://ototeachers.com"),
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "ototeacher — ১-অন-১ অনলাইন শিক্ষক প্ল্যাটফর্ম",
+    title: "ototeachers.com — ১-অন-১ অনলাইন শিক্ষক প্ল্যাটফর্ম",
     description:
       "প্রতিটি শিক্ষার্থীর জন্য একজন ডেডিকেটেড অনলাইন শিক্ষক। প্রথম ক্লাস বিনামূল্যে।",
     type: "website",
     locale: "bn_BD",
-    siteName: "ototeacher",
+    siteName: "ototeachers.com",
   },
   twitter: {
     card: "summary_large_image",
-    title: "ototeacher — ১-অন-১ অনলাইন শিক্ষক",
+    title: "ototeachers.com — ১-অন-১ অনলাইন শিক্ষক",
     description: "বাংলাদেশ জুড়ে ১-অন-১ লাইভ অনলাইন ক্লাস। প্রথম ক্লাস ফ্রি।",
   },
   robots: {

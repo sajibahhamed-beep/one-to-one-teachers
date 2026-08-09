@@ -29,8 +29,8 @@ export default function TermsPage() {
 
           <p className="text-base sm:text-lg text-white/85 leading-relaxed">
             {lang === "bn"
-              ? "ওয়ান-টু-ওয়ান টিচার্স (ototeacher - আলো শিক্ষা) প্ল্যাটফর্ম ব্যবহারের নিয়মমালা ও সেবা গ্রহণের শর্তসমূহ।"
-              : "Rules and terms governing the use of One-to-One Teachers (ototeacher - Alo Shikkha) platform."}
+              ? "ওয়ান-টু-ওয়ান টিচার্স (ototeachers.com) প্ল্যাটফর্ম ব্যবহারের নিয়মমালা ও সেবা গ্রহণের শর্তসমূহ।"
+              : "Rules and terms governing the use of One-to-One Teachers (ototeachers.com) platform."}
           </p>
         </div>
       </section>
@@ -45,8 +45,8 @@ export default function TermsPage() {
             </h2>
             <p className="text-slate-600 leading-relaxed text-sm sm:text-base">
               {lang === "bn"
-                ? "ototeacher - আলো শিক্ষা একটি ১-অন-১ শিক্ষাদান সংযোগ প্ল্যাটফর্ম। আমরা অসচ্ছল ও যেকোনো পরিবারের শিক্ষার্থীদের বুয়েট, ঢাবি, মেডিকেলসহ নামকরা বিশ্ববিদ্যালয়ের যাচাইকৃত শিক্ষকদের সাথে বিষয়ভিত্তিক পড়াশোনার জন্য সংযুক্ত করি।"
-                : "ototeacher - Alo Shikkha connects learners directly with verified subject tutors from top universities (BUET, DU, Medical) for 1-on-1 personalized academic sessions."}
+                ? "ototeachers.com একটি ১-অন-১ শিক্ষাদান সংযোগ প্ল্যাটফর্ম। আমরা অসচ্ছল ও যেকোনো পরিবারের শিক্ষার্থীদের বুয়েট, ঢাবি, মেডিকেলসহ নামকরা বিশ্ববিদ্যালয়ের যাচাইকৃত শিক্ষকদের সাথে বিষয়ভিত্তিক পড়াশোনার জন্য সংযুক্ত করি।"
+                : "ototeachers.com connects learners directly with verified subject tutors from top universities (BUET, DU, Medical) for 1-on-1 personalized academic sessions."}
             </p>
           </div>
 
@@ -91,8 +91,8 @@ export default function TermsPage() {
             </h2>
             <p className="text-slate-600 leading-relaxed text-sm sm:text-base">
               {lang === "bn"
-                ? "শর্তাবলী সংক্রান্ত যেকোনো অনুসন্ধানের জন্য আমাদের ইমেইল support@aloshikkha.org বা ফোন 01775551325 এ যোগাযোগ করা যাবে।"
-                : "For questions regarding our terms, reach out at support@aloshikkha.org or hotline 01775551325."}
+                ? "শর্তাবলী সংক্রান্ত যেকোনো অনুসন্ধানের জন্য আমাদের ইমেইল support@ototeachers.com বা ফোন 01775551325 এ যোগাযোগ করা যাবে।"
+                : "For questions regarding our terms, reach out at support@ototeachers.com or hotline 01775551325."}
             </p>
           </div>
 

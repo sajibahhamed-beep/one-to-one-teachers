@@ -82,8 +82,8 @@ export default function RefundPolicyPage() {
                 <span className="text-[#00A896] font-bold">•</span>
                 <span>
                   {lang === "bn"
-                    ? "আমাদের সাপোর্ট ইমেইলে (support@aloshikkha.org) অথবা হটলাইনে (01775551325) যোগাযোগ করে রিফান্ড রিকোয়েস্ট পাঠান।"
-                    : "Send your refund request to our official support email (support@aloshikkha.org) or hotline (01775551325)."}
+                    ? "আমাদের সাপোর্ট ইমেইলে (support@ototeachers.com) অথবা হটলাইনে (01775551325) যোগাযোগ করে রিফান্ড রিকোয়েস্ট পাঠান।"
+                    : "Send your refund request to our official support email (support@ototeachers.com) or hotline (01775551325)."}
                 </span>
               </li>
               <li className="flex items-start gap-2.5">
@@ -104,8 +104,8 @@ export default function RefundPolicyPage() {
             </h3>
             <p className="text-sm text-[#B45309]">
               {lang === "bn"
-                ? "আমাদের সাপোর্ট টিম আপনাকে সাহায্য করতে প্রস্তুত: support@aloshikkha.org | 01775551325"
-                : "Our support team is ready to assist you: support@aloshikkha.org | 01775551325"}
+                ? "আমাদের সাপোর্ট টিম আপনাকে সাহায্য করতে প্রস্তুত: support@ototeachers.com | 01775551325"
+                : "Our support team is ready to assist you: support@ototeachers.com | 01775551325"}
             </p>
           </div>
 

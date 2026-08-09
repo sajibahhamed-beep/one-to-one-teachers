@@ -354,11 +354,11 @@ export default function ContactPage() {
                 </p>
               </div>
               <p className="font-mono text-xs md:text-sm font-bold text-[#0D2C4A] truncate">
-                support@aloshikkha.org
+                support@ototeachers.com
               </p>
             </div>
             <a
-              href="mailto:support@aloshikkha.org"
+              href="mailto:support@ototeachers.com"
               className="mt-4 inline-flex items-center text-xs font-extrabold text-[#00A896] hover:text-[#008075] transition-colors"
             >
               <span>{lang === "bn" ? "ইমেইল পাঠান" : "Send Email"}</span>
