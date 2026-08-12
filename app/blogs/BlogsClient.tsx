@@ -24,8 +24,8 @@ export default function BlogsClient({ initialPosts }: BlogsClientProps) {
   const { lang } = useLanguage();
   const [enrollModalOpen, setEnrollModalOpen] = useState(false);
   const [mentorModalOpen, setMentorModalOpen] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState("Pay-what-you-can");
-  const [selectedFee, setSelectedFee] = useState(600);
+  const [selectedPlan, setSelectedPlan] = useState("Student Request");
+  const [selectedFee, setSelectedFee] = useState(0);
 
   // Api posts
   const [apiPosts, setApiPosts] = useState<any[]>([]);
@@ -43,10 +43,15 @@ export default function BlogsClient({ initialPosts }: BlogsClientProps) {
             category: b.category || "mentorship",
             excerptBn: b.excerptBn || "",
             excerptEn: b.excerptEn || "",
-            publishedDateBn: b.publishedDateBn || "০৬ আগস্ট, ২০২৬",
-            publishedDateEn: "06 August 2026",
-            readTimeBn: "৪ মিনিট পড়া",
-            readTimeEn: "4 min read",
+            contentBn: b.contentBn || "",
+            contentEn: b.contentEn || "",
+            publishedDateBn: b.publishedDateBn || "",
+            publishedDateEn: b.publishedDateEn || "",
+            authorBn: b.authorBn || "টিচার্স টিম",
+            authorEn: b.authorEn || "Teachers Team",
+            readTimeBn: b.readTimeBn || "৫ মিনিট",
+            readTimeEn: b.readTimeEn || "5 min read",
+            featured: b.featured || false,
             image: b.image || "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=800&q=80",
             author: {
               nameBn: "OTOTeachers টিম",
@@ -79,7 +84,7 @@ export default function BlogsClient({ initialPosts }: BlogsClientProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
 
-  const handleOpenEnroll = (planName = "Pay-what-you-can", fee = 600) => {
+  const handleOpenEnroll = (planName = "Student Request", fee = 0) => {
     setSelectedPlan(planName);
     setSelectedFee(fee);
     setEnrollModalOpen(true);
@@ -113,7 +118,7 @@ export default function BlogsClient({ initialPosts }: BlogsClientProps) {
     <main suppressHydrationWarning className="min-h-screen bg-[#FBF7EF] font-sans text-[#12213D] flex flex-col">
       {/* Top Navbar */}
       <Navbar
-        onOpenEnroll={() => handleOpenEnroll()}
+        onOpenEnroll={(plan) => handleOpenEnroll(plan || "Student Request")}
         onOpenMentor={() => setMentorModalOpen(true)}
       />
 

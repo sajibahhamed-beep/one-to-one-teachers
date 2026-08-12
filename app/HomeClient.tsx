@@ -25,8 +25,8 @@ export default function HomeClient() {
   const { lang } = useLanguage();
   const [enrollModalOpen, setEnrollModalOpen] = useState(false);
   const [mentorModalOpen, setMentorModalOpen] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<string>("Pay-what-you-can");
-  const [selectedFee, setSelectedFee] = useState<number>(600);
+  const [selectedPlan, setSelectedPlan] = useState<string>("Free Trial");
+  const [selectedFee, setSelectedFee] = useState<number>(0);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -47,8 +47,8 @@ export default function HomeClient() {
   }, []);
 
   const handleOpenEnroll = (plan?: string | any, fee?: number | any) => {
-    const validPlan = typeof plan === "string" ? plan : "Pay-what-you-can";
-    const validFee = typeof fee === "number" ? fee : 600;
+    const validPlan = typeof plan === "string" ? plan : "Student Request";
+    const validFee = typeof fee === "number" ? fee : 0;
     setSelectedPlan(validPlan);
     setSelectedFee(validFee);
     setEnrollModalOpen(true);
@@ -58,36 +58,36 @@ export default function HomeClient() {
     <div className="min-h-screen flex flex-col bg-[#FBF7EF]">
       {/* Navbar with mentors.com.bd Topbar & Language Switcher */}
       <Navbar
-        onOpenEnroll={() => handleOpenEnroll("Pay-what-you-can", 600)}
+        onOpenEnroll={(plan) => handleOpenEnroll(plan || "Student Request", 0)}
         onOpenMentor={() => setMentorModalOpen(true)}
       />
 
       {/* Hero Visual Section */}
-      <Hero onOpenEnroll={() => handleOpenEnroll("Pay-what-you-can", 600)} />
+      <Hero onOpenEnroll={(plan) => handleOpenEnroll(plan || "Student Request", 0)} />
 
       {/* Category Icons Grid */}
-      <CategoryGrid onOpenEnroll={() => handleOpenEnroll("Pay-what-you-can", 600)} />
+      <CategoryGrid onOpenEnroll={() => handleOpenEnroll("Student Request", 0)} />
 
       {/* Marquee Ticker */}
       <SubjectMarquee />
 
       {/* Educational Gap & Vision */}
-      <ProblemSection onOpenEnroll={() => handleOpenEnroll("Pay-what-you-can", 600)} />
+      <ProblemSection onOpenEnroll={() => handleOpenEnroll("Student Request", 0)} />
 
       {/* How it works */}
       <HowItWorks />
 
       {/* Subjects & Syllabus Gallery */}
-      <Subjects onOpenEnroll={() => handleOpenEnroll("Pay-what-you-can", 600)} />
+      <Subjects onOpenEnroll={() => handleOpenEnroll("Student Request", 0)} />
 
       {/* Live Batch Schedule */}
-      <BatchSchedule onOpenEnroll={() => handleOpenEnroll("Pay-what-you-can", 600)} />
+      <BatchSchedule onOpenEnroll={() => handleOpenEnroll("Student Request", 0)} />
 
       {/* Student Success Stories & Scorecards */}
       <SuccessStories />
 
       {/* Mentor Spotlight */}
-      <Mentors onOpenEnroll={() => handleOpenEnroll("Pay-what-you-can", 600)} />
+      <Mentors onOpenEnroll={() => handleOpenEnroll("Student Request", 0)} />
 
       {/* Flexible Fee & Sliding Scale Calculator */}
       <Pricing onOpenEnroll={handleOpenEnroll} />
@@ -97,7 +97,7 @@ export default function HomeClient() {
 
       {/* For Students & For Teachers (H2 Sections) */}
       <StudentTeacherSection
-        onOpenEnroll={() => handleOpenEnroll("Pay-what-you-can", 600)}
+        onOpenEnroll={() => handleOpenEnroll("Student Request", 0)}
         onOpenMentor={() => setMentorModalOpen(true)}
       />
 
@@ -117,7 +117,7 @@ export default function HomeClient() {
           </p>
           <div className="hero-actions flex flex-wrap items-center justify-center gap-4">
             <button
-              onClick={() => handleOpenEnroll("Pay-what-you-can", 600)}
+              onClick={() => handleOpenEnroll("Free Trial", 0)}
               className="btn btn-gold flex items-center gap-2 px-7 py-4 rounded-full bg-[#FFB627] text-[#12213D] font-bold text-sm hover:-translate-y-0.5 hover:shadow-xl transition-all cursor-pointer"
             >
               <span>{lang === "bn" ? "ফ্রি ট্রায়াল সেশনে শুরু করুন" : "Start with a free first session"}</span>

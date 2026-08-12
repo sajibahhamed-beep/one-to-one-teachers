@@ -1,6 +1,481 @@
 {
   "enrollments": [
     {
+      "id": "ENR-9729",
+      "studentName": "Free Trial Test User",
+      "phone": "01822002200",
+      "grade": "Class IX (SSC Prep)",
+      "district": "Rajshahi",
+      "selectedSubjects": [
+        "Mathematics"
+      ],
+      "preferredTime": "Morning 10 AM",
+      "medium": "English Version",
+      "selectedPlan": "Free Trial",
+      "fee": 0,
+      "status": "Pending",
+      "createdAt": "2026-08-12T06:44:49.729Z"
+    },
+    {
+      "id": "ENR-9698",
+      "studentName": "Student Request Test",
+      "phone": "01711001100",
+      "grade": "HSC 1st Year",
+      "district": "Chattogram",
+      "selectedSubjects": [
+        "Chemistry"
+      ],
+      "preferredTime": "Evening 6 PM",
+      "medium": "Bangla Medium",
+      "selectedPlan": "Student Request",
+      "fee": 0,
+      "status": "Pending",
+      "createdAt": "2026-08-12T06:44:49.698Z"
+    },
+    {
+      "id": "ENR-1101",
+      "studentName": "sfd",
+      "phone": "adfdf",
+      "grade": "Class IX (SSC Prep)",
+      "district": "adfdf",
+      "selectedSubjects": [
+        "Mathematics",
+        "জীববিজ্ঞান"
+      ],
+      "preferredTime": "adfdf",
+      "medium": "Bangla Medium",
+      "selectedPlan": "Free Trial",
+      "fee": 0,
+      "status": "Pending",
+      "createdAt": "2026-08-12T06:38:31.101Z"
+    },
+    {
+      "id": "ENR-0836",
+      "studentName": "Ayman Sadiq Test",
+      "phone": "01799887766",
+      "grade": "Class X (SSC Prep)",
+      "district": "Dhaka",
+      "selectedSubjects": [
+        "Mathematics",
+        "Physics"
+      ],
+      "preferredTime": "Saturday & Sunday 8:00 PM",
+      "medium": "English Version",
+      "selectedPlan": "Free Trial",
+      "fee": 0,
+      "status": "Pending",
+      "createdAt": "2026-08-12T06:36:50.836Z"
+    },
+    {
+      "id": "ENR-1118",
+      "studentName": "adfd",
+      "phone": "adfdf",
+      "grade": "Class IX (SSC Prep)",
+      "district": "adfd",
+      "selectedSubjects": [
+        "Mathematics",
+        "অন্যান্য"
+      ],
+      "preferredTime": "Flexible",
+      "medium": "English Version",
+      "selectedPlan": "Free Trial",
+      "fee": 6000,
+      "status": "Pending",
+      "createdAt": "2026-08-12T06:30:41.118Z"
+    },
+    {
+      "id": "ENR-2166",
+      "studentName": "adfd",
+      "phone": "adfdf",
+      "grade": "Class IX (SSC Prep)",
+      "district": "adfd",
+      "selectedSubjects": [
+        "Mathematics",
+        "অন্যান্য"
+      ],
+      "preferredTime": "Flexible",
+      "medium": "English Version",
+      "selectedPlan": "Free Trial",
+      "fee": 6000,
+      "status": "Pending",
+      "createdAt": "2026-08-12T06:30:32.166Z"
+    },
+    {
+      "id": "ENR-6139",
+      "studentName": "adfdfd",
+      "phone": "adfdf",
+      "grade": "Class IX (SSC Prep)",
+      "district": "adfd",
+      "selectedSubjects": [
+        "Mathematics",
+        "Accounting"
+      ],
+      "preferredTime": "7:00 PM Evening (Recommended)",
+      "medium": "Bangla Medium",
+      "selectedPlan": "Free Trial",
+      "fee": 6000,
+      "status": "Pending",
+      "createdAt": "2026-08-12T06:25:36.139Z"
+    },
+    {
+      "id": "ENR-5559",
+      "studentName": "adfdfd",
+      "phone": "adfd",
+      "grade": "Class IX (SSC Prep)",
+      "district": "adfd",
+      "selectedSubjects": [
+        "Mathematics",
+        "জীববিজ্ঞান"
+      ],
+      "preferredTime": "7:00 PM Evening (Recommended)",
+      "medium": "Bangla Medium",
+      "selectedPlan": "Pay-what-you-can",
+      "fee": 600,
+      "status": "Pending",
+      "createdAt": "2026-08-12T06:25:15.559Z"
+    },
+    {
+      "id": "ENR-6440",
+      "studentName": "adfd",
+      "phone": "sdfd",
+      "grade": "HSC 1st Year",
+      "district": "dfdf",
+      "selectedSubjects": [
+        "Mathematics",
+        "অন্যান্য"
+      ],
+      "preferredTime": "7:00 PM Evening (Recommended)",
+      "medium": "English Version",
+      "selectedPlan": "Pay-what-you-can",
+      "fee": 600,
+      "status": "Pending",
+      "createdAt": "2026-08-12T06:22:06.440Z"
+    },
+    {
+      "id": "ENR-6399",
+      "studentName": "afdfd",
+      "phone": "adfdf",
+      "grade": "Class IX (SSC Prep)",
+      "district": "adsfdf",
+      "selectedSubjects": [
+        "Mathematics",
+        "স্পোকেন ইংলিশ",
+        "আইসিটি ও কম্পিউটার",
+        "অন্যান্য"
+      ],
+      "preferredTime": "7:00 PM Evening (Recommended)",
+      "medium": "Bangla Medium",
+      "selectedPlan": "Pay-what-you-can",
+      "fee": 600,
+      "status": "Pending",
+      "createdAt": "2026-08-12T06:17:16.399Z"
+    },
+    {
+      "id": "ENR-3764",
+      "studentName": "afdfd",
+      "phone": "adfdf",
+      "grade": "Class IX (SSC Prep)",
+      "district": "adsfdf",
+      "selectedSubjects": [
+        "Mathematics",
+        "স্পোকেন ইংলিশ",
+        "আইসিটি ও কম্পিউটার",
+        "অন্যান্য"
+      ],
+      "preferredTime": "7:00 PM Evening (Recommended)",
+      "medium": "Bangla Medium",
+      "selectedPlan": "Pay-what-you-can",
+      "fee": 600,
+      "status": "Pending",
+      "createdAt": "2026-08-12T06:16:33.764Z"
+    },
+    {
+      "id": "ENR-4408",
+      "studentName": "sdfdf",
+      "phone": "sdfd",
+      "grade": "Class IX (SSC Prep)",
+      "district": "sfdfd",
+      "selectedSubjects": [
+        "Mathematics",
+        "অন্যান্য"
+      ],
+      "preferredTime": "7:00 PM Evening (Recommended)",
+      "medium": "Bangla Medium",
+      "selectedPlan": "Pay-what-you-can",
+      "fee": 600,
+      "status": "Pending",
+      "createdAt": "2026-08-12T06:01:54.408Z"
+    },
+    {
+      "id": "ENR-9280",
+      "studentName": "adfdf",
+      "phone": "fasdfasd",
+      "grade": "Class IX",
+      "district": "adfdasadf",
+      "selectedSubjects": [
+        "Mathematics",
+        "অন্যান্য"
+      ],
+      "preferredTime": "7:00 PM Evening",
+      "medium": "Bangla Medium",
+      "selectedPlan": "Pay-what-you-can",
+      "fee": 600,
+      "status": "Pending",
+      "createdAt": "2026-08-12T06:01:19.280Z"
+    },
+    {
+      "id": "ENR-1962",
+      "studentName": "adfdf",
+      "phone": "fasdfasd",
+      "grade": "Class IX",
+      "district": "adfdasadf",
+      "selectedSubjects": [
+        "Mathematics",
+        "অন্যান্য"
+      ],
+      "preferredTime": "7:00 PM Evening",
+      "medium": "Bangla Medium",
+      "selectedPlan": "Pay-what-you-can",
+      "fee": 600,
+      "status": "Pending",
+      "createdAt": "2026-08-12T06:01:11.962Z"
+    },
+    {
+      "id": "ENR-9748",
+      "studentName": "adfd",
+      "phone": "sdf",
+      "grade": "Class IX",
+      "district": "dadf",
+      "selectedSubjects": [
+        "Mathematics",
+        "অন্যান্য"
+      ],
+      "preferredTime": "7:00 PM Evening",
+      "medium": "Bangla Medium",
+      "selectedPlan": "Pay-what-you-can",
+      "fee": 600,
+      "status": "Pending",
+      "createdAt": "2026-08-12T05:56:29.748Z"
+    },
+    {
+      "id": "ENR-2165",
+      "studentName": "adfd",
+      "phone": "sdf",
+      "grade": "Class IX",
+      "district": "dadf",
+      "selectedSubjects": [
+        "Mathematics",
+        "অন্যান্য"
+      ],
+      "preferredTime": "7:00 PM Evening",
+      "medium": "Bangla Medium",
+      "selectedPlan": "Pay-what-you-can",
+      "fee": 600,
+      "status": "Pending",
+      "createdAt": "2026-08-12T05:56:12.165Z"
+    },
+    {
+      "id": "ENR-3085",
+      "studentName": "adfdf",
+      "phone": "adfdf",
+      "grade": "Class IX",
+      "district": "adfdfd",
+      "selectedSubjects": [
+        "Mathematics",
+        "অন্যান্য"
+      ],
+      "preferredTime": "7:00 PM Evening",
+      "medium": "Bangla Medium",
+      "selectedPlan": "Pay-what-you-can",
+      "fee": 600,
+      "status": "Pending",
+      "createdAt": "2026-08-12T05:50:23.085Z"
+    },
+    {
+      "id": "ENR-5242",
+      "studentName": "adfdf",
+      "phone": "adfdf",
+      "grade": "Class IX",
+      "district": "adfdfd",
+      "selectedSubjects": [
+        "Mathematics",
+        "অন্যান্য"
+      ],
+      "preferredTime": "7:00 PM Evening",
+      "medium": "Bangla Medium",
+      "selectedPlan": "Pay-what-you-can",
+      "fee": 600,
+      "status": "Pending",
+      "createdAt": "2026-08-12T05:50:15.242Z"
+    },
+    {
+      "id": "ENR-2067",
+      "studentName": "adfd",
+      "phone": "asdfad",
+      "grade": "Class IX (SSC Prep)",
+      "district": "asdfasdf",
+      "selectedSubjects": [
+        "Mathematics",
+        "হিসাববিজ্ঞান"
+      ],
+      "preferredTime": "7:00 PM Evening",
+      "medium": "Bangla Medium",
+      "selectedPlan": "Pay-what-you-can",
+      "fee": 600,
+      "status": "Pending",
+      "createdAt": "2026-08-12T05:48:22.067Z"
+    },
+    {
+      "id": "ENR-9592",
+      "studentName": "adfd",
+      "phone": "asdfad",
+      "grade": "Class IX (SSC Prep)",
+      "district": "asdfasdf",
+      "selectedSubjects": [
+        "Mathematics",
+        "হিসাববিজ্ঞান"
+      ],
+      "preferredTime": "7:00 PM Evening",
+      "medium": "Bangla Medium",
+      "selectedPlan": "Pay-what-you-can",
+      "fee": 600,
+      "status": "Pending",
+      "createdAt": "2026-08-12T05:47:49.592Z"
+    },
+    {
+      "id": "ENR-2128",
+      "studentName": "asfasd",
+      "phone": "asdfadsf",
+      "grade": "HSC 1st Year",
+      "district": "asdfdf",
+      "selectedSubjects": [
+        "Mathematics",
+        "Others"
+      ],
+      "preferredTime": "7:00 PM Evening",
+      "medium": "Bangla Medium",
+      "selectedPlan": "Pay-what-you-can",
+      "fee": 600,
+      "status": "Pending",
+      "createdAt": "2026-08-12T05:47:32.129Z"
+    },
+    {
+      "id": "ENR-5611",
+      "studentName": "asfasd",
+      "phone": "asdfadsf",
+      "grade": "HSC 1st Year",
+      "district": "asdfdf",
+      "selectedSubjects": [
+        "Mathematics",
+        "Others"
+      ],
+      "preferredTime": "7:00 PM Evening",
+      "medium": "Bangla Medium",
+      "selectedPlan": "Pay-what-you-can",
+      "fee": 600,
+      "status": "Pending",
+      "createdAt": "2026-08-12T05:47:15.611Z"
+    },
+    {
+      "id": "ENR-2963",
+      "studentName": "ertqwerq",
+      "phone": "dasfas",
+      "grade": "Class IX",
+      "district": "aewrft",
+      "selectedSubjects": [
+        "Mathematics",
+        "অন্যান্য"
+      ],
+      "preferredTime": "7:00 PM Evening",
+      "medium": "Bangla Medium",
+      "selectedPlan": "Pay-what-you-can",
+      "fee": 600,
+      "status": "Pending",
+      "createdAt": "2026-08-12T05:42:22.963Z"
+    },
+    {
+      "id": "ENR-3631",
+      "studentName": "ertqwerq",
+      "phone": "dasfas",
+      "grade": "Class IX",
+      "district": "aewrft",
+      "selectedSubjects": [
+        "Mathematics",
+        "অন্যান্য"
+      ],
+      "preferredTime": "7:00 PM Evening",
+      "medium": "Bangla Medium",
+      "selectedPlan": "Pay-what-you-can",
+      "fee": 600,
+      "status": "Pending",
+      "createdAt": "2026-08-12T05:42:13.631Z"
+    },
+    {
+      "id": "ENR-4635",
+      "studentName": "User Flow Tester",
+      "phone": "01711223344",
+      "grade": "Others",
+      "district": "Dhaka",
+      "selectedSubjects": [
+        "Mathematics",
+        "Others"
+      ],
+      "preferredTime": "7:00 PM Evening (Recommended)",
+      "medium": "Bangla Medium",
+      "selectedPlan": "Pay-what-you-can",
+      "fee": 600,
+      "status": "Pending",
+      "createdAt": "2026-08-12T05:40:34.635Z"
+    },
+    {
+      "id": "ENR-1242",
+      "studentName": "adfda",
+      "phone": "adfdfd",
+      "grade": "Others",
+      "district": "adfdfd",
+      "selectedSubjects": [
+        "Mathematics"
+      ],
+      "preferredTime": "7:00 PM Evening",
+      "medium": "Bangla Medium",
+      "selectedPlan": "Pay-what-you-can",
+      "fee": 600,
+      "status": "Pending",
+      "createdAt": "2026-08-12T05:38:01.242Z"
+    },
+    {
+      "id": "ENR-2970",
+      "studentName": "adfda",
+      "phone": "adfdfd",
+      "grade": "Others",
+      "district": "adfdfd",
+      "selectedSubjects": [
+        "Mathematics"
+      ],
+      "preferredTime": "7:00 PM Evening",
+      "medium": "Bangla Medium",
+      "selectedPlan": "Pay-what-you-can",
+      "fee": 600,
+      "status": "Pending",
+      "createdAt": "2026-08-12T05:37:52.970Z"
+    },
+    {
+      "id": "ENR-4684",
+      "studentName": "adfda",
+      "phone": "adfdfd",
+      "grade": "Others",
+      "district": "adfdfd",
+      "selectedSubjects": [
+        "Mathematics"
+      ],
+      "preferredTime": "7:00 PM Evening",
+      "medium": "Bangla Medium",
+      "selectedPlan": "Pay-what-you-can",
+      "fee": 600,
+      "status": "Pending",
+      "createdAt": "2026-08-12T05:37:44.684Z"
+    },
+    {
       "id": "ENR-8461",
       "studentName": "ASFasf",
       "phone": "adfadsfasd",
@@ -68,6 +543,16 @@
   ],
   "pricingRequests": [
     {
+      "id": "PRC-4683",
+      "studentName": "Pricing Student",
+      "phone": "01611223344",
+      "planName": "সাশ্রয়ী ২-বিষয় প্যাক",
+      "duration": "৬ মাস",
+      "monthlyFee": 5500,
+      "status": "Pending",
+      "createdAt": "2026-08-12T05:40:34.683Z"
+    },
+    {
       "id": "PRC-4945",
       "studentName": "Student",
       "phone": "",
@@ -99,6 +584,15 @@
     }
   ],
   "contacts": [
+    {
+      "id": "MSG-4654",
+      "name": "Contact User",
+      "email": "user@example.com",
+      "phone": "01811223344",
+      "subject": "General Question",
+      "message": "Need 1-on-1 tutor for Class 8",
+      "createdAt": "2026-08-12T05:40:34.654Z"
+    },
     {
       "id": "MSG-4467",
       "name": "aegdsa",
@@ -188,6 +682,20 @@
       "qEn": "Is there a free trial class available?",
       "aBn": "হ্যাঁ, যেকোনো বিষয়ে ভর্তি হওয়ার পূর্বে ১ম ফ্রি ডেমো ক্লাস বুক করতে পারবেন।",
       "aEn": "Yes, you can book a free 1st demo trial class before confirming enrollment."
+    },
+    {
+      "id": "faq-1786516315388",
+      "qBn": "asefrad",
+      "qEn": "",
+      "aBn": "adfdf",
+      "aEn": ""
+    },
+    {
+      "id": "faq-1786517504780",
+      "qBn": "শিক্ষার্থীরা কি নিজের সুবিধামতো ক্লাস টাইম বেছে নিতে পারবে? (আপডেট)",
+      "qEn": "Can students choose their own convenient class time? (Updated)",
+      "aBn": "হ্যাঁ, সকাল, দুপুর, বিকেল কিংবা রাত—যে কোনো সময়ে ১-অন-১ ক্লাস নেওয়া যায়।",
+      "aEn": "Yes, 1-on-1 sessions can be booked for morning, afternoon, evening, or night."
     }
   ],
   "blogs": [
@@ -219,7 +727,19 @@
     "addressBn": "ধানমণ্ডি, ঢাকা, বাংলাদেশ",
     "addressEn": "Dhanmondi, Dhaka, Bangladesh"
   },
-  "teacherApplications": [],
+  "teacherApplications": [
+    {
+      "id": "APP-4665",
+      "fullName": "Prospective Teacher",
+      "phone": "01911223344",
+      "email": "teacher@example.com",
+      "institution": "BUET",
+      "subjectExpertise": "Mathematics (SSC & HSC)",
+      "hoursPerWeek": "4-6 hours",
+      "status": "Pending",
+      "createdAt": "2026-08-12T05:40:34.665Z"
+    }
+  ],
   "inquiries": [],
   "payments": []
 }

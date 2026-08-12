@@ -257,8 +257,8 @@ export default function FemaleTutorsClient() {
       <EnrollModal
         isOpen={enrollModalOpen}
         onClose={() => setEnrollModalOpen(false)}
-        initialPlan="Pay-what-you-can"
-        initialFee={600}
+        initialPlan="Student Request"
+        initialFee={0}
       />
       <MentorModal
         isOpen={mentorModalOpen}

@@ -8,7 +8,7 @@ import { useLanguage } from "../context/LanguageContext";
 import { Menu, X, PhoneCall, Globe, Sparkles } from "lucide-react";
 
 interface NavbarProps {
-  onOpenEnroll?: () => void;
+  onOpenEnroll?: (plan?: string) => void;
   onOpenMentor?: () => void;
 }
 
@@ -77,7 +77,7 @@ export default function Navbar({ onOpenEnroll, onOpenMentor }: NavbarProps) {
 
             <button
               type="button"
-              onClick={() => onOpenEnroll?.()}
+              onClick={() => onOpenEnroll?.("Free Trial")}
               className="hidden sm:inline-flex items-center gap-1.5 bg-[#FFB627] text-[#0D2C4A] px-4 py-1.5 rounded-full text-xs sm:text-sm font-extrabold hover:bg-[#FFA800] active:scale-95 transition-all shadow-md cursor-pointer select-none"
             >
               <Sparkles className="w-3.5 h-3.5 text-[#0D2C4A]" />
@@ -133,7 +133,7 @@ export default function Navbar({ onOpenEnroll, onOpenMentor }: NavbarProps) {
         <div className="hidden sm:flex items-center gap-3">
           <button
             type="button"
-            onClick={() => onOpenEnroll?.()}
+            onClick={() => onOpenEnroll?.("Student Request")}
             className="btn text-sm font-extrabold px-6 py-3 rounded-full bg-[#00A896] text-white hover:bg-[#008075] active:bg-[#00665E] active:scale-95 shadow-lg shadow-[#00A896]/25 hover:-translate-y-0.5 transition-all cursor-pointer select-none"
           >
             <span>{t.btnStartLearning}</span>

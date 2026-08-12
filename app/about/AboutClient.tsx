@@ -14,11 +14,17 @@ export default function AboutClient() {
   const { lang } = useLanguage();
   const [enrollModalOpen, setEnrollModalOpen] = useState(false);
   const [mentorModalOpen, setMentorModalOpen] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState("Student Request");
+
+  const handleOpenEnroll = (plan = "Student Request") => {
+    setSelectedPlan(plan);
+    setEnrollModalOpen(true);
+  };
 
   return (
     <main className="min-h-screen bg-[#F8FAFC] font-sans">
       <Navbar
-        onOpenEnroll={() => setEnrollModalOpen(true)}
+        onOpenEnroll={(plan) => handleOpenEnroll(plan || "Student Request")}
         onOpenMentor={() => setMentorModalOpen(true)}
       />
 
@@ -40,19 +46,20 @@ export default function AboutClient() {
       </section>
 
       {/* Problem & Educational Gap Section */}
-      <ProblemSection onOpenEnroll={() => setEnrollModalOpen(true)} />
+      <ProblemSection onOpenEnroll={() => handleOpenEnroll("Student Request")} />
 
       {/* Impact Section */}
       <ImpactSection />
 
       {/* Verified Mentors Spotlight */}
-      <Mentors onOpenEnroll={() => setEnrollModalOpen(true)} />
+      <Mentors onOpenEnroll={() => handleOpenEnroll("Student Request")} />
 
       <Footer />
 
       <EnrollModal
         isOpen={enrollModalOpen}
         onClose={() => setEnrollModalOpen(false)}
+        initialPlan={selectedPlan}
       />
       <MentorModal
         isOpen={mentorModalOpen}

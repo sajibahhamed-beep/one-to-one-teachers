@@ -742,6 +742,46 @@ export async function insertFAQ(faq: FAQItem): Promise<FAQItem> {
   return faq;
 }
 
+export async function updateFAQ(faq: FAQItem): Promise<FAQItem | null> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const row = {
+        q_bn: faq.qBn,
+        q_en: faq.qEn,
+        a_bn: faq.aBn,
+        a_en: faq.aEn,
+      };
+      const { data, error } = await supabase
+        .from("faqs")
+        .update(row)
+        .eq("id", faq.id)
+        .select()
+        .single();
+      if (!error && data) {
+        return {
+          id: data.id,
+          qBn: data.q_bn,
+          qEn: data.q_en,
+          aBn: data.a_bn,
+          aEn: data.a_en,
+        };
+      }
+    } catch (e) {
+      console.error("Supabase updateFAQ error:", e);
+    }
+  }
+  const db = getDB();
+  if (db.faqs) {
+    const idx = db.faqs.findIndex((f) => f.id === faq.id);
+    if (idx !== -1) {
+      db.faqs[idx] = faq;
+      saveDB(db);
+      return faq;
+    }
+  }
+  return null;
+}
+
 export async function deleteFAQ(id: string): Promise<boolean> {
   if (supabase && isSupabaseConfigured()) {
     try {

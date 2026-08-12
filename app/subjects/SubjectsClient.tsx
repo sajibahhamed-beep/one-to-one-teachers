@@ -16,12 +16,12 @@ export default function SubjectsClient() {
   const { lang } = useLanguage();
   const [enrollModalOpen, setEnrollModalOpen] = useState(false);
   const [mentorModalOpen, setMentorModalOpen] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState("Pay-what-you-can");
-  const [selectedFee, setSelectedFee] = useState(600);
+  const [selectedPlan, setSelectedPlan] = useState("Student Request");
+  const [selectedFee, setSelectedFee] = useState(0);
 
   const handleOpenEnroll = (planName?: string | any, fee?: number | any) => {
-    const validPlan = typeof planName === "string" ? planName : "Pay-what-you-can";
-    const validFee = typeof fee === "number" ? fee : 600;
+    const validPlan = typeof planName === "string" ? planName : "Student Request";
+    const validFee = typeof fee === "number" ? fee : 0;
     setSelectedPlan(validPlan);
     setSelectedFee(validFee);
     setEnrollModalOpen(true);
@@ -31,7 +31,7 @@ export default function SubjectsClient() {
     <main className="min-h-screen bg-[#F8FAFC] font-sans">
       {/* Top Sticky Header */}
       <Navbar
-        onOpenEnroll={() => handleOpenEnroll()}
+        onOpenEnroll={(plan) => handleOpenEnroll(plan || "Student Request")}
         onOpenMentor={() => setMentorModalOpen(true)}
       />
 

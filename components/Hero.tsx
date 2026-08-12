@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 
 interface HeroProps {
-  onOpenEnroll: () => void;
+  onOpenEnroll: (plan?: string) => void;
 }
 
 export default function Hero({ onOpenEnroll }: HeroProps) {
@@ -62,7 +62,7 @@ export default function Hero({ onOpenEnroll }: HeroProps) {
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 pt-1 sm:pt-2">
             <button
               type="button"
-              onClick={() => onOpenEnroll?.()}
+              onClick={() => onOpenEnroll?.("Student Request")}
               className="flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-full bg-[#00A896] text-white font-bold text-sm hover:bg-[#008075] shadow-lg shadow-[#00A896]/30 hover:-translate-y-0.5 transition-all cursor-pointer select-none w-full sm:w-auto"
             >
               <span>{t.heroFindMentor}</span>
@@ -130,7 +130,7 @@ export default function Hero({ onOpenEnroll }: HeroProps) {
         <div className="lg:col-span-5 flex flex-col gap-5">
           {/* Main Classroom Image Card */}
           <div
-            onClick={() => onOpenEnroll?.()}
+            onClick={() => onOpenEnroll?.("Student Request")}
             className="relative rounded-3xl overflow-hidden shadow-xl border border-[#00A896]/20 aspect-[4/3] sm:aspect-[16/10] lg:aspect-[4/3] group bg-white p-2 cursor-pointer hover:shadow-2xl transition-all"
           >
             <div className="relative w-full h-full rounded-2xl overflow-hidden">
@@ -179,7 +179,7 @@ export default function Hero({ onOpenEnroll }: HeroProps) {
 
             <button
               type="button"
-              onClick={() => onOpenEnroll?.()}
+              onClick={() => onOpenEnroll?.("Free Trial")}
               className="w-full sm:w-auto text-center justify-center px-6 py-3 sm:py-2.5 rounded-full bg-[#00A896] text-white font-extrabold text-xs hover:bg-[#008075] transition-all shadow-md flex-shrink-0 cursor-pointer"
             >
               {t.heroBookTrial}

@@ -28,8 +28,8 @@ export async function POST(req: Request) {
       selectedSubjects: body.selectedSubjects || [],
       preferredTime: body.preferredTime || "Flexible",
       medium: body.medium || "",
-      selectedPlan: body.selectedPlan || "",
-      fee: Number(body.fee) || 6000,
+      selectedPlan: body.selectedPlan || "Free Trial",
+      fee: typeof body.fee === "number" ? body.fee : 0,
       status: "Pending",
       createdAt: new Date().toISOString(),
     };

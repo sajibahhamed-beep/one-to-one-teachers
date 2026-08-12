@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getFAQs, insertFAQ, deleteFAQ, FAQItem } from "@/lib/db";
+import { getFAQs, insertFAQ, updateFAQ, deleteFAQ, FAQItem } from "@/lib/db";
 
 export async function GET() {
   try {
@@ -25,6 +25,28 @@ export async function POST(req: Request) {
     return NextResponse.json({ success: true, data: saved });
   } catch (error) {
     return NextResponse.json({ error: "Failed to save FAQ" }, { status: 500 });
+  }
+}
+
+export async function PUT(req: Request) {
+  try {
+    const body = await req.json();
+    if (!body.id) {
+      return NextResponse.json({ error: "FAQ ID required" }, { status: 400 });
+    }
+    const updated = await updateFAQ({
+      id: body.id,
+      qBn: body.qBn || "",
+      qEn: body.qEn || "",
+      aBn: body.aBn || "",
+      aEn: body.aEn || "",
+    });
+    if (updated) {
+      return NextResponse.json({ success: true, data: updated });
+    }
+    return NextResponse.json({ error: "FAQ not found" }, { status: 404 });
+  } catch (error) {
+    return NextResponse.json({ error: "Failed to update FAQ" }, { status: 500 });
   }
 }
 

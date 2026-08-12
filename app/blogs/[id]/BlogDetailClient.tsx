@@ -37,7 +37,7 @@ export default function BlogDetailClient({ post, relatedPosts }: BlogDetailClien
   const [selectedFee, setSelectedFee] = useState(600);
   const [copiedLink, setCopiedLink] = useState(false);
 
-  const handleOpenEnroll = (planName = "Pay-what-you-can", fee = 600) => {
+  const handleOpenEnroll = (planName = "Free Trial", fee = 0) => {
     setSelectedPlan(planName);
     setSelectedFee(fee);
     setEnrollModalOpen(true);

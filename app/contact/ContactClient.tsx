@@ -23,8 +23,8 @@ export default function ContactClient() {
   const { lang } = useLanguage();
   const [enrollModalOpen, setEnrollModalOpen] = useState(false);
   const [mentorModalOpen, setMentorModalOpen] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState("Pay-what-you-can");
-  const [selectedFee, setSelectedFee] = useState(600);
+  const [selectedPlan, setSelectedPlan] = useState("Student Request");
+  const [selectedFee, setSelectedFee] = useState(0);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -37,7 +37,7 @@ export default function ContactClient() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleOpenEnroll = (planName = "Pay-what-you-can", fee = 600) => {
+  const handleOpenEnroll = (planName = "Student Request", fee = 0) => {
     setSelectedPlan(planName);
     setSelectedFee(fee);
     setEnrollModalOpen(true);
@@ -63,7 +63,7 @@ export default function ContactClient() {
     <main className="min-h-screen bg-[#FBF7EF] font-sans text-[#12213D] flex flex-col">
       {/* Top Navbar */}
       <Navbar
-        onOpenEnroll={() => handleOpenEnroll()}
+        onOpenEnroll={(plan) => handleOpenEnroll(plan || "Student Request")}
         onOpenMentor={() => setMentorModalOpen(true)}
       />
 
