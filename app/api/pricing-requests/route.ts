@@ -1,29 +1,37 @@
 import { NextResponse } from "next/server";
-import { getDB, saveDB } from "@/lib/db";
+import {
+  getPricingRequests,
+  insertPricingRequest,
+  updatePricingRequestStatus,
+  deletePricingRequest,
+  PricingRequest,
+} from "@/lib/db";
 
 export async function GET() {
-  const db = getDB();
-  return NextResponse.json(db.pricingRequests || []);
+  try {
+    const requests = await getPricingRequests();
+    return NextResponse.json(requests);
+  } catch (error) {
+    return NextResponse.json({ error: "Failed to fetch pricing requests" }, { status: 500 });
+  }
 }
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const db = getDB();
-    const newRequest = {
+    const newRequest: PricingRequest = {
       id: `PRC-${Date.now().toString().slice(-4)}`,
       studentName: body.studentName || "Student",
       phone: body.phone || "",
       planName: body.planName || "Custom Plan",
       duration: body.duration || "1 Month",
-      monthlyFee: body.monthlyFee || 5000,
-      status: "Pending" as const,
+      monthlyFee: Number(body.monthlyFee) || 5000,
+      status: "Pending",
       createdAt: new Date().toISOString(),
     };
 
-    db.pricingRequests.unshift(newRequest);
-    saveDB(db);
-    return NextResponse.json({ success: true, data: newRequest });
+    const saved = await insertPricingRequest(newRequest);
+    return NextResponse.json({ success: true, data: saved });
   } catch (error) {
     return NextResponse.json({ error: "Failed to save pricing request" }, { status: 500 });
   }
@@ -32,11 +40,11 @@ export async function POST(req: Request) {
 export async function PUT(req: Request) {
   try {
     const { id, status } = await req.json();
-    const db = getDB();
-    const item = db.pricingRequests.find((p) => p.id === id);
+    if (!id) {
+      return NextResponse.json({ error: "Request ID required" }, { status: 400 });
+    }
+    const item = await updatePricingRequestStatus(id, status);
     if (item) {
-      item.status = status;
-      saveDB(db);
       return NextResponse.json({ success: true, item });
     }
     return NextResponse.json({ error: "Pricing request not found" }, { status: 404 });
@@ -49,10 +57,11 @@ export async function DELETE(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
-    const db = getDB();
-    db.pricingRequests = db.pricingRequests.filter((p) => p.id !== id);
-    saveDB(db);
-    return NextResponse.json({ success: true });
+    if (!id) {
+      return NextResponse.json({ error: "Request ID required" }, { status: 400 });
+    }
+    const success = await deletePricingRequest(id);
+    return NextResponse.json({ success });
   } catch (error) {
     return NextResponse.json({ error: "Failed to delete item" }, { status: 500 });
   }

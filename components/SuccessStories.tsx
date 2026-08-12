@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useLanguage } from "../context/LanguageContext";
 import { Star, MapPin, CheckCircle } from "lucide-react";
 
@@ -83,11 +84,11 @@ export default function SuccessStories() {
               <div className="pt-6 border-t border-[#0D2C4A]/10 mt-6 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0">
                   {/* Guardian / Student Image */}
-                  <img
+                  <Image
                     src={rev.img}
                     alt={rev.name}
-                    loading="lazy"
-                    decoding="async"
+                    width={44}
+                    height={44}
                     className="w-11 h-11 rounded-full object-cover border-2 border-[#00A896]/30 flex-shrink-0 shadow-sm"
                   />
                   <div className="min-w-0">

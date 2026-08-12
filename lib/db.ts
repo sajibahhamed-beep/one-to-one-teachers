@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { supabase, isSupabaseConfigured } from "./supabase";
 
 const dbPath = path.join(process.cwd(), "data", "db.json");
 
@@ -67,6 +68,10 @@ export interface SocialLinkItem {
 
 export interface SettingData {
   socialLinks?: SocialLinkItem[];
+  facebookUrl?: string;
+  instagramUrl?: string;
+  youtubeUrl?: string;
+  linkedinUrl?: string;
   whatsappPhone?: string;
   whatsappMessageBn?: string;
   whatsappMessageEn?: string;
@@ -126,7 +131,7 @@ export interface DBData {
   payments?: Payment[];
 }
 
-const initialData: DBData = {
+export const initialData: DBData = {
   enrollments: [
     {
       id: "ENR-1001",
@@ -275,6 +280,10 @@ const initialData: DBData = {
       { id: "soc-3", name: "YouTube", iconUrl: "youtube", url: "https://youtube.com" },
       { id: "soc-4", name: "LinkedIn", iconUrl: "linkedin", url: "https://linkedin.com" },
     ],
+    facebookUrl: "https://facebook.com",
+    instagramUrl: "https://instagram.com",
+    youtubeUrl: "https://youtube.com",
+    linkedinUrl: "https://linkedin.com",
     whatsappPhone: "8801775551325",
     whatsappMessageBn: "হ্যালো ototeachers.com টিম, ১-অন-১ অনলাইন শিক্ষক সম্পর্কে জানতে চাই।",
     whatsappMessageEn: "Hello ototeachers.com team, I want to inquire about 1-on-1 online teachers.",
@@ -288,6 +297,9 @@ const initialData: DBData = {
   },
 };
 
+// -------------------------------------------------------------
+// Fallback local file DB handlers
+// -------------------------------------------------------------
 export function getDB(): DBData {
   try {
     const dir = path.dirname(dbPath);
@@ -318,4 +330,898 @@ export function saveDB(data: DBData): void {
   } catch (error) {
     console.error("Error saving database", error);
   }
+}
+
+// -------------------------------------------------------------
+// Supabase Data Access Operations with Graceful Local Fallbacks
+// -------------------------------------------------------------
+
+// --- 1. Enrollments ---
+export async function getEnrollments(): Promise<Enrollment[]> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const { data, error } = await supabase
+        .from("enrollments")
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (!error && data) {
+        return data.map((row: any) => ({
+          id: row.id,
+          studentName: row.student_name,
+          phone: row.phone,
+          grade: row.grade,
+          district: row.district,
+          selectedSubjects: row.selected_subjects || [],
+          preferredTime: row.preferred_time,
+          medium: row.medium || "",
+          selectedPlan: row.selected_plan || "",
+          fee: Number(row.fee) || 0,
+          status: row.status,
+          createdAt: row.created_at,
+        }));
+      }
+    } catch (e) {
+      console.error("Supabase getEnrollments error, falling back to local DB:", e);
+    }
+  }
+  return getDB().enrollments || [];
+}
+
+export async function insertEnrollment(enrollment: Enrollment): Promise<Enrollment> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const row = {
+        id: enrollment.id,
+        student_name: enrollment.studentName,
+        phone: enrollment.phone,
+        grade: enrollment.grade,
+        district: enrollment.district,
+        selected_subjects: enrollment.selectedSubjects,
+        preferred_time: enrollment.preferredTime,
+        medium: enrollment.medium || "",
+        selected_plan: enrollment.selectedPlan || "",
+        fee: enrollment.fee,
+        status: enrollment.status,
+        created_at: enrollment.createdAt,
+      };
+      const { error } = await supabase.from("enrollments").insert(row);
+      if (!error) return enrollment;
+      console.error("Supabase insertEnrollment error:", error.message);
+    } catch (e) {
+      console.error("Supabase insertEnrollment error:", e);
+    }
+  }
+  const db = getDB();
+  db.enrollments = db.enrollments || [];
+  db.enrollments.unshift(enrollment);
+  saveDB(db);
+  return enrollment;
+}
+
+export async function updateEnrollmentStatus(id: string, status: Enrollment["status"]): Promise<Enrollment | null> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const { data, error } = await supabase
+        .from("enrollments")
+        .update({ status })
+        .eq("id", id)
+        .select()
+        .single();
+      if (!error && data) {
+        return {
+          id: data.id,
+          studentName: data.student_name,
+          phone: data.phone,
+          grade: data.grade,
+          district: data.district,
+          selectedSubjects: data.selected_subjects || [],
+          preferredTime: data.preferred_time,
+          medium: data.medium || "",
+          selectedPlan: data.selected_plan || "",
+          fee: Number(data.fee) || 0,
+          status: data.status,
+          createdAt: data.created_at,
+        };
+      }
+    } catch (e) {
+      console.error("Supabase updateEnrollmentStatus error:", e);
+    }
+  }
+  const db = getDB();
+  const item = db.enrollments?.find((e) => e.id === id);
+  if (item) {
+    item.status = status;
+    saveDB(db);
+    return item;
+  }
+  return null;
+}
+
+export async function deleteEnrollment(id: string): Promise<boolean> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const { error } = await supabase.from("enrollments").delete().eq("id", id);
+      if (!error) return true;
+    } catch (e) {
+      console.error("Supabase deleteEnrollment error:", e);
+    }
+  }
+  const db = getDB();
+  if (db.enrollments) {
+    db.enrollments = db.enrollments.filter((e) => e.id !== id);
+    saveDB(db);
+    return true;
+  }
+  return false;
+}
+
+// --- 2. Pricing Requests ---
+export async function getPricingRequests(): Promise<PricingRequest[]> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const { data, error } = await supabase
+        .from("pricing_requests")
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (!error && data) {
+        return data.map((row: any) => ({
+          id: row.id,
+          studentName: row.student_name,
+          phone: row.phone || "",
+          planName: row.plan_name,
+          duration: row.duration,
+          monthlyFee: Number(row.monthly_fee) || 0,
+          status: row.status,
+          createdAt: row.created_at,
+        }));
+      }
+    } catch (e) {
+      console.error("Supabase getPricingRequests error:", e);
+    }
+  }
+  return getDB().pricingRequests || [];
+}
+
+export async function insertPricingRequest(req: PricingRequest): Promise<PricingRequest> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const row = {
+        id: req.id,
+        student_name: req.studentName,
+        phone: req.phone || "",
+        plan_name: req.planName,
+        duration: req.duration,
+        monthly_fee: req.monthlyFee,
+        status: req.status,
+        created_at: req.createdAt,
+      };
+      const { error } = await supabase.from("pricing_requests").insert(row);
+      if (!error) return req;
+    } catch (e) {
+      console.error("Supabase insertPricingRequest error:", e);
+    }
+  }
+  const db = getDB();
+  db.pricingRequests = db.pricingRequests || [];
+  db.pricingRequests.unshift(req);
+  saveDB(db);
+  return req;
+}
+
+export async function updatePricingRequestStatus(id: string, status: PricingRequest["status"]): Promise<PricingRequest | null> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const { data, error } = await supabase
+        .from("pricing_requests")
+        .update({ status })
+        .eq("id", id)
+        .select()
+        .single();
+      if (!error && data) {
+        return {
+          id: data.id,
+          studentName: data.student_name,
+          phone: data.phone || "",
+          planName: data.plan_name,
+          duration: data.duration,
+          monthlyFee: Number(data.monthly_fee) || 0,
+          status: data.status,
+          createdAt: data.created_at,
+        };
+      }
+    } catch (e) {
+      console.error("Supabase updatePricingRequestStatus error:", e);
+    }
+  }
+  const db = getDB();
+  const item = db.pricingRequests?.find((p) => p.id === id);
+  if (item) {
+    item.status = status;
+    saveDB(db);
+    return item;
+  }
+  return null;
+}
+
+export async function deletePricingRequest(id: string): Promise<boolean> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const { error } = await supabase.from("pricing_requests").delete().eq("id", id);
+      if (!error) return true;
+    } catch (e) {
+      console.error("Supabase deletePricingRequest error:", e);
+    }
+  }
+  const db = getDB();
+  if (db.pricingRequests) {
+    db.pricingRequests = db.pricingRequests.filter((p) => p.id !== id);
+    saveDB(db);
+    return true;
+  }
+  return false;
+}
+
+// --- 3. Contacts ---
+export async function getContacts(): Promise<ContactMessage[]> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const { data, error } = await supabase
+        .from("contacts")
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (!error && data) {
+        return data.map((row: any) => ({
+          id: row.id,
+          name: row.name,
+          email: row.email || "",
+          phone: row.phone || "",
+          subject: row.subject,
+          message: row.message,
+          createdAt: row.created_at,
+        }));
+      }
+    } catch (e) {
+      console.error("Supabase getContacts error:", e);
+    }
+  }
+  return getDB().contacts || [];
+}
+
+export async function insertContact(msg: ContactMessage): Promise<ContactMessage> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const row = {
+        id: msg.id,
+        name: msg.name,
+        email: msg.email || "",
+        phone: msg.phone || "",
+        subject: msg.subject,
+        message: msg.message,
+        created_at: msg.createdAt,
+      };
+      const { error } = await supabase.from("contacts").insert(row);
+      if (!error) return msg;
+    } catch (e) {
+      console.error("Supabase insertContact error:", e);
+    }
+  }
+  const db = getDB();
+  db.contacts = db.contacts || [];
+  db.contacts.unshift(msg);
+  saveDB(db);
+  return msg;
+}
+
+export async function deleteContact(id: string): Promise<boolean> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const { error } = await supabase.from("contacts").delete().eq("id", id);
+      if (!error) return true;
+    } catch (e) {
+      console.error("Supabase deleteContact error:", e);
+    }
+  }
+  const db = getDB();
+  if (db.contacts) {
+    db.contacts = db.contacts.filter((c) => c.id !== id);
+    saveDB(db);
+    return true;
+  }
+  return false;
+}
+
+// --- 4. Teachers ---
+export async function getTeachers(): Promise<Teacher[]> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const { data, error } = await supabase.from("teachers").select("*");
+      if (!error && data) {
+        return data.map((row: any) => ({
+          id: row.id,
+          nameBn: row.name_bn,
+          nameEn: row.name_en,
+          universityBn: row.university_bn,
+          universityEn: row.university_en,
+          subjectBn: row.subject_bn,
+          subjectEn: row.subject_en,
+          avatar: row.avatar,
+        }));
+      }
+    } catch (e) {
+      console.error("Supabase getTeachers error:", e);
+    }
+  }
+  return getDB().teachers || [];
+}
+
+export async function insertTeacher(teacher: Teacher): Promise<Teacher> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const row = {
+        id: teacher.id,
+        name_bn: teacher.nameBn,
+        name_en: teacher.nameEn,
+        university_bn: teacher.universityBn,
+        university_en: teacher.universityEn,
+        subject_bn: teacher.subjectBn,
+        subject_en: teacher.subjectEn,
+        avatar: teacher.avatar,
+      };
+      const { error } = await supabase.from("teachers").insert(row);
+      if (!error) return teacher;
+    } catch (e) {
+      console.error("Supabase insertTeacher error:", e);
+    }
+  }
+  const db = getDB();
+  db.teachers = db.teachers || [];
+  db.teachers.unshift(teacher);
+  saveDB(db);
+  return teacher;
+}
+
+export async function deleteTeacher(id: string): Promise<boolean> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const { error } = await supabase.from("teachers").delete().eq("id", id);
+      if (!error) return true;
+    } catch (e) {
+      console.error("Supabase deleteTeacher error:", e);
+    }
+  }
+  const db = getDB();
+  if (db.teachers) {
+    db.teachers = db.teachers.filter((t) => t.id !== id);
+    saveDB(db);
+    return true;
+  }
+  return false;
+}
+
+// --- 5. FAQs ---
+export async function getFAQs(): Promise<FAQItem[]> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const { data, error } = await supabase.from("faqs").select("*");
+      if (!error && data) {
+        return data.map((row: any) => ({
+          id: row.id,
+          qBn: row.q_bn,
+          qEn: row.q_en,
+          aBn: row.a_bn,
+          aEn: row.a_en,
+        }));
+      }
+    } catch (e) {
+      console.error("Supabase getFAQs error:", e);
+    }
+  }
+  return getDB().faqs || [];
+}
+
+export async function insertFAQ(faq: FAQItem): Promise<FAQItem> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const row = {
+        id: faq.id,
+        q_bn: faq.qBn,
+        q_en: faq.qEn,
+        a_bn: faq.aBn,
+        a_en: faq.aEn,
+      };
+      const { error } = await supabase.from("faqs").insert(row);
+      if (!error) return faq;
+    } catch (e) {
+      console.error("Supabase insertFAQ error:", e);
+    }
+  }
+  const db = getDB();
+  db.faqs = db.faqs || [];
+  db.faqs.push(faq);
+  saveDB(db);
+  return faq;
+}
+
+export async function deleteFAQ(id: string): Promise<boolean> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const { error } = await supabase.from("faqs").delete().eq("id", id);
+      if (!error) return true;
+    } catch (e) {
+      console.error("Supabase deleteFAQ error:", e);
+    }
+  }
+  const db = getDB();
+  if (db.faqs) {
+    db.faqs = db.faqs.filter((f) => f.id !== id);
+    saveDB(db);
+    return true;
+  }
+  return false;
+}
+
+// --- 6. Blogs ---
+export async function getBlogs(): Promise<any[]> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const { data, error } = await supabase
+        .from("blogs")
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (!error && data) {
+        return data.map((row: any) => ({
+          id: row.id,
+          slug: row.slug,
+          titleBn: row.title_bn,
+          titleEn: row.title_en || "",
+          category: row.category,
+          excerptBn: row.excerpt_bn || "",
+          publishedDateBn: row.published_date_bn || "",
+          image: row.image || "",
+        }));
+      }
+    } catch (e) {
+      console.error("Supabase getBlogs error:", e);
+    }
+  }
+  return getDB().blogs || [];
+}
+
+export async function insertBlog(blog: any): Promise<any> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const row = {
+        id: blog.id,
+        slug: blog.slug,
+        title_bn: blog.titleBn,
+        title_en: blog.titleEn || "",
+        category: blog.category || "mentorship",
+        excerpt_bn: blog.excerptBn || "",
+        published_date_bn: blog.publishedDateBn || "",
+        image: blog.image || "",
+      };
+      const { error } = await supabase.from("blogs").insert(row);
+      if (!error) return blog;
+    } catch (e) {
+      console.error("Supabase insertBlog error:", e);
+    }
+  }
+  const db = getDB();
+  db.blogs = db.blogs || [];
+  db.blogs.unshift(blog);
+  saveDB(db);
+  return blog;
+}
+
+export async function deleteBlog(id: string): Promise<boolean> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const { error } = await supabase.from("blogs").delete().eq("id", id);
+      if (!error) return true;
+    } catch (e) {
+      console.error("Supabase deleteBlog error:", e);
+    }
+  }
+  const db = getDB();
+  if (db.blogs) {
+    db.blogs = db.blogs.filter((b) => b.id !== id);
+    saveDB(db);
+    return true;
+  }
+  return false;
+}
+
+// --- 7. Settings ---
+export async function getSettings(): Promise<SettingData> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const { data, error } = await supabase
+        .from("settings")
+        .select("*")
+        .eq("id", "general_settings")
+        .single();
+      if (!error && data) {
+        return {
+          socialLinks: data.social_links || [],
+          facebookUrl: data.facebook_url,
+          instagramUrl: data.instagram_url,
+          youtubeUrl: data.youtube_url,
+          linkedinUrl: data.linkedin_url,
+          whatsappPhone: data.whatsapp_phone,
+          whatsappMessageBn: data.whatsapp_message_bn,
+          whatsappMessageEn: data.whatsapp_message_en,
+          phone: data.phone,
+          email: data.email,
+          addressBn: data.address_bn,
+          addressEn: data.address_en,
+          metaTitle: data.meta_title,
+          metaDescription: data.meta_description,
+          keywords: data.keywords,
+        };
+      }
+    } catch (e) {
+      console.error("Supabase getSettings error:", e);
+    }
+  }
+  return getDB().settings || {};
+}
+
+export async function saveSettings(settings: Partial<SettingData>): Promise<SettingData> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const current = await getSettings();
+      const updated = { ...current, ...settings };
+      const row = {
+        id: "general_settings",
+        social_links: updated.socialLinks || [],
+        facebook_url: updated.facebookUrl,
+        instagram_url: updated.instagramUrl,
+        youtube_url: updated.youtubeUrl,
+        linkedin_url: updated.linkedinUrl,
+        whatsapp_phone: updated.whatsappPhone,
+        whatsapp_message_bn: updated.whatsappMessageBn,
+        whatsapp_message_en: updated.whatsappMessageEn,
+        phone: updated.phone,
+        email: updated.email,
+        address_bn: updated.addressBn,
+        address_en: updated.addressEn,
+        meta_title: updated.metaTitle,
+        meta_description: updated.metaDescription,
+        keywords: updated.keywords,
+        updated_at: new Date().toISOString(),
+      };
+      const { error } = await supabase.from("settings").upsert(row);
+      if (!error) return updated;
+    } catch (e) {
+      console.error("Supabase saveSettings error:", e);
+    }
+  }
+  const db = getDB();
+  db.settings = { ...db.settings, ...settings };
+  saveDB(db);
+  return db.settings;
+}
+
+// --- 8. Teacher Applications ---
+export async function getTeacherApplications(): Promise<TeacherApplication[]> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const { data, error } = await supabase
+        .from("teacher_applications")
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (!error && data) {
+        return data.map((row: any) => ({
+          id: row.id,
+          fullName: row.full_name,
+          phone: row.phone,
+          email: row.email || "",
+          institution: row.institution,
+          subjectExpertise: row.subject_expertise,
+          hoursPerWeek: row.hours_per_week,
+          status: row.status,
+          createdAt: row.created_at,
+        }));
+      }
+    } catch (e) {
+      console.error("Supabase getTeacherApplications error:", e);
+    }
+  }
+  return getDB().teacherApplications || [];
+}
+
+export async function insertTeacherApplication(app: TeacherApplication): Promise<TeacherApplication> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const row = {
+        id: app.id,
+        full_name: app.fullName,
+        phone: app.phone,
+        email: app.email || "",
+        institution: app.institution,
+        subject_expertise: app.subjectExpertise,
+        hours_per_week: app.hoursPerWeek,
+        status: app.status || "Pending",
+        created_at: app.createdAt || new Date().toISOString(),
+      };
+      const { error } = await supabase.from("teacher_applications").insert(row);
+      if (!error) return app;
+    } catch (e) {
+      console.error("Supabase insertTeacherApplication error:", e);
+    }
+  }
+  const db = getDB();
+  db.teacherApplications = db.teacherApplications || [];
+  db.teacherApplications.unshift(app);
+  saveDB(db);
+  return app;
+}
+
+export async function updateTeacherApplicationStatus(
+  id: string,
+  status: TeacherApplication["status"]
+): Promise<TeacherApplication | null> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const { data, error } = await supabase
+        .from("teacher_applications")
+        .update({ status })
+        .eq("id", id)
+        .select()
+        .single();
+      if (!error && data) {
+        return {
+          id: data.id,
+          fullName: data.full_name,
+          phone: data.phone,
+          email: data.email || "",
+          institution: data.institution,
+          subjectExpertise: data.subject_expertise,
+          hoursPerWeek: data.hours_per_week,
+          status: data.status,
+          createdAt: data.created_at,
+        };
+      }
+    } catch (e) {
+      console.error("Supabase updateTeacherApplicationStatus error:", e);
+    }
+  }
+  const db = getDB();
+  const index = db.teacherApplications?.findIndex((a) => a.id === id) ?? -1;
+  if (index !== -1 && db.teacherApplications) {
+    db.teacherApplications[index].status = status;
+    saveDB(db);
+    return db.teacherApplications[index];
+  }
+  return null;
+}
+
+export async function deleteTeacherApplication(id: string): Promise<boolean> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const { error } = await supabase.from("teacher_applications").delete().eq("id", id);
+      if (!error) return true;
+    } catch (e) {
+      console.error("Supabase deleteTeacherApplication error:", e);
+    }
+  }
+  const db = getDB();
+  if (db.teacherApplications) {
+    db.teacherApplications = db.teacherApplications.filter((a) => a.id !== id);
+    saveDB(db);
+    return true;
+  }
+  return false;
+}
+
+// --- 9. Inquiries ---
+export async function getInquiries(): Promise<Inquiry[]> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const { data, error } = await supabase
+        .from("inquiries")
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (!error && data) {
+        return data.map((row: any) => ({
+          id: row.id,
+          name: row.name,
+          phone: row.phone || "",
+          subject: row.subject,
+          message: row.message,
+          status: row.status,
+          createdAt: row.created_at,
+        }));
+      }
+    } catch (e) {
+      console.error("Supabase getInquiries error:", e);
+    }
+  }
+  return getDB().inquiries || [];
+}
+
+export async function insertInquiry(inquiry: Inquiry): Promise<Inquiry> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const row = {
+        id: inquiry.id,
+        name: inquiry.name,
+        phone: inquiry.phone || "",
+        subject: inquiry.subject,
+        message: inquiry.message,
+        status: inquiry.status || "Pending",
+        created_at: inquiry.createdAt || new Date().toISOString(),
+      };
+      const { error } = await supabase.from("inquiries").insert(row);
+      if (!error) return inquiry;
+    } catch (e) {
+      console.error("Supabase insertInquiry error:", e);
+    }
+  }
+  const db = getDB();
+  db.inquiries = db.inquiries || [];
+  db.inquiries.unshift(inquiry);
+  saveDB(db);
+  return inquiry;
+}
+
+export async function updateInquiryStatus(id: string, status: string): Promise<Inquiry | null> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const { data, error } = await supabase
+        .from("inquiries")
+        .update({ status })
+        .eq("id", id)
+        .select()
+        .single();
+      if (!error && data) {
+        return {
+          id: data.id,
+          name: data.name,
+          phone: data.phone || "",
+          subject: data.subject,
+          message: data.message,
+          status: data.status,
+          createdAt: data.created_at,
+        };
+      }
+    } catch (e) {
+      console.error("Supabase updateInquiryStatus error:", e);
+    }
+  }
+  const db = getDB();
+  const index = db.inquiries?.findIndex((i) => i.id === id) ?? -1;
+  if (index !== -1 && db.inquiries) {
+    db.inquiries[index].status = status;
+    saveDB(db);
+    return db.inquiries[index];
+  }
+  return null;
+}
+
+export async function deleteInquiry(id: string): Promise<boolean> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const { error } = await supabase.from("inquiries").delete().eq("id", id);
+      if (!error) return true;
+    } catch (e) {
+      console.error("Supabase deleteInquiry error:", e);
+    }
+  }
+  const db = getDB();
+  if (db.inquiries) {
+    db.inquiries = db.inquiries.filter((i) => i.id !== id);
+    saveDB(db);
+    return true;
+  }
+  return false;
+}
+
+// --- 10. Payments ---
+export async function getPayments(): Promise<Payment[]> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const { data, error } = await supabase
+        .from("payments")
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (!error && data) {
+        return data.map((row: any) => ({
+          id: row.id,
+          studentName: row.student_name,
+          phone: row.phone || "",
+          amount: Number(row.amount) || 0,
+          trxId: row.trx_id,
+          type: row.type || "Fee Collection",
+          paymentMethod: row.payment_method || "bKash",
+          status: row.status,
+          createdAt: row.created_at,
+        }));
+      }
+    } catch (e) {
+      console.error("Supabase getPayments error:", e);
+    }
+  }
+  return getDB().payments || [];
+}
+
+export async function insertPayment(payment: Payment): Promise<Payment> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const row = {
+        id: payment.id,
+        student_name: payment.studentName,
+        phone: payment.phone || "",
+        amount: payment.amount,
+        trx_id: payment.trxId,
+        type: payment.type || "Fee Collection",
+        payment_method: payment.paymentMethod || "bKash",
+        status: payment.status || "Paid",
+        created_at: payment.createdAt || new Date().toISOString(),
+      };
+      const { error } = await supabase.from("payments").insert(row);
+      if (!error) return payment;
+    } catch (e) {
+      console.error("Supabase insertPayment error:", e);
+    }
+  }
+  const db = getDB();
+  db.payments = db.payments || [];
+  db.payments.unshift(payment);
+  saveDB(db);
+  return payment;
+}
+
+export async function updatePaymentStatus(id: string, status: Payment["status"]): Promise<Payment | null> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const { data, error } = await supabase
+        .from("payments")
+        .update({ status })
+        .eq("id", id)
+        .select()
+        .single();
+      if (!error && data) {
+        return {
+          id: data.id,
+          studentName: data.student_name,
+          phone: data.phone || "",
+          amount: Number(data.amount) || 0,
+          trxId: data.trx_id,
+          type: data.type || "Fee Collection",
+          paymentMethod: data.payment_method || "bKash",
+          status: data.status,
+          createdAt: data.created_at,
+        };
+      }
+    } catch (e) {
+      console.error("Supabase updatePaymentStatus error:", e);
+    }
+  }
+  const db = getDB();
+  const index = db.payments?.findIndex((p) => p.id === id) ?? -1;
+  if (index !== -1 && db.payments) {
+    db.payments[index].status = status;
+    saveDB(db);
+    return db.payments[index];
+  }
+  return null;
+}
+
+export async function deletePayment(id: string): Promise<boolean> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const { error } = await supabase.from("payments").delete().eq("id", id);
+      if (!error) return true;
+    } catch (e) {
+      console.error("Supabase deletePayment error:", e);
+    }
+  }
+  const db = getDB();
+  if (db.payments) {
+    db.payments = db.payments.filter((p) => p.id !== id);
+    saveDB(db);
+    return true;
+  }
+  return false;
 }

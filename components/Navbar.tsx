@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useLanguage } from "../context/LanguageContext";
 import { Menu, X, PhoneCall, Globe, Sparkles } from "lucide-react";
@@ -90,11 +91,12 @@ export default function Navbar({ onOpenEnroll, onOpenMentor }: NavbarProps) {
       <nav className="flex items-center justify-between py-3.5 px-6 md:px-8 max-w-[1240px] mx-auto bg-[#FFFFFF]">
         {/* Brand Logo */}
         <Link href="/" className="brand flex items-center gap-3 group" aria-label="OTOTeachers Home">
-          <img
+          <Image
             src="/Assets/Group 2147229264.png"
             alt="OTOTeachers — ১-অন-১ অনলাইন শিক্ষক প্ল্যাটফর্ম"
             width={180}
             height={50}
+            priority
             style={{ height: "50px", width: "auto", maxHeight: "50px" }}
             className="h-12 w-auto object-contain group-hover:scale-105 transition-transform duration-300"
           />

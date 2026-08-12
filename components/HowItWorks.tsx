@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useLanguage } from "../context/LanguageContext";
 import { UserCheck, CalendarCheck, Video } from "lucide-react";
 
@@ -56,12 +57,12 @@ export default function HowItWorks() {
                 className="bg-[#16385C] border border-white/15 rounded-3xl overflow-hidden shadow-lg hover:border-[#00A896] hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group"
               >
                 <div className="relative h-52 overflow-hidden bg-[#0D2C4A]">
-                  <img
+                  <Image
                     src={step.img}
                     alt={step.title}
-                    loading="lazy"
-                    decoding="async"
-                    className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out opacity-90 group-hover:opacity-100"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 400px"
+                    className="object-cover group-hover:scale-108 transition-transform duration-700 ease-out opacity-90 group-hover:opacity-100"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#16385C] via-[#16385C]/30 to-transparent" />
                   <div className="absolute top-4 left-4 bg-[#00A896] text-white p-3 rounded-2xl shadow-md border border-white/20">

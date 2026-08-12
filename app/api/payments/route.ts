@@ -1,15 +1,24 @@
 import { NextResponse } from "next/server";
-import { getDB, saveDB, Payment } from "@/lib/db";
+import {
+  getPayments,
+  insertPayment,
+  updatePaymentStatus,
+  deletePayment,
+  Payment,
+} from "@/lib/db";
 
 export async function GET() {
-  const db = getDB();
-  return NextResponse.json(db.payments || []);
+  try {
+    const payments = await getPayments();
+    return NextResponse.json(payments);
+  } catch (error) {
+    return NextResponse.json({ error: "Failed to fetch payments" }, { status: 500 });
+  }
 }
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const db = getDB();
     const newPayment: Payment = {
       id: `PAY-${Date.now().toString().slice(-4)}`,
       studentName: body.studentName || body.name || "Student",
@@ -22,11 +31,8 @@ export async function POST(req: Request) {
       createdAt: new Date().toISOString(),
     };
 
-    if (!db.payments) db.payments = [];
-    db.payments.unshift(newPayment);
-    saveDB(db);
-
-    return NextResponse.json({ success: true, payment: newPayment }, { status: 201 });
+    const saved = await insertPayment(newPayment);
+    return NextResponse.json({ success: true, payment: saved }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: "Failed to record payment" }, { status: 500 });
   }
@@ -36,14 +42,12 @@ export async function PUT(req: Request) {
   try {
     const body = await req.json();
     const { id, status } = body;
-    const db = getDB();
-
-    if (!db.payments) db.payments = [];
-    const index = db.payments.findIndex((p) => p.id === id);
-    if (index !== -1) {
-      db.payments[index].status = status;
-      saveDB(db);
-      return NextResponse.json({ success: true, payment: db.payments[index] });
+    if (!id) {
+      return NextResponse.json({ error: "Payment ID required" }, { status: 400 });
+    }
+    const updated = await updatePaymentStatus(id, status);
+    if (updated) {
+      return NextResponse.json({ success: true, payment: updated });
     }
     return NextResponse.json({ error: "Payment not found" }, { status: 404 });
   } catch (error) {
@@ -55,14 +59,11 @@ export async function DELETE(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
-    const db = getDB();
-
-    if (id && db.payments) {
-      db.payments = db.payments.filter((p) => p.id !== id);
-      saveDB(db);
-      return NextResponse.json({ success: true });
+    if (!id) {
+      return NextResponse.json({ error: "Payment ID required" }, { status: 400 });
     }
-    return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+    const success = await deletePayment(id);
+    return NextResponse.json({ success });
   } catch (error) {
     return NextResponse.json({ error: "Failed to delete payment" }, { status: 500 });
   }

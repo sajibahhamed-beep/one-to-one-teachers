@@ -1,15 +1,24 @@
 import { NextResponse } from "next/server";
-import { getDB, saveDB, TeacherApplication } from "@/lib/db";
+import {
+  getTeacherApplications,
+  insertTeacherApplication,
+  updateTeacherApplicationStatus,
+  deleteTeacherApplication,
+  TeacherApplication,
+} from "@/lib/db";
 
 export async function GET() {
-  const db = getDB();
-  return NextResponse.json(db.teacherApplications || []);
+  try {
+    const apps = await getTeacherApplications();
+    return NextResponse.json(apps);
+  } catch (error) {
+    return NextResponse.json({ error: "Failed to fetch teacher applications" }, { status: 500 });
+  }
 }
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const db = getDB();
     const newApp: TeacherApplication = {
       id: `APP-${Date.now().toString().slice(-4)}`,
       fullName: body.fullName || "আবেদনকারী",
@@ -22,11 +31,8 @@ export async function POST(req: Request) {
       createdAt: new Date().toISOString(),
     };
 
-    if (!db.teacherApplications) db.teacherApplications = [];
-    db.teacherApplications.unshift(newApp);
-    saveDB(db);
-
-    return NextResponse.json({ success: true, application: newApp }, { status: 201 });
+    const saved = await insertTeacherApplication(newApp);
+    return NextResponse.json({ success: true, application: saved }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: "Failed to submit application" }, { status: 500 });
   }
@@ -36,14 +42,12 @@ export async function PUT(req: Request) {
   try {
     const body = await req.json();
     const { id, status } = body;
-    const db = getDB();
-
-    if (!db.teacherApplications) db.teacherApplications = [];
-    const index = db.teacherApplications.findIndex((a) => a.id === id);
-    if (index !== -1) {
-      db.teacherApplications[index].status = status;
-      saveDB(db);
-      return NextResponse.json({ success: true, application: db.teacherApplications[index] });
+    if (!id) {
+      return NextResponse.json({ error: "Application ID required" }, { status: 400 });
+    }
+    const updated = await updateTeacherApplicationStatus(id, status);
+    if (updated) {
+      return NextResponse.json({ success: true, application: updated });
     }
     return NextResponse.json({ error: "Application not found" }, { status: 404 });
   } catch (error) {
@@ -55,14 +59,11 @@ export async function DELETE(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
-    const db = getDB();
-
-    if (id && db.teacherApplications) {
-      db.teacherApplications = db.teacherApplications.filter((a) => a.id !== id);
-      saveDB(db);
-      return NextResponse.json({ success: true });
+    if (!id) {
+      return NextResponse.json({ error: "Application ID required" }, { status: 400 });
     }
-    return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+    const success = await deleteTeacherApplication(id);
+    return NextResponse.json({ success });
   } catch (error) {
     return NextResponse.json({ error: "Failed to delete application" }, { status: 500 });
   }

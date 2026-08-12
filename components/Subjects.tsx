@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useLanguage } from "../context/LanguageContext";
 import {
   Search,
@@ -193,12 +194,12 @@ export default function Subjects({ onOpenEnroll }: { onOpenEnroll: () => void })
               <div>
                 {/* Subject Header Image Banner (Clean, no badges overlaying) */}
                 <div className="relative h-44 sm:h-48 w-full mb-5 rounded-2xl overflow-hidden bg-slate-100">
-                  <img
+                  <Image
                     src={subject.img}
                     alt={subject.title}
-                    loading="lazy"
-                    decoding="async"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 500px"
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 </div>
 

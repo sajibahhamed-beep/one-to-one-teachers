@@ -1,15 +1,24 @@
 import { NextResponse } from "next/server";
-import { getDB, saveDB, Inquiry } from "@/lib/db";
+import {
+  getInquiries,
+  insertInquiry,
+  updateInquiryStatus,
+  deleteInquiry,
+  Inquiry,
+} from "@/lib/db";
 
 export async function GET() {
-  const db = getDB();
-  return NextResponse.json(db.inquiries || []);
+  try {
+    const inquiries = await getInquiries();
+    return NextResponse.json(inquiries);
+  } catch (error) {
+    return NextResponse.json({ error: "Failed to fetch inquiries" }, { status: 500 });
+  }
 }
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const db = getDB();
     const newInquiry: Inquiry = {
       id: `INQ-${Date.now().toString().slice(-4)}`,
       name: body.name || "User",
@@ -20,11 +29,8 @@ export async function POST(req: Request) {
       createdAt: new Date().toISOString(),
     };
 
-    if (!db.inquiries) db.inquiries = [];
-    db.inquiries.unshift(newInquiry);
-    saveDB(db);
-
-    return NextResponse.json({ success: true, inquiry: newInquiry }, { status: 201 });
+    const saved = await insertInquiry(newInquiry);
+    return NextResponse.json({ success: true, inquiry: saved }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: "Failed to create inquiry" }, { status: 500 });
   }
@@ -34,14 +40,12 @@ export async function PUT(req: Request) {
   try {
     const body = await req.json();
     const { id, status } = body;
-    const db = getDB();
-
-    if (!db.inquiries) db.inquiries = [];
-    const index = db.inquiries.findIndex((i) => i.id === id);
-    if (index !== -1) {
-      db.inquiries[index].status = status;
-      saveDB(db);
-      return NextResponse.json({ success: true, inquiry: db.inquiries[index] });
+    if (!id) {
+      return NextResponse.json({ error: "Inquiry ID required" }, { status: 400 });
+    }
+    const updated = await updateInquiryStatus(id, status);
+    if (updated) {
+      return NextResponse.json({ success: true, inquiry: updated });
     }
     return NextResponse.json({ error: "Inquiry not found" }, { status: 404 });
   } catch (error) {
@@ -53,14 +57,11 @@ export async function DELETE(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
-    const db = getDB();
-
-    if (id && db.inquiries) {
-      db.inquiries = db.inquiries.filter((i) => i.id !== id);
-      saveDB(db);
-      return NextResponse.json({ success: true });
+    if (!id) {
+      return NextResponse.json({ error: "Inquiry ID required" }, { status: 400 });
     }
-    return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+    const success = await deleteInquiry(id);
+    return NextResponse.json({ success });
   } catch (error) {
     return NextResponse.json({ error: "Failed to delete inquiry" }, { status: 500 });
   }

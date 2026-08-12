@@ -11,23 +11,6 @@ export const DEFAULT_SEO = {
   title: "OTOTeachers — ১-অন-১ অনলাইন শিক্ষক | One-to-One Teacher for All",
   description:
     "বাংলাদেশের ১-অন-১ অনলাইন শিক্ষক প্ল্যাটফর্ম। বুয়েট, ঢাবি ও মেডিকেলের যাচাইকৃত শিক্ষকদের সাথে সরাসরি লাইভ ক্লাস — ঘরে বসে। প্রথম ক্লাস সম্পূর্ণ বিনামূল্যে।",
-  keywords: [
-    "OTOTeachers",
-    "ototeachers.com",
-    "online teacher Bangladesh",
-    "১-অন-১ শিক্ষক",
-    "১-অন-১ অনলাইন শিক্ষক",
-    "private tutor Bangladesh",
-    "online tutor Bangla",
-    "SSC HSC math teacher",
-    "buet teacher online",
-    "du tutor online",
-    "1 on 1 online class Bangladesh",
-    "গৃহশিক্ষক অনলাইন",
-    "অনলাইন প্রাইভেট টিউটর",
-    "স্পোকেন ইংলিশ টিচার",
-    "পদার্থবিজ্ঞান প্রাইভেট শিক্ষক",
-  ],
   ogImage: `${SITE_URL}/Assets/Group%202147229264.png`,
 };
 

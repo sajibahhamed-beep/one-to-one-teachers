@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useLanguage } from "../context/LanguageContext";
 import { UserCheck, GraduationCap, Laptop, Sparkles, Calendar, HeartHandshake, ArrowUpRight } from "lucide-react";
 
@@ -82,12 +83,12 @@ export default function CategoryGrid({ onOpenEnroll }: CategoryGridProps) {
               >
                 {/* Image Header with Gradient & Floating Glass Pill Badge */}
                 <div className="relative h-48 sm:h-52 overflow-hidden bg-[#0D2C4A]/5">
-                  <img
+                  <Image
                     src={cat.img}
                     alt={cat.title}
-                    loading="lazy"
-                    decoding="async"
-                    className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 300px"
+                    className="object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0D2C4A]/80 via-[#0D2C4A]/20 to-transparent pointer-events-none" />
                   

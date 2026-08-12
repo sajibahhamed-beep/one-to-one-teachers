@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useLanguage } from "../context/LanguageContext";
 import { Calendar, Clock, User, CheckCircle2, ArrowRight } from "lucide-react";
 
@@ -76,12 +77,12 @@ export default function BatchSchedule({ onOpenEnroll }: BatchScheduleProps) {
               <div>
                 {/* Slot Header Image Banner (Clean, no badges overlaying) */}
                 <div className="relative h-44 sm:h-48 w-full mb-5 rounded-2xl overflow-hidden bg-slate-100">
-                  <img
+                  <Image
                     src={slot.img}
                     alt={slot.subject}
-                    loading="lazy"
-                    decoding="async"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 500px"
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 </div>
 

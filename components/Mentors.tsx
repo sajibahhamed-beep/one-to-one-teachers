@@ -1,13 +1,9 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import Image from "next/image";
 import { useLanguage } from "../context/LanguageContext";
 import { Quote, CheckCircle2, Award } from "lucide-react";
-
-interface MentorsProps {
-  onOpenEnroll?: () => void;
-}
-
-import { useState, useEffect } from "react";
 
 interface MentorsProps {
   onOpenEnroll?: () => void;
@@ -111,9 +107,11 @@ export default function Mentors({ onOpenEnroll }: MentorsProps) {
               className="bg-white border border-[#0D2C4A]/12 rounded-3xl p-7 shadow-[0_4px_20px_-4px_rgba(13,44,74,0.06)] hover:shadow-[0_20px_40px_-10px_rgba(13,44,74,0.14)] hover:-translate-y-1.5 transition-all duration-300 flex items-center gap-5 group cursor-pointer"
             >
               <div className="relative flex-shrink-0">
-                <img
+                <Image
                   src={m.img}
                   alt={m.name}
+                  width={80}
+                  height={80}
                   className="w-20 h-20 rounded-2xl object-cover border-2 border-[#00A896]/30 group-hover:scale-105 transition-transform duration-300 shadow-md"
                 />
                 <div className="absolute -bottom-1 -right-1 bg-[#00A896] text-white p-1 rounded-full shadow-sm">

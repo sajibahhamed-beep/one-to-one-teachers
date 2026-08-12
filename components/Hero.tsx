@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useLanguage } from "../context/LanguageContext";
 import {
   ArrowRight,
@@ -133,13 +134,13 @@ export default function Hero({ onOpenEnroll }: HeroProps) {
             className="relative rounded-3xl overflow-hidden shadow-xl border border-[#00A896]/20 aspect-[4/3] sm:aspect-[16/10] lg:aspect-[4/3] group bg-white p-2 cursor-pointer hover:shadow-2xl transition-all"
           >
             <div className="relative w-full h-full rounded-2xl overflow-hidden">
-              <img
+              <Image
                 src="https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=800&q=80"
                 alt="OTOTeachers — ১-অন-১ লাইভ অনলাইন শিক্ষক মেন্টরিং"
-                // @ts-ignore
-                fetchPriority="high"
-                decoding="async"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                fill
+                priority
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
+                className="object-cover group-hover:scale-105 transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0D2C4A]/90 via-[#0D2C4A]/30 to-transparent pointer-events-none" />
 

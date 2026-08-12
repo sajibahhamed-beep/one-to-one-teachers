@@ -1,16 +1,19 @@
 import { NextResponse } from "next/server";
-import { getDB, saveDB } from "@/lib/db";
+import { getTeachers, insertTeacher, deleteTeacher, Teacher } from "@/lib/db";
 
 export async function GET() {
-  const db = getDB();
-  return NextResponse.json(db.teachers || []);
+  try {
+    const teachers = await getTeachers();
+    return NextResponse.json(teachers);
+  } catch (error) {
+    return NextResponse.json({ error: "Failed to fetch teachers" }, { status: 500 });
+  }
 }
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const db = getDB();
-    const newTeacher = {
+    const newTeacher: Teacher = {
       id: `tch-${Date.now()}`,
       nameBn: body.nameBn || "",
       nameEn: body.nameEn || "",
@@ -18,12 +21,13 @@ export async function POST(req: Request) {
       universityEn: body.universityEn || "BUET",
       subjectBn: body.subjectBn || "গণিত শিক্ষক",
       subjectEn: body.subjectEn || "Math Tutor",
-      avatar: body.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80",
+      avatar:
+        body.avatar ||
+        "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80",
     };
 
-    db.teachers.unshift(newTeacher);
-    saveDB(db);
-    return NextResponse.json({ success: true, data: newTeacher });
+    const saved = await insertTeacher(newTeacher);
+    return NextResponse.json({ success: true, data: saved });
   } catch (error) {
     return NextResponse.json({ error: "Failed to add teacher" }, { status: 500 });
   }
@@ -33,10 +37,11 @@ export async function DELETE(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
-    const db = getDB();
-    db.teachers = db.teachers.filter((t) => t.id !== id);
-    saveDB(db);
-    return NextResponse.json({ success: true });
+    if (!id) {
+      return NextResponse.json({ error: "Teacher ID required" }, { status: 400 });
+    }
+    const success = await deleteTeacher(id);
+    return NextResponse.json({ success });
   } catch (error) {
     return NextResponse.json({ error: "Failed to delete teacher" }, { status: 500 });
   }

@@ -1,16 +1,19 @@
 import { NextResponse } from "next/server";
-import { getDB, saveDB } from "@/lib/db";
+import { getFAQs, insertFAQ, deleteFAQ, FAQItem } from "@/lib/db";
 
 export async function GET() {
-  const db = getDB();
-  return NextResponse.json(db.faqs || []);
+  try {
+    const faqs = await getFAQs();
+    return NextResponse.json(faqs);
+  } catch (error) {
+    return NextResponse.json({ error: "Failed to fetch FAQs" }, { status: 500 });
+  }
 }
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const db = getDB();
-    const newFaq = {
+    const newFaq: FAQItem = {
       id: `faq-${Date.now()}`,
       qBn: body.qBn || "",
       qEn: body.qEn || "",
@@ -18,9 +21,8 @@ export async function POST(req: Request) {
       aEn: body.aEn || "",
     };
 
-    db.faqs.push(newFaq);
-    saveDB(db);
-    return NextResponse.json({ success: true, data: newFaq });
+    const saved = await insertFAQ(newFaq);
+    return NextResponse.json({ success: true, data: saved });
   } catch (error) {
     return NextResponse.json({ error: "Failed to save FAQ" }, { status: 500 });
   }
@@ -30,10 +32,11 @@ export async function DELETE(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
-    const db = getDB();
-    db.faqs = db.faqs.filter((f) => f.id !== id);
-    saveDB(db);
-    return NextResponse.json({ success: true });
+    if (!id) {
+      return NextResponse.json({ error: "FAQ ID required" }, { status: 400 });
+    }
+    const success = await deleteFAQ(id);
+    return NextResponse.json({ success });
   } catch (error) {
     return NextResponse.json({ error: "Failed to delete FAQ" }, { status: 500 });
   }

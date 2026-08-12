@@ -1,21 +1,20 @@
 import { NextResponse } from "next/server";
-import { getDB, saveDB } from "@/lib/db";
+import { getSettings, saveSettings } from "@/lib/db";
 
 export async function GET() {
-  const db = getDB();
-  return NextResponse.json(db.settings || {});
+  try {
+    const settings = await getSettings();
+    return NextResponse.json(settings || {});
+  } catch (error) {
+    return NextResponse.json({ error: "Failed to fetch settings" }, { status: 500 });
+  }
 }
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const db = getDB();
-    db.settings = {
-      ...db.settings,
-      ...body,
-    };
-    saveDB(db);
-    return NextResponse.json({ success: true, settings: db.settings });
+    const updated = await saveSettings(body);
+    return NextResponse.json({ success: true, settings: updated });
   } catch (error) {
     return NextResponse.json({ error: "Failed to update settings" }, { status: 500 });
   }
