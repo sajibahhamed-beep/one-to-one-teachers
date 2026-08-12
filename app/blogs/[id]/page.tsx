@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import BlogDetailClient from "./BlogDetailClient";
 import JsonLd from "@/components/JsonLd";
-import { getAllBlogs, getBlogBySlug } from "@/lib/blogsData";
+import { getBlogs, getBlogBySlug } from "@/lib/db";
+import { getAllBlogs } from "@/lib/blogsData";
 import { getBlogPostingSchema, getBreadcrumbSchema, SITE_URL, SITE_NAME } from "@/lib/seoConfig";
 
 interface PageProps {
@@ -15,17 +16,24 @@ interface PageProps {
  * Generate static params for pre-rendering all blog posts at build time (SSG)
  */
 export async function generateStaticParams() {
-  const blogs = getAllBlogs();
-  return blogs.map((b) => ({
-    id: b.slug || b.id,
-  }));
+  try {
+    const blogs = await getBlogs();
+    return blogs.map((b) => ({
+      id: b.slug || b.id,
+    }));
+  } catch {
+    const staticBlogs = getAllBlogs();
+    return staticBlogs.map((b) => ({
+      id: b.slug || b.id,
+    }));
+  }
 }
 
 /**
  * Dynamic metadata generator for each individual educational blog post
  */
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const post = getBlogBySlug(params.id);
+  const post = await getBlogBySlug(params.id);
 
   if (!post) {
     return {
@@ -74,15 +82,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default function SingleBlogPage({ params }: PageProps) {
-  const post = getBlogBySlug(params.id);
+export default async function SingleBlogPage({ params }: PageProps) {
+  const post = await getBlogBySlug(params.id);
 
   // Return HTTP 404 status if the requested article slug does not exist
   if (!post) {
     notFound();
   }
 
-  const allBlogs = getAllBlogs();
+  const allBlogs = await getBlogs();
   const relatedPosts = allBlogs
     .filter((p) => p.id !== post.id && p.slug !== post.slug)
     .slice(0, 3);

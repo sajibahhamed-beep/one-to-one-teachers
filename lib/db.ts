@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { supabase, isSupabaseConfigured } from "./supabase";
+import { BlogPost, BLOG_POSTS } from "./blogsData";
 
 const dbPath = path.join(process.cwd(), "data", "db.json");
 
@@ -49,6 +50,13 @@ export interface Teacher {
   subjectBn: string;
   subjectEn: string;
   avatar: string;
+  phone?: string;
+  email?: string;
+  experienceBn?: string;
+  experienceEn?: string;
+  bioBn?: string;
+  bioEn?: string;
+  rating?: string;
 }
 
 export interface FAQItem {
@@ -90,8 +98,12 @@ export interface TeacherApplication {
   phone: string;
   email: string;
   institution: string;
+  department?: string;
   subjectExpertise: string;
   hoursPerWeek: string;
+  experience?: string;
+  bio?: string;
+  avatar?: string;
   status?: "Pending" | "Reviewed" | "Accepted" | "Approved" | "Rejected";
   createdAt?: string;
 }
@@ -118,6 +130,32 @@ export interface Payment {
   createdAt?: string;
 }
 
+export interface PageSection {
+  id: string;
+  icon?: string;
+  titleBn: string;
+  titleEn: string;
+  contentBn: string;
+  contentEn: string;
+}
+
+export interface CustomPage {
+  id: string;
+  slug: string;
+  titleBn: string;
+  titleEn: string;
+  subtitleBn: string;
+  subtitleEn: string;
+  lastUpdatedBn?: string;
+  lastUpdatedEn?: string;
+  sections: PageSection[];
+  metaTitleBn?: string;
+  metaTitleEn?: string;
+  metaDescriptionBn?: string;
+  metaDescriptionEn?: string;
+  updatedAt?: string;
+}
+
 export interface DBData {
   enrollments: Enrollment[];
   pricingRequests: PricingRequest[];
@@ -129,6 +167,7 @@ export interface DBData {
   teacherApplications?: TeacherApplication[];
   inquiries?: Inquiry[];
   payments?: Payment[];
+  pages?: CustomPage[];
 }
 
 export const initialData: DBData = {
@@ -645,6 +684,13 @@ export async function getTeachers(): Promise<Teacher[]> {
           subjectBn: row.subject_bn,
           subjectEn: row.subject_en,
           avatar: row.avatar,
+          phone: row.phone,
+          email: row.email,
+          experienceBn: row.experience_bn,
+          experienceEn: row.experience_en,
+          bioBn: row.bio_bn,
+          bioEn: row.bio_en,
+          rating: row.rating,
         }));
       }
     } catch (e) {
@@ -678,6 +724,36 @@ export async function insertTeacher(teacher: Teacher): Promise<Teacher> {
   db.teachers.unshift(teacher);
   saveDB(db);
   return teacher;
+}
+
+export async function updateTeacher(teacher: Teacher): Promise<Teacher | null> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const row = {
+        name_bn: teacher.nameBn,
+        name_en: teacher.nameEn,
+        university_bn: teacher.universityBn,
+        university_en: teacher.universityEn,
+        subject_bn: teacher.subjectBn,
+        subject_en: teacher.subjectEn,
+        avatar: teacher.avatar,
+      };
+      const { error } = await supabase.from("teachers").update(row).eq("id", teacher.id);
+      if (!error) return teacher;
+    } catch (e) {
+      console.error("Supabase updateTeacher error:", e);
+    }
+  }
+  const db = getDB();
+  if (db.teachers) {
+    const idx = db.teachers.findIndex((t) => t.id === teacher.id);
+    if (idx !== -1) {
+      db.teachers[idx] = { ...db.teachers[idx], ...teacher };
+      saveDB(db);
+      return db.teachers[idx];
+    }
+  }
+  return null;
 }
 
 export async function deleteTeacher(id: string): Promise<boolean> {
@@ -801,33 +877,79 @@ export async function deleteFAQ(id: string): Promise<boolean> {
 }
 
 // --- 6. Blogs ---
-export async function getBlogs(): Promise<any[]> {
+export async function getBlogs(): Promise<BlogPost[]> {
   if (supabase && isSupabaseConfigured()) {
     try {
       const { data, error } = await supabase
         .from("blogs")
         .select("*")
         .order("created_at", { ascending: false });
-      if (!error && data) {
+      if (!error && data && data.length > 0) {
         return data.map((row: any) => ({
           id: row.id,
           slug: row.slug,
           titleBn: row.title_bn,
           titleEn: row.title_en || "",
-          category: row.category,
+          category: row.category || "mentorship",
+          featured: Boolean(row.featured),
           excerptBn: row.excerpt_bn || "",
+          excerptEn: row.excerpt_en || "",
           publishedDateBn: row.published_date_bn || "",
-          image: row.image || "",
+          publishedDateEn: row.published_date_en || "",
+          readTimeBn: row.read_time_bn || "৫ মিনিট পড়া",
+          readTimeEn: row.read_time_en || "5 min read",
+          image: row.image || "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1200&q=80",
+          author: typeof row.author === "object" && row.author !== null && row.author.nameBn ? row.author : {
+            nameBn: "OTOTeachers টিম",
+            nameEn: "OTOTeachers Team",
+            roleBn: "একাডেমিক মেন্টর",
+            roleEn: "Academic Mentor",
+            institutionBn: "বুয়েট ও ঢাবি",
+            institutionEn: "BUET & DU",
+            avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"
+          },
+          tagsBn: Array.isArray(row.tags_bn) && row.tags_bn.length > 0 ? row.tags_bn : ["১-অন-১ মেন্টরিং", "শিক্ষা পদ্ধতি"],
+          tagsEn: Array.isArray(row.tags_en) && row.tags_en.length > 0 ? row.tags_en : ["1-on-1 Mentoring", "Study Tips"],
+          introBn: row.intro_bn || row.excerpt_bn || "",
+          introEn: row.intro_en || row.excerpt_en || "",
+          sectionsBn: Array.isArray(row.sections_bn) && row.sections_bn.length > 0 ? row.sections_bn : [
+            {
+              heading: row.title_bn,
+              paragraphs: [row.content_bn || row.excerpt_bn || "বিস্তারিত বিবরণ শীঘ্রই আসছে।"],
+            }
+          ],
+          sectionsEn: Array.isArray(row.sections_en) && row.sections_en.length > 0 ? row.sections_en : [
+            {
+              heading: row.title_en || row.title_bn,
+              paragraphs: [row.content_en || row.excerpt_en || "Detailed description coming soon."],
+            }
+          ],
+          keyTakeawaysBn: Array.isArray(row.key_takeaways_bn) ? row.key_takeaways_bn : [],
+          keyTakeawaysEn: Array.isArray(row.key_takeaways_en) ? row.key_takeaways_en : [],
         }));
       }
     } catch (e) {
-      console.error("Supabase getBlogs error:", e);
+      console.error("Supabase getBlogs error, falling back to local DB:", e);
     }
   }
-  return getDB().blogs || [];
+  const db = getDB();
+  const existingSlugs = new Set((db.blogs || []).map((b: any) => b.slug || b.id));
+  const missingDefaults = BLOG_POSTS.filter((p) => !existingSlugs.has(p.slug) && !existingSlugs.has(p.id));
+  if (missingDefaults.length > 0 || !db.blogs || db.blogs.length === 0) {
+    db.blogs = [...(db.blogs || []), ...missingDefaults];
+    saveDB(db);
+  }
+  return db.blogs;
 }
 
-export async function insertBlog(blog: any): Promise<any> {
+export async function getBlogBySlug(slug: string): Promise<BlogPost | null> {
+  const blogs = await getBlogs();
+  const found = blogs.find((b) => b.slug === slug || b.id === slug);
+  if (found) return found;
+  return BLOG_POSTS.find((b) => b.slug === slug || b.id === slug) || null;
+}
+
+export async function insertBlog(blog: BlogPost): Promise<BlogPost> {
   if (supabase && isSupabaseConfigured()) {
     try {
       const row = {
@@ -836,21 +958,61 @@ export async function insertBlog(blog: any): Promise<any> {
         title_bn: blog.titleBn,
         title_en: blog.titleEn || "",
         category: blog.category || "mentorship",
+        featured: Boolean(blog.featured),
         excerpt_bn: blog.excerptBn || "",
+        excerpt_en: blog.excerptEn || "",
         published_date_bn: blog.publishedDateBn || "",
+        published_date_en: blog.publishedDateEn || "",
         image: blog.image || "",
       };
       const { error } = await supabase.from("blogs").insert(row);
       if (!error) return blog;
+      console.error("Supabase insertBlog error:", error.message);
     } catch (e) {
       console.error("Supabase insertBlog error:", e);
     }
   }
   const db = getDB();
-  db.blogs = db.blogs || [];
+  db.blogs = db.blogs && db.blogs.length > 0 ? db.blogs : [...BLOG_POSTS];
   db.blogs.unshift(blog);
   saveDB(db);
   return blog;
+}
+
+export async function updateBlog(blog: BlogPost): Promise<BlogPost | null> {
+  if (supabase && isSupabaseConfigured()) {
+    try {
+      const row = {
+        slug: blog.slug,
+        title_bn: blog.titleBn,
+        title_en: blog.titleEn || "",
+        category: blog.category || "mentorship",
+        featured: Boolean(blog.featured),
+        excerpt_bn: blog.excerptBn || "",
+        excerpt_en: blog.excerptEn || "",
+        published_date_bn: blog.publishedDateBn || "",
+        published_date_en: blog.publishedDateEn || "",
+        image: blog.image || "",
+      };
+      const { error } = await supabase
+        .from("blogs")
+        .update(row)
+        .eq("id", blog.id);
+      if (!error) return blog;
+    } catch (e) {
+      console.error("Supabase updateBlog error:", e);
+    }
+  }
+  const db = getDB();
+  if (db.blogs) {
+    const idx = db.blogs.findIndex((b) => b.id === blog.id || b.slug === blog.slug);
+    if (idx !== -1) {
+      db.blogs[idx] = blog;
+      saveDB(db);
+      return blog;
+    }
+  }
+  return null;
 }
 
 export async function deleteBlog(id: string): Promise<boolean> {
@@ -864,7 +1026,7 @@ export async function deleteBlog(id: string): Promise<boolean> {
   }
   const db = getDB();
   if (db.blogs) {
-    db.blogs = db.blogs.filter((b) => b.id !== id);
+    db.blogs = db.blogs.filter((b) => b.id !== id && b.slug !== id);
     saveDB(db);
     return true;
   }
@@ -1260,6 +1422,66 @@ export async function deletePayment(id: string): Promise<boolean> {
   const db = getDB();
   if (db.payments) {
     db.payments = db.payments.filter((p) => p.id !== id);
+    saveDB(db);
+    return true;
+  }
+  return false;
+}
+
+// ============================================================
+// Custom Pages Management Helpers
+// ============================================================
+
+export async function getCustomPages(): Promise<CustomPage[]> {
+  const db = getDB();
+  return db.pages || [];
+}
+
+export async function getPageBySlug(slug: string): Promise<CustomPage | null> {
+  const db = getDB();
+  const found = (db.pages || []).find((p) => p.slug === slug || p.id === slug);
+  return found || null;
+}
+
+export async function saveCustomPage(pageData: Partial<CustomPage> & { id: string; slug: string }): Promise<CustomPage> {
+  const db = getDB();
+  if (!db.pages) db.pages = [];
+
+  const existingIndex = db.pages.findIndex((p) => p.id === pageData.id || p.slug === pageData.slug);
+
+  const fullPage: CustomPage = {
+    id: pageData.id || (existingIndex !== -1 ? db.pages[existingIndex].id : pageData.slug),
+    slug: pageData.slug || (existingIndex !== -1 ? db.pages[existingIndex].slug : "custom-page"),
+    titleBn: pageData.titleBn || "",
+    titleEn: pageData.titleEn || "",
+    subtitleBn: pageData.subtitleBn || "",
+    subtitleEn: pageData.subtitleEn || "",
+    lastUpdatedBn: pageData.lastUpdatedBn || "১০ আগস্ট, ২০২৬",
+    lastUpdatedEn: pageData.lastUpdatedEn || "August 10, 2026",
+    sections: pageData.sections || [],
+    metaTitleBn: pageData.metaTitleBn || pageData.titleBn || "",
+    metaTitleEn: pageData.metaTitleEn || pageData.titleEn || "",
+    metaDescriptionBn: pageData.metaDescriptionBn || pageData.subtitleBn || "",
+    metaDescriptionEn: pageData.metaDescriptionEn || pageData.subtitleEn || "",
+    updatedAt: new Date().toISOString(),
+  };
+
+  if (existingIndex !== -1) {
+    db.pages[existingIndex] = { ...db.pages[existingIndex], ...fullPage };
+  } else {
+    db.pages.push(fullPage);
+  }
+
+  saveDB(db);
+  return fullPage;
+}
+
+export async function deleteCustomPage(idOrSlug: string): Promise<boolean> {
+  const db = getDB();
+  if (!db.pages) return false;
+  const initialLength = db.pages.length;
+  db.pages = db.pages.filter((p) => p.id !== idOrSlug && p.slug !== idOrSlug);
+  if (db.pages.length !== initialLength) {
     saveDB(db);
     return true;
   }
