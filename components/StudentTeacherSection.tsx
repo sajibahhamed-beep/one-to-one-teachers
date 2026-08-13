@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 
 interface StudentTeacherSectionProps {
-  onOpenEnroll: () => void;
+  onOpenEnroll: (plan?: string) => void;
   onOpenMentor: () => void;
 }
 
@@ -135,7 +135,7 @@ export default function StudentTeacherSection({
 
           <div className="text-center sm:text-left">
             <button
-              onClick={onOpenEnroll}
+              onClick={() => onOpenEnroll("Free Trial")}
               className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-[#00A896] text-white font-extrabold text-sm sm:text-base hover:bg-[#008075] shadow-lg shadow-[#00A896]/30 hover:-translate-y-0.5 transition-all cursor-pointer"
             >
               <span>{lang === "bn" ? "শিক্ষার্থী হিসেবে ফ্রি ট্রায়াল ক্লাস নিন" : "Start Learning with Free Trial"}</span>

@@ -97,7 +97,7 @@ export default function HomeClient() {
 
       {/* For Students & For Teachers (H2 Sections) */}
       <StudentTeacherSection
-        onOpenEnroll={() => handleOpenEnroll("Student Request", 0)}
+        onOpenEnroll={(plan) => handleOpenEnroll(plan || "Free Trial", 0)}
         onOpenMentor={() => setMentorModalOpen(true)}
       />
 

@@ -32,29 +32,29 @@ export default function Hero({ onOpenEnroll }: HeroProps) {
           </div>
 
           {/* Primary SEO H1 Heading */}
-          <h1 className="font-sans text-3xl sm:text-5xl lg:text-[54px] font-extrabold text-[#0D2C4A] tracking-tight leading-[1.22] sm:leading-[1.25] mb-3 sm:mb-4">
+          <h1 className="font-sans text-xl sm:text-3xl md:text-[38px] lg:text-[46px] font-extrabold text-[#0D2C4A] tracking-tight leading-[1.25] mb-3 sm:mb-4">
             {lang === "bn" ? (
               <>
-                একজন শিক্ষার্থী, একজন শিক্ষক — <br className="hidden sm:inline" />
-                <span className="text-[#00A896]">সাশ্রয়ী অনলাইন শিক্ষক</span>
+                <span className="block whitespace-nowrap">একজন শিক্ষার্থী, একজন শিক্ষক —</span>
+                <span className="text-[#00A896] block whitespace-nowrap">সাশ্রয়ী অনলাইন শিক্ষক</span>
               </>
             ) : (
               <>
-                Affordable One-to-One <br className="hidden sm:inline" />
-                <span className="text-[#00A896]">Online Teachers in Bangladesh</span>
+                <span className="block whitespace-nowrap">Affordable One-to-One</span>
+                <span className="text-[#00A896] block whitespace-nowrap">Online Teachers in Bangladesh</span>
               </>
             )}
           </h1>
 
           {/* Supporting Brand Message */}
-          <p className="text-base sm:text-xl font-bold text-[#008075] leading-snug mb-3">
+          <p className="text-base sm:text-xl font-bold text-[#008075] leading-snug mb-3 text-justify">
             {lang === "bn"
               ? "নিজের শিক্ষকের সাথে ব্যক্তিগতভাবে শিখুন, নিজের গতিতে এগিয়ে যান।"
               : "Learn individually with your personal tutor, progress at your own pace."}
           </p>
 
           {/* Subtitle / Paragraph */}
-          <p className="text-sm sm:text-base md:text-lg leading-relaxed text-[#475569] max-w-[620px] font-normal mb-6 sm:mb-8">
+          <p className="text-sm sm:text-base md:text-lg leading-relaxed text-[#475569] max-w-[620px] font-normal mb-6 sm:mb-8 text-justify">
             {t.heroLede}
           </p>
 

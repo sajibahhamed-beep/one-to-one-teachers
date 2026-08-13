@@ -1958,61 +1958,63 @@ export default function AdminDashboardPage() {
       {/* ===== MAIN CONTENT FEED (Margin left: ml-64) ===== */}
       <main className="ml-64 flex-1 flex flex-col min-w-0 bg-[#F8FAFC] min-h-screen overflow-y-auto">
         
-        {/* TOP HEADER BAR */}
-        <header className="bg-white border-b border-[#0D2C4A]/10 px-8 py-4 sticky top-0 z-20 flex items-center justify-between gap-6 shadow-sm">
-          {/* Search Input Box */}
-          <div className="relative flex-1 max-w-md">
-            <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              placeholder="Search students, teachers, phone or district..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-11 pr-4 py-2.5 rounded-2xl bg-[#F8FAFC] border border-[#0D2C4A]/10 text-sm focus:outline-none focus:border-[#00A896] font-sans text-[#0D2C4A] shadow-inner admin-body-text"
-            />
-          </div>
-
-          {/* Right Header Status Badges */}
-          <div className="flex items-center gap-5">
-            {/* Live Date Badge */}
-            <div className="hidden md:flex items-center gap-2 admin-chip-label text-slate-600 bg-slate-100 px-3.5 py-1.5 rounded-full border border-slate-200">
-              <Calendar className="w-3.5 h-3.5 text-[#00A896]" />
-              <span>Saturday, August 08, 2026</span>
+        {/* FLOATING TOP NAVBAR */}
+        <div className="sticky top-4 z-20 mx-4 sm:mx-8 my-3">
+          <header className="bg-white/85 backdrop-blur-xl border border-slate-200/80 rounded-2xl sm:rounded-3xl px-6 py-3.5 flex items-center justify-between gap-6 shadow-lg shadow-slate-900/5 transition-all">
+            {/* Search Input Box */}
+            <div className="relative flex-1 max-w-md">
+              <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                placeholder="Search students, teachers, phone or district..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-11 pr-4 py-2.5 rounded-2xl bg-slate-50/80 border border-slate-200/80 text-sm focus:outline-none focus:border-[#00A896] focus:bg-white font-sans text-[#0D2C4A] shadow-inner admin-body-text transition-all"
+              />
             </div>
 
-            {/* Refresh Data Button */}
-            <button
-              onClick={fetchAllData}
-              title="Refresh Data"
-              className="p-2.5 rounded-xl text-slate-500 hover:bg-slate-100 active:scale-95 transition-all border border-slate-200 cursor-pointer"
-            >
-              <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin text-[#00A896]" : ""}`} />
-            </button>
-
-            {/* Notification Icon */}
-            <div className="relative p-2.5 rounded-xl bg-slate-100 text-[#0D2C4A] border border-slate-200 cursor-pointer">
-              <Bell className="w-4 h-4" />
-              {pendingEnrollmentsCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-rose-500 rounded-full animate-ping" />
-              )}
-            </div>
-
-            {/* Admin Profile User Badge */}
-            <div className="flex items-center gap-3 pl-2 border-l border-slate-200">
-              <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-[#00A896] to-[#0D2C4A] text-white flex items-center justify-center font-extrabold text-sm shadow-md">
-                {adminUser?.name ? adminUser.name.charAt(0).toUpperCase() : "S"}
+            {/* Right Header Status Badges */}
+            <div className="flex items-center gap-4 sm:gap-5">
+              {/* Live Date Badge */}
+              <div className="hidden md:flex items-center gap-2 admin-chip-label text-slate-600 bg-slate-100/90 px-3.5 py-1.5 rounded-full border border-slate-200/80">
+                <Calendar className="w-3.5 h-3.5 text-[#00A896]" />
+                <span>Saturday, August 08, 2026</span>
               </div>
-              <div className="hidden sm:block text-left">
-                <strong className="block admin-caption-text font-extrabold text-[#0D2C4A] leading-tight">
-                  {adminUser?.name || "Sajib Ahmed"}
-                </strong>
-                <span className="admin-chip-label text-slate-400 font-mono text-[10px]">
-                  {adminUser?.email || "sajib@sajib.com"}
-                </span>
+
+              {/* Refresh Data Button */}
+              <button
+                onClick={fetchAllData}
+                title="Refresh Data"
+                className="p-2.5 rounded-xl text-slate-500 hover:bg-slate-100/80 hover:text-[#0D2C4A] active:scale-95 transition-all border border-slate-200/80 cursor-pointer shadow-2xs"
+              >
+                <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin text-[#00A896]" : ""}`} />
+              </button>
+
+              {/* Notification Icon */}
+              <div className="relative p-2.5 rounded-xl bg-slate-100/80 text-[#0D2C4A] border border-slate-200/80 cursor-pointer shadow-2xs">
+                <Bell className="w-4 h-4" />
+                {pendingEnrollmentsCount > 0 && (
+                  <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-rose-500 rounded-full animate-ping" />
+                )}
+              </div>
+
+              {/* Admin Profile User Badge */}
+              <div className="flex items-center gap-3 pl-2 border-l border-slate-200/80">
+                <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-[#00A896] to-[#0D2C4A] text-white flex items-center justify-center font-extrabold text-sm shadow-md">
+                  {adminUser?.name ? adminUser.name.charAt(0).toUpperCase() : "S"}
+                </div>
+                <div className="hidden sm:block text-left">
+                  <strong className="block admin-caption-text font-extrabold text-[#0D2C4A] leading-tight">
+                    {adminUser?.name || "Sajib Ahmed"}
+                  </strong>
+                  <span className="admin-chip-label text-slate-400 font-mono text-[10px]">
+                    {adminUser?.email || "sajib@sajib.com"}
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
-        </header>
+          </header>
+        </div>
 
         {/* BODY CONTAINER */}
         <div className="p-6 md:p-8 space-y-8 max-w-7xl w-full">
