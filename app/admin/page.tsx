@@ -1725,12 +1725,12 @@ export default function AdminDashboardPage() {
             {/* Email Field */}
             <div className="space-y-1.5">
               <label className="block text-xs font-bold text-[#0D2C4A]">
-                ইমেইল েস / Email Address <span className="text-rose-500">*</span>
+                ইমেইল ঠিকানা / Email Address <span className="text-rose-500">*</span>
               </label>
               <div className="relative">
                 <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
-                  type="email"
+                  type="text"
                   required
                   placeholder="sajib@sajib.com"
                   value={email}
@@ -1811,11 +1811,11 @@ export default function AdminDashboardPage() {
               {authLoading ? (
                 <>
                   <RefreshCw className="w-4 h-4 animate-spin text-white" />
-                  <span>যাচাই করা š›ে... / Logging in...</span>
+                  <span>যাচাই করা হচ্ছে... / Logging in...</span>
                 </>
               ) : (
                 <>
-                  <span>েশ করুন / Sign In to Admin</span>
+                  <span>প্রবেশ করুন / Sign In to Admin</span>
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}

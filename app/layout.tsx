@@ -64,7 +64,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: `${SITE_URL}/Assets/Group%202147229264.png`,
+        url: `${SITE_URL}/Assets/logo.png`,
         width: 1200,
         height: 630,
         alt: "OTOTeachers — ১-অন-১ অনলাইন শিক্ষক প্ল্যাটফর্ম",
@@ -75,12 +75,12 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "OTOTeachers — ১-অন-১ অনলাইন শিক্ষক",
     description: "বাংলাদেশ জুড়ে ১-অন-১ লাইভ অনলাইন ক্লাস। প্রথম সেশন সম্পূর্ণ ফ্রি।",
-    images: [`${SITE_URL}/Assets/Group%202147229264.png`],
+    images: [`${SITE_URL}/Assets/logo.png`],
   },
   icons: {
-    icon: "/Assets/Group 2147229264.png",
-    shortcut: "/Assets/Group 2147229264.png",
-    apple: "/Assets/Group 2147229264.png",
+    icon: "/Assets/logo.png",
+    shortcut: "/Assets/logo.png",
+    apple: "/Assets/logo.png",
   },
   robots: {
     index: true,
