@@ -92,11 +92,12 @@ export default function Navbar({ onOpenEnroll, onOpenMentor }: NavbarProps) {
         {/* Brand Logo */}
         <Link href="/" className="brand flex items-center gap-3 group" aria-label="OTOTeachers Home">
           <Image
-            src="/Assets/logo.png"
+            src="/logo.png"
             alt="OTOTeachers — ১-অন-১ অনলাইন শিক্ষক প্ল্যাটফর্ম"
             width={180}
             height={50}
             priority
+            unoptimized
             style={{ height: "50px", width: "auto", maxHeight: "50px" }}
             className="h-12 w-auto object-contain group-hover:scale-105 transition-transform duration-300"
           />
