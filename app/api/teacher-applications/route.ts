@@ -9,6 +9,7 @@ import {
   insertTeacher,
   Teacher,
 } from "@/lib/db";
+import { sendNotificationEmail } from "@/lib/email";
 
 export async function GET() {
   try {
@@ -39,6 +40,27 @@ export async function POST(req: Request) {
     };
 
     const saved = await insertTeacherApplication(newApp);
+
+    try {
+      await sendNotificationEmail({
+        formName: "Teacher Application Modal (Become a Teacher)",
+        details: {
+          "Applicant Name": newApp.fullName,
+          Phone: newApp.phone,
+          Email: newApp.email,
+          Institution: newApp.institution,
+          Department: newApp.department,
+          "Subject Expertise": newApp.subjectExpertise,
+          "Hours Per Week": newApp.hoursPerWeek,
+          Experience: newApp.experience,
+          Bio: newApp.bio,
+          "Application ID": newApp.id,
+        },
+      });
+    } catch (e) {
+      console.error("Failed to send teacher application notification email:", e);
+    }
+
     return NextResponse.json({ success: true, application: saved }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: "Failed to submit application" }, { status: 500 });

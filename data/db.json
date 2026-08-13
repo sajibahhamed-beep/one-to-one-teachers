@@ -1,6 +1,59 @@
 {
   "enrollments": [
     {
+      "id": "ENR-8754",
+      "studentName": "Md.",
+      "phone": "251786451",
+      "grade": "Others",
+      "district": "aaaaaaaaaaa",
+      "selectedSubjects": [
+        "Mathematics",
+        "অন্যান্য",
+        "ICT & Computer"
+      ],
+      "preferredTime": "adfdfdf",
+      "medium": "Bangla Medium",
+      "selectedPlan": "Student Request",
+      "fee": 0,
+      "status": "Pending",
+      "createdAt": "2026-08-13T04:30:08.754Z"
+    },
+    {
+      "id": "ENR-5026",
+      "studentName": "Md.",
+      "phone": "251786451",
+      "grade": "Others",
+      "district": "aaaaaaaaaaa",
+      "selectedSubjects": [
+        "Mathematics",
+        "অন্যান্য",
+        "ICT & Computer"
+      ],
+      "preferredTime": "adfdfdf",
+      "medium": "Bangla Medium",
+      "selectedPlan": "Student Request",
+      "fee": 0,
+      "status": "Pending",
+      "createdAt": "2026-08-13T04:29:55.026Z"
+    },
+    {
+      "id": "ENR-6270",
+      "studentName": "Md.",
+      "phone": "251786451",
+      "grade": "Others",
+      "district": "aaaaaaaaaaa",
+      "selectedSubjects": [
+        "Mathematics",
+        "অন্যান্য"
+      ],
+      "preferredTime": "adfdfdf",
+      "medium": "Bangla Medium",
+      "selectedPlan": "Student Request",
+      "fee": 0,
+      "status": "Pending",
+      "createdAt": "2026-08-13T04:25:36.270Z"
+    },
+    {
       "id": "ENR-9729",
       "studentName": "Free Trial Test User",
       "phone": "01822002200",
@@ -29,7 +82,7 @@
       "medium": "Bangla Medium",
       "selectedPlan": "Student Request",
       "fee": 0,
-      "status": "Pending",
+      "status": "Contacted",
       "createdAt": "2026-08-12T06:44:49.698Z"
     },
     {
@@ -595,6 +648,15 @@
   ],
   "contacts": [
     {
+      "id": "MSG-8323",
+      "name": "sadtqw",
+      "email": "sajibahhamed@gmail.com",
+      "phone": "574364563",
+      "subject": "tutor-match",
+      "message": "sfgsdfgasdfg",
+      "createdAt": "2026-08-13T04:31:38.323Z"
+    },
+    {
       "id": "MSG-4654",
       "name": "Contact User",
       "email": "user@example.com",
@@ -623,6 +685,23 @@
     }
   ],
   "teachers": [
+    {
+      "id": "tch-1786595350230",
+      "nameBn": "adfdfd",
+      "nameEn": "aaaaaaaaaaaaaaa",
+      "universityBn": "বুয়েট (সিএসই)",
+      "universityEn": "BUET (CSE)",
+      "subjectBn": "উচ্চতর গণিত ও পদার্থবিজ্ঞান",
+      "subjectEn": "Higher Math & Physics",
+      "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80",
+      "phone": "",
+      "email": "",
+      "experienceBn": "৪+ বছরের শিক্ষকতার অভিজ্ঞতা",
+      "experienceEn": "4+ Years Mentoring Experience",
+      "bioBn": "",
+      "bioEn": "",
+      "rating": "4.9/5"
+    },
     {
       "id": "tch-1786532464859",
       "nameBn": "Md. Sajib",
@@ -788,6 +867,104 @@
     }
   ],
   "blogs": [
+    {
+      "id": "aaaaaaaaaaaaaaaaaaaa",
+      "slug": "aaaaaaaaaaaaaaaaaaaa",
+      "titleBn": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "titleEn": "aaaaaaaaaaaaaaaaaaaaaa",
+      "category": "english",
+      "featured": true,
+      "image": "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=1200&q=80",
+      "excerptBn": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "excerptEn": "aaaaaaaaaaaaaaaa",
+      "readTimeBn": "৫ মিনিট পড়া",
+      "readTimeEn": "5 min read",
+      "publishedDateBn": "০৬ †—, ২০২৬",
+      "publishedDateEn": "Aug 06, 2026",
+      "author": {
+        "nameBn": "আরিফুর রহমান",
+        "nameEn": "Arifur Rahman",
+        "roleBn": "aaaaaaaaaaaaaaaa",
+        "roleEn": "Head of Mentorship",
+        "institutionBn": "aaaaaaaaaaaaaaaa",
+        "institutionEn": "BUET (CSE)",
+        "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"
+      },
+      "tagsBn": [
+        "১-অন-১ মেন্টরিং",
+        "শিক্ষা পদ্ধতি",
+        "যাচাইকৃত শিক্ষক"
+      ],
+      "tagsEn": [
+        "1-on-1 Mentoring",
+        "Learning Methods",
+        "Private Tutor"
+      ],
+      "introBn": "বাংলাদেশের প্রচলিত শিক্ষাব্যবস্থায় অধিকাংশ শিক্ষার্থী বড় বড় কোচিং সেন্টারে ভর্তি হয়। কিন্তু ৫০ থেকে ১০০ জনের এক একটি ক্লাসে কোনো শিক্ষার্থীর নিজস্ব দুর্বলতা দূর হয় না।",
+      "introEn": "In Bangladesh's conventional academic landscape, most students enroll in overcrowded coaching centers.",
+      "sectionsBn": [
+        {
+          "heading": "এ+ পাওয়ার জন্য মেন্টরদের ৫টি সেরা কৌশল",
+          "subheading": "বোর্ড খাতা মূল্যায়নে শিক্ষকের মন জয় করার নিয়ম",
+          "points": [
+            {
+              "title": "১. বিগত ৫ বছরের বোর্ড প্রশ্ন খুঁটিনাটি সমাধান",
+              "desc": "বোর্ড পরীক্ষার প্রায় ৭০% প্রশ্ন বিগত বছরের প্যাটার্ন অনুসরণ করে থাকে। টেস্ট পেপার সলভ করার মাধ্যমে প্রতিটি চ্যাপ্টারের মূল ধরন আয়ত্ত করা সম্ভব।"
+            },
+            {
+              "title": "২. বিজ্ঞান বিষয়ে স্পষ্ট চিত্র ও সমীকরণের ব্যবহার",
+              "desc": "পদার্থ, রসায়ন ও জীববিজ্ঞানে পেন্সিল দিয়ে স্পষ্ট চিত্র আঁকলে পরীক্ষক পূর্ণ নম্বর দিতে উৎসাহিত হন।"
+            },
+            {
+              "title": "৩. টাইমার ধরে ১-অন-১ মক টেস্ট দেওয়া",
+              "desc": "পরীক্ষার হলে সময় না পাওয়ার সমস্যা দূর করতে প্রতি সপ্তাহে ঘড়ি ধরে মক টেস্ট দিয়ে উত্তরপত্র ১-অন-১ মেন্টরকে দেখিয়ে ফিডব্যাক নেওয়া উচিত।"
+            },
+            {
+              "title": "৪. সৃজনশীল (CQ) প্রশ্নের ক ও খ অংশ নিখুঁত করা",
+              "desc": "ক ও খ অংশে পূর্ণ নম্বর পাওয়া সহজ। মেন্টরের সহায়তায় সংজ্ঞা ও মূল পয়েন্ট নির্ভুল মুখস্থ ও প্র্যাকটিস করুন।"
+            },
+            {
+              "title": "৫. রিভিশন নোটস ও সূত্র তালিকা প্রস্তুত রাখা",
+              "desc": "পরীক্ষার আগের রাতে সব বই পড়া অসম্ভব। তাই নিজস্ব হাতে লেখা ফর্মুলা শিট ও নোটস দেখে রিভিশন শেষ করুন।"
+            }
+          ]
+        }
+      ],
+      "sectionsEn": [
+        {
+          "heading": "Top 5 Strategies from Mentors to Secure an A+",
+          "subheading": "Rules to impress the examiner during board paper evaluation",
+          "points": [
+            {
+              "title": "1. Thoroughly Solve Past 5 Years Board Papers",
+              "desc": "Nearly 70% of board questions follow past patterns. Solving test papers helps master common question types."
+            },
+            {
+              "title": "2. Use Clear Diagrams & Equations in Science",
+              "desc": "Drawing clean pencil diagrams in Physics, Chemistry, and Biology encourages examiners to award full marks."
+            },
+            {
+              "title": "3. Timed 1-on-1 Mock Tests",
+              "desc": "To prevent running out of time in the exam hall, take weekly timed mock tests and get them reviewed 1-on-1."
+            },
+            {
+              "title": "4. Perfecting Parts A and B of Creative (CQ) Questions",
+              "desc": "Getting full marks in Parts A and B is straightforward. Master exact definitions and key points with mentor guidance."
+            },
+            {
+              "title": "5. Prepare Revision Notes & Formula Sheets",
+              "desc": "Reading the whole textbook the night before exams is impossible. Review hand-written formula sheets and quick notes instead."
+            }
+          ]
+        }
+      ],
+      "keyTakeawaysBn": [
+        "asdfffff"
+      ],
+      "keyTakeawaysEn": [
+        "asdffff"
+      ]
+    },
     {
       "id": "1",
       "slug": "hsc-board-prep-guide",
@@ -1529,6 +1706,21 @@
     "addressEn": "Dhanmondi, Dhaka, Bangladesh"
   },
   "teacherApplications": [
+    {
+      "id": "APP-2810",
+      "fullName": "adsf",
+      "phone": "45645123",
+      "email": "sajibahhamed@gmail.com",
+      "institution": "adfd",
+      "department": "adfdf",
+      "subjectExpertise": "Mathematics (SSC & HSC)",
+      "hoursPerWeek": "2-4 hours",
+      "experience": "২+ বছর টিউশন অভিজ্ঞতা",
+      "bio": "adfdd",
+      "avatar": "/tutors/tutor-1.png",
+      "status": "Approved",
+      "createdAt": "2026-08-13T04:30:42.810Z"
+    },
     {
       "id": "APP-0720",
       "fullName": "Tahmid Rahman",

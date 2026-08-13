@@ -692,43 +692,44 @@ export function getAllBlogs(): BlogPost[] {
         const dbMapped: BlogPost[] = db.blogs.map((b: any) => ({
           id: b.id || b.slug,
           slug: b.slug || b.id,
-          titleBn: b.titleBn || "নিবন্ধ",
-          titleEn: b.titleEn || "Article",
+          titleBn: b.titleBn || b.title_bn || "নিবন্ধ",
+          titleEn: b.titleEn || b.title_en || "Article",
           category: b.category || "mentorship",
-          excerptBn: b.excerptBn || "",
-          excerptEn: b.excerptEn || "",
-          publishedDateBn: b.publishedDateBn || "০৬ আগস্ট, ২০২৬",
-          publishedDateEn: "06 August 2026",
-          readTimeBn: "৪ মিনিট পড়া",
-          readTimeEn: "4 min read",
+          featured: Boolean(b.featured),
+          excerptBn: b.excerptBn || b.excerpt_bn || "",
+          excerptEn: b.excerptEn || b.excerpt_en || "",
+          publishedDateBn: b.publishedDateBn || b.published_date_bn || "০৬ আগস্ট, ২০২৬",
+          publishedDateEn: b.publishedDateEn || b.published_date_en || "06 August 2026",
+          readTimeBn: b.readTimeBn || b.read_time_bn || "৫ মিনিট পড়া",
+          readTimeEn: b.readTimeEn || b.read_time_en || "5 min read",
           image: b.image || "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=800&q=80",
-          author: {
-            nameBn: "OTOTeachers টিম",
-            nameEn: "OTOTeachers Team",
-            avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
-            roleBn: "একাডেমিক পরামর্শক",
-            roleEn: "Academic Advisor",
-            institutionBn: "বুয়েট ও ঢাবি",
-            institutionEn: "BUET & DU",
+          author: b.author && typeof b.author === "object" && b.author.nameBn ? b.author : {
+            nameBn: b.authorNameBn || "OTOTeachers টিম",
+            nameEn: b.authorNameEn || "OTOTeachers Team",
+            avatar: b.authorAvatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+            roleBn: b.authorRoleBn || "একাডেমিক পরামর্শক",
+            roleEn: b.authorRoleEn || "Academic Advisor",
+            institutionBn: b.authorUniBn || "বুয়েট ও ঢাবি",
+            institutionEn: b.authorUniEn || "BUET & DU",
           },
-          tagsBn: ["১-অন-১ শিক্ষক", "পড়াশোনা", "পরামর্শ"],
-          tagsEn: ["1-on-1 Tutor", "Study", "Preparation"],
-          introBn: b.excerptBn || "১-অন-১ ব্যক্তিগত শিক্ষক এর মাধ্যমে আপনার সন্তানের পড়ালেখার অগ্রগতি নিশ্চিত করুন।",
-          introEn: b.excerptEn || "Ensure your child's learning progress with 1-on-1 personalized tutoring.",
-          sectionsBn: [
+          tagsBn: Array.isArray(b.tagsBn) && b.tagsBn.length > 0 ? b.tagsBn : ["১-অন-১ শিক্ষক", "পড়াশোনা", "পরামর্শ"],
+          tagsEn: Array.isArray(b.tagsEn) && b.tagsEn.length > 0 ? b.tagsEn : ["1-on-1 Tutor", "Study", "Preparation"],
+          introBn: b.introBn || b.excerptBn || "১-অন-১ ব্যক্তিগত শিক্ষক এর মাধ্যমে আপনার সন্তানের পড়ালেখার অগ্রগতি নিশ্চিত করুন।",
+          introEn: b.introEn || b.excerptEn || "Ensure your child's learning progress with 1-on-1 personalized tutoring.",
+          sectionsBn: Array.isArray(b.sectionsBn) && b.sectionsBn.length > 0 ? b.sectionsBn : [
             {
-              heading: "১-অন-১ শিক্ষাদানের বিশেষ সুবিধা",
+              heading: b.titleBn || "১-অন-১ শিক্ষাদানের বিশেষ সুবিধা",
               subheading: "কেন একজন ডেডিকেটেড শিক্ষক প্রয়োজন?",
               paragraphs: [
                 b.excerptBn || "১-অন-১ লাইভ ক্লাসে প্রতিটি শিক্ষার্থী তাদের নিজস্ব গতিতে শিখতে পারে এবং সকল জটিল প্রশ্নের সমাধান তাৎক্ষণিক পেয়ে থাকে।",
-                "আমাদের বুয়েট, ঢাবি ও মেডিকেলের শিক্ষকেরা প্রতিটি বিষয় ধরে ধরে ১-অন-১ সহজ ভাষায় বুঝিয়ে দেন。"
+                "আমাদের বুয়েট, ঢাবি ও মেডিকেলের শিক্ষকেরা প্রতিটি বিষয় ধরে ধরে ১-অন-১ সহজ ভাষায় বুঝিয়ে দেন।"
               ],
               callout: "অর্থ যেন কখনো কোনো শিক্ষার্থীর শিক্ষার পথে বাধা না হয়।"
             }
           ],
-          sectionsEn: [
+          sectionsEn: Array.isArray(b.sectionsEn) && b.sectionsEn.length > 0 ? b.sectionsEn : [
             {
-              heading: "Benefits of 1-on-1 Tutoring",
+              heading: b.titleEn || "Benefits of 1-on-1 Tutoring",
               subheading: "Why a dedicated tutor matters?",
               paragraphs: [
                 b.excerptEn || "In 1-on-1 live sessions, students learn at their own pace and get instant solutions to complex doubts.",
@@ -737,12 +738,12 @@ export function getAllBlogs(): BlogPost[] {
               callout: "Money should never be a restriction for education."
             }
           ],
-          keyTakeawaysBn: [
+          keyTakeawaysBn: Array.isArray(b.keyTakeawaysBn) && b.keyTakeawaysBn.length > 0 ? b.keyTakeawaysBn : [
             "ব্যক্তিগত ১-অন-১ মনোযোগ",
             "প্রথম ক্লাস সম্পূর্ণ ফ্রি",
             "অনুকূল সময়সূচী বেছে নেওয়ার সুযোগ"
           ],
-          keyTakeawaysEn: [
+          keyTakeawaysEn: Array.isArray(b.keyTakeawaysEn) && b.keyTakeawaysEn.length > 0 ? b.keyTakeawaysEn : [
             "Personalized 1-on-1 attention",
             "First session completely free",
             "Flexible schedule selection"

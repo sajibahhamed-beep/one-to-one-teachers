@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getContacts, insertContact, deleteContact, ContactMessage } from "@/lib/db";
+import { sendNotificationEmail } from "@/lib/email";
 
 export async function GET() {
   try {
@@ -24,6 +25,23 @@ export async function POST(req: Request) {
     };
 
     const saved = await insertContact(newMsg);
+
+    try {
+      await sendNotificationEmail({
+        formName: "Contact Us Form",
+        details: {
+          Name: newMsg.name,
+          Email: newMsg.email,
+          Phone: newMsg.phone,
+          Subject: newMsg.subject,
+          Message: newMsg.message,
+          "Message ID": newMsg.id,
+        },
+      });
+    } catch (e) {
+      console.error("Failed to send contact notification email:", e);
+    }
+
     return NextResponse.json({ success: true, data: saved });
   } catch (error) {
     return NextResponse.json({ error: "Failed to save message" }, { status: 500 });

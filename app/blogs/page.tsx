@@ -4,6 +4,8 @@ import JsonLd from "@/components/JsonLd";
 import { getAllBlogs } from "@/lib/blogsData";
 import { getBreadcrumbSchema, SITE_URL, SITE_NAME } from "@/lib/seoConfig";
 
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: "১-অন-১ শিক্ষাদান, পরীক্ষা প্রস্তুতি ও পড়াশোনার কৌশল ব্লগ",
   description: "বুয়েট, ঢাবি ও মেডিকেল শিক্ষকদের বাস্তব অভিজ্ঞতা, বোর্ড পরীক্ষার সেরা প্রস্তুতি কৌশল, গণিতের ভয় কাটানোর উপায় এবং ১-অন-১ মেন্টরিং নির্দেশিকা।",

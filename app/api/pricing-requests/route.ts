@@ -6,6 +6,7 @@ import {
   deletePricingRequest,
   PricingRequest,
 } from "@/lib/db";
+import { sendNotificationEmail } from "@/lib/email";
 
 export async function GET() {
   try {
@@ -31,6 +32,23 @@ export async function POST(req: Request) {
     };
 
     const saved = await insertPricingRequest(newRequest);
+
+    try {
+      await sendNotificationEmail({
+        formName: "Pricing Request Modal",
+        details: {
+          "Student Name": newRequest.studentName,
+          Phone: newRequest.phone,
+          "Plan Name": newRequest.planName,
+          Duration: newRequest.duration,
+          "Monthly Fee": `${newRequest.monthlyFee} BDT`,
+          "Request ID": newRequest.id,
+        },
+      });
+    } catch (e) {
+      console.error("Failed to send pricing request notification email:", e);
+    }
+
     return NextResponse.json({ success: true, data: saved });
   } catch (error) {
     return NextResponse.json({ error: "Failed to save pricing request" }, { status: 500 });

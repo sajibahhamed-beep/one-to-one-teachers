@@ -6,6 +6,8 @@ import { getBlogs, getBlogBySlug } from "@/lib/db";
 import { getAllBlogs } from "@/lib/blogsData";
 import { getBlogPostingSchema, getBreadcrumbSchema, SITE_URL, SITE_NAME } from "@/lib/seoConfig";
 
+export const revalidate = 0;
+
 interface PageProps {
   params: {
     id: string;

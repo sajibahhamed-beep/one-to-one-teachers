@@ -6,6 +6,7 @@ import {
   deletePayment,
   Payment,
 } from "@/lib/db";
+import { sendNotificationEmail } from "@/lib/email";
 
 export async function GET() {
   try {
@@ -32,6 +33,24 @@ export async function POST(req: Request) {
     };
 
     const saved = await insertPayment(newPayment);
+
+    try {
+      await sendNotificationEmail({
+        formName: "Payment Submission Modal",
+        details: {
+          "Student Name": newPayment.studentName,
+          Phone: newPayment.phone,
+          Amount: `${newPayment.amount} BDT`,
+          "Transaction ID": newPayment.trxId,
+          "Payment Method": newPayment.paymentMethod,
+          Type: newPayment.type,
+          "Payment ID": newPayment.id,
+        },
+      });
+    } catch (e) {
+      console.error("Failed to send payment notification email:", e);
+    }
+
     return NextResponse.json({ success: true, payment: saved }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: "Failed to record payment" }, { status: 500 });

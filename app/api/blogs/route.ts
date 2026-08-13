@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { getBlogs, insertBlog, updateBlog, deleteBlog } from "@/lib/db";
 import { BlogPost } from "@/lib/blogsData";
 
@@ -84,6 +85,10 @@ export async function POST(req: Request) {
     };
 
     const saved = await insertBlog(newBlog);
+    try {
+      revalidatePath("/blogs");
+      revalidatePath(`/blogs/${saved.slug}`);
+    } catch {}
     return NextResponse.json({ success: true, data: saved });
   } catch (error) {
     console.error("POST /api/blogs error:", error);
@@ -165,6 +170,10 @@ export async function PUT(req: Request) {
 
     const updated = await updateBlog(updatedBlog);
     if (updated) {
+      try {
+        revalidatePath("/blogs");
+        revalidatePath(`/blogs/${updated.slug}`);
+      } catch {}
       return NextResponse.json({ success: true, data: updated });
     }
     return NextResponse.json({ error: "Blog not found" }, { status: 404 });
@@ -182,6 +191,10 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ error: "Blog ID required" }, { status: 400 });
     }
     const success = await deleteBlog(id);
+    try {
+      revalidatePath("/blogs");
+      revalidatePath(`/blogs/${id}`);
+    } catch {}
     return NextResponse.json({ success });
   } catch (error) {
     return NextResponse.json({ error: "Failed to delete blog" }, { status: 500 });

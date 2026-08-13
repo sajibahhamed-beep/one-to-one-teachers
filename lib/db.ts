@@ -963,7 +963,18 @@ export async function insertBlog(blog: BlogPost): Promise<BlogPost> {
         excerpt_en: blog.excerptEn || "",
         published_date_bn: blog.publishedDateBn || "",
         published_date_en: blog.publishedDateEn || "",
+        read_time_bn: blog.readTimeBn || "",
+        read_time_en: blog.readTimeEn || "",
         image: blog.image || "",
+        author: blog.author || null,
+        tags_bn: blog.tagsBn || [],
+        tags_en: blog.tagsEn || [],
+        intro_bn: blog.introBn || "",
+        intro_en: blog.introEn || "",
+        sections_bn: blog.sectionsBn || [],
+        sections_en: blog.sectionsEn || [],
+        key_takeaways_bn: blog.keyTakeawaysBn || [],
+        key_takeaways_en: blog.keyTakeawaysEn || [],
       };
       const { error } = await supabase.from("blogs").insert(row);
       if (!error) return blog;
@@ -992,7 +1003,18 @@ export async function updateBlog(blog: BlogPost): Promise<BlogPost | null> {
         excerpt_en: blog.excerptEn || "",
         published_date_bn: blog.publishedDateBn || "",
         published_date_en: blog.publishedDateEn || "",
+        read_time_bn: blog.readTimeBn || "",
+        read_time_en: blog.readTimeEn || "",
         image: blog.image || "",
+        author: blog.author || null,
+        tags_bn: blog.tagsBn || [],
+        tags_en: blog.tagsEn || [],
+        intro_bn: blog.introBn || "",
+        intro_en: blog.introEn || "",
+        sections_bn: blog.sectionsBn || [],
+        sections_en: blog.sectionsEn || [],
+        key_takeaways_bn: blog.keyTakeawaysBn || [],
+        key_takeaways_en: blog.keyTakeawaysEn || [],
       };
       const { error } = await supabase
         .from("blogs")

@@ -453,15 +453,15 @@ export default function AdminDashboardPage() {
       { id: "soc-4", name: "LinkedIn", iconUrl: "linkedin", url: "https://linkedin.com" },
     ],
     whatsappPhone: "8801775551325",
-    whatsappMessageBn: "‹ ototeachers.com টিম, ১-অন-১ অনলাইন ক·ক কে জানতে চাই।",
+    whatsappMessageBn: "হ্যালো ototeachers.com টিম, ১-অন-১ অনলাইন শিক্ষক সম্পর্কে জানতে চাই।",
     whatsappMessageEn: "Hello ototeachers.com team, I want to inquire about 1-on-1 online teachers.",
     phone: "01775551325",
     email: "support@ototeachers.com",
     addressBn: "ধানমণ্ডি, ঢাকা, বাংলাদেশ",
     addressEn: "Dhanmondi, Dhaka, Bangladesh",
-    metaTitle: "ototeachers.com — ১-অন-১ অনলাইন ক·ক | One-to-One Teacher for All",
-    metaDescription: "বাংলাদেশের ১-অন-১ অনলাইন ক·ক ফর্ম। ে, ঢাবি ও মেডিকেলের যাচাইকৃত ক·কদের সাথে সরাসরি লাইভ ক্লাস — ঘরে বসে।",
-    keywords: "ototeachers.com, ototeachers, online teacher Bangladesh, ১-অন-১ ক·ক, private tutor Bangladesh",
+    metaTitle: "ototeachers.com — ১-অন-১ অনলাইন শিক্ষক | One-to-One Teacher for All",
+    metaDescription: "বাংলাদেশের ১-অন-১ অনলাইন শিক্ষক প্ল্যাটফর্ম। বুয়েট, ঢাবি ও মেডিকেলের যাচাইকৃত শিক্ষকদের সাথে সরাসরি লাইভ ক্লাস — ঘরে বসে।",
+    keywords: "ototeachers.com, ototeachers, online teacher Bangladesh, ১-অন-১ শিক্ষক, private tutor Bangladesh",
   });
   const [whatsappSaved, setWhatsappSaved] = useState(false);
   const [seoSaved, setSeoSaved] = useState(false);
@@ -500,16 +500,16 @@ export default function AdminDashboardPage() {
   const [newBlogExcerptEn, setNewBlogExcerptEn] = useState("");
   const [newBlogReadTimeBn, setNewBlogReadTimeBn] = useState("৫ মিনিট পড়া");
   const [newBlogReadTimeEn, setNewBlogReadTimeEn] = useState("5 min read");
-  const [newBlogDateBn, setNewBlogDateBn] = useState("০৬ †—, ২০২৬");
+  const [newBlogDateBn, setNewBlogDateBn] = useState("০৬ আগস্ট, ২০২৬");
   const [newBlogDateEn, setNewBlogDateEn] = useState("Aug 06, 2026");
   const [newBlogAuthorNameBn, setNewBlogAuthorNameBn] = useState("আরিফুর রহমান");
   const [newBlogAuthorNameEn, setNewBlogAuthorNameEn] = useState("Arifur Rahman");
-  const [newBlogAuthorRoleBn, setNewBlogAuthorRoleBn] = useState("হেড অব েরশিপ");
+  const [newBlogAuthorRoleBn, setNewBlogAuthorRoleBn] = useState("হেড অব মেন্টরশিপ");
   const [newBlogAuthorRoleEn, setNewBlogAuthorRoleEn] = useState("Head of Mentorship");
-  const [newBlogAuthorUniBn, setNewBlogAuthorUniBn] = useState("ে (‡)");
+  const [newBlogAuthorUniBn, setNewBlogAuthorUniBn] = useState("বুয়েট (সিএসই)");
   const [newBlogAuthorUniEn, setNewBlogAuthorUniEn] = useState("BUET (CSE)");
   const [newBlogAuthorAvatar, setNewBlogAuthorAvatar] = useState("https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80");
-  const [newBlogTagsBn, setNewBlogTagsBn] = useState("১-অন-১ ে‚, শিক্ষা পদ্ধতি, ক—ত ক·ক");
+  const [newBlogTagsBn, setNewBlogTagsBn] = useState("১-অন-১ মেন্টরিং, শিক্ষা পদ্ধতি, যাচাইকৃত শিক্ষক");
   const [newBlogTagsEn, setNewBlogTagsEn] = useState("1-on-1 Mentoring, Learning Methods, Private Tutor");
   const [newBlogIntroBn, setNewBlogIntroBn] = useState("");
   const [newBlogIntroEn, setNewBlogIntroEn] = useState("");
@@ -541,41 +541,41 @@ export default function AdminDashboardPage() {
   });
 
   const [newBlogSections, setNewBlogSections] = useState<BlogSectionAdmin[]>([{
-    headingBn: "এ+ …ে েদের €র্ষ ি কŒশল",
+    headingBn: "এ+ পাওয়ার জন্য মেন্টরদের ৫টি সেরা কৌশল",
     headingEn: "Top 5 Strategies from Mentors to Secure an A+",
-    subheadingBn: "বোর্ড খাতা মূলে €ক·কের মন য় করার নিয়ম",
+    subheadingBn: "বোর্ড খাতা মূল্যায়নে শিক্ষকের মন জয় করার নিয়ম",
     subheadingEn: "Rules to impress the examiner during board paper evaluation",
     image: "", imageCaptionBn: "", imageCaptionEn: "",
     paragraphsBn: "", paragraphsEn: "",
     points: [
     {
-      titleBn: "১. —ত ৫ ›ের বোর্ড প্রশ্ন ™খ™খ সমাধান",
+      titleBn: "১. বিগত ৫ বছরের বোর্ড প্রশ্ন খুঁটিনাটি সমাধান",
       titleEn: "1. Thoroughly Solve Past 5 Years Board Papers",
-      descBn: "বোর্ড পরীক্ষার  ৭০% প্রশ্ন —ত ›ের ার্ন অনুসরণ কে †ে। ে েপার সলভ করার ে ের ‡প †ে †না সম্ভব।",
+      descBn: "বোর্ড পরীক্ষার প্রায় ৭০% প্রশ্ন বিগত বছরের প্যাটার্ন অনুসরণ করে থাকে। টেস্ট পেপার সলভ করার মাধ্যমে প্রতিটি চ্যাপ্টারের মূল ধরন আয়ত্ত করা সম্ভব।",
       descEn: "Nearly 70% of board questions follow past patterns. Solving test papers helps master common question types.",
     },
     {
-      titleBn: "২. žান —ে · šিত্র ও €কের ব্যবহার",
+      titleBn: "২. বিজ্ঞান বিষয়ে স্পষ্ট চিত্র ও সমীকরণের ব্যবহার",
       titleEn: "2. Use Clear Diagrams & Equations in Science",
-      descBn: "žান, €žান ও ে েনসিল ে š›ন্ন —্রাম †কলে €ক·ক পূর্ণ নম্বর ে ‰Žসাহিত হন।",
+      descBn: "পদার্থ, রসায়ন ও জীববিজ্ঞানে পেন্সিল দিয়ে স্পষ্ট চিত্র আঁকলে পরীক্ষক পূর্ণ নম্বর দিতে উৎসাহিত হন।",
       descEn: "Drawing clean pencil diagrams in Physics, Chemistry, and Biology encourages examiners to award full marks.",
     },
     {
-      titleBn: "৩. ‡‚ েে ১-অন-১ ক ে দেওা",
+      titleBn: "৩. টাইমার ধরে ১-অন-১ মক টেস্ট দেওয়া",
       titleEn: "3. Timed 1-on-1 Mock Tests",
-      descBn: "পরীক্ষার লে সময় না ওয়ার সমস্যা ে প্রতি ে ˜ড়ি ে ‚™— উত্তরপত্র খে ১-অন-১ েের ক›ে šেক কে েওয়া ‰šিত।",
+      descBn: "পরীক্ষার হলে সময় না পাওয়ার সমস্যা দূর করতে প্রতি সপ্তাহে ঘড়ি ধরে মক টেস্ট দিয়ে উত্তরপত্র ১-অন-১ মেন্টরকে দেখিয়ে ফিডব্যাক নেওয়া উচিত।",
       descEn: "To prevent running out of time in the exam hall, take weekly timed mock tests and get them reviewed 1-on-1.",
     },
     {
-      titleBn: "৪. সৃজনশীল (CQ) ের ক ও খ অংশ নিখুঁত করা",
+      titleBn: "৪. সৃজনশীল (CQ) প্রশ্নের ক ও খ অংশ নিখুঁত করা",
       titleEn: "4. Perfecting Parts A and B of Creative (CQ) Questions",
-      descBn: "ক ও খ অংশে পূর্ণ নম্বর পাওয়া সহজ। েের সহায়তায় ‚žা ও মূল ে—‹ নির্ভুল খস্থ ও কটিস করুন।",
+      descBn: "ক ও খ অংশে পূর্ণ নম্বর পাওয়া সহজ। মেন্টরের সহায়তায় সংজ্ঞা ও মূল পয়েন্ট নির্ভুল মুখস্থ ও প্র্যাকটিস করুন।",
       descEn: "Getting full marks in Parts A and B is straightforward. Master exact definitions and key points with mentor guidance.",
     },
     {
       titleBn: "৫. রিভিশন নোটস ও সূত্র তালিকা প্রস্তুত রাখা",
       titleEn: "5. Prepare Revision Notes & Formula Sheets",
-      descBn: "পরীক্ষার আগের রাতে ‹ বই পড়া অসম্ভব। তাই নিজস্ব হাতে লেখা ফর্মুলা শিট ও  নোটস দেখে রিভিশন শেষ করুন।",
+      descBn: "পরীক্ষার আগের রাতে সব বই পড়া অসম্ভব। তাই নিজস্ব হাতে লেখা ফর্মুলা শিট ও নোটস দেখে রিভিশন শেষ করুন।",
       descEn: "Reading the whole textbook the night before exams is impossible. Review hand-written formula sheets and quick notes instead.",
     },
   ],
@@ -3122,7 +3122,7 @@ export default function AdminDashboardPage() {
                         <label className="admin-kicker text-slate-500 block mb-2">WEBSITE META TITLE (GOOGLE SEARCH TITLE)</label>
                         <input
                           type="text"
-                          placeholder="ototeachers.com — ১-অন-১ অনলাইন ক·ক | One-to-One Teacher for All"
+                          placeholder="ototeachers.com — ১-অন-১ অনলাইন শিক্ষক | One-to-One Teacher for All"
                           value={settings.metaTitle || ""}
                           onChange={(e) => setSettings({ ...settings, metaTitle: e.target.value })}
                           className="w-full p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-sans font-bold text-[#0D2C4A] focus:outline-none focus:border-[#00A896] shadow-sm"
@@ -3138,7 +3138,7 @@ export default function AdminDashboardPage() {
                           rows={3}
                           value={settings.metaDescription || ""}
                           onChange={(e) => setSettings({ ...settings, metaDescription: e.target.value })}
-                          placeholder="বাংলাদেশের ১-অন-১ অনলাইন ক·ক ফর্ম। ে, ঢাবি ও মেডিকেলের যাচাইকৃত ক·কদের সাথে সরাসরি লাইভ ক্লাস — ঘরে বসে।"
+                          placeholder="বাংলাদেশের ১-অন-১ অনলাইন শিক্ষক প্ল্যাটফর্ম। বুয়েট, ঢাবি ও মেডিকেলের যাচাইকৃত শিক্ষকদের সাথে সরাসরি লাইভ ক্লাস — ঘরে বসে।"
                           className="w-full p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-sans font-semibold text-[#0D2C4A] focus:outline-none focus:border-[#00A896] shadow-sm"
                         />
                         <span className="text-[11px] text-slate-400 font-mono pt-1 block">
@@ -3150,7 +3150,7 @@ export default function AdminDashboardPage() {
                         <label className="admin-kicker text-slate-500 block mb-2">TARGET SEARCH KEYWORDS (COMMA SEPARATED)</label>
                         <input
                           type="text"
-                          placeholder="ototeachers.com, ototeachers, online teacher Bangladesh, ১-অন-১ ক·ক, private tutor Bangladesh"
+                          placeholder="ototeachers.com, ototeachers, online teacher Bangladesh, ১-অন-১ শিক্ষক, private tutor Bangladesh"
                           value={settings.keywords || ""}
                           onChange={(e) => setSettings({ ...settings, keywords: e.target.value })}
                           className="w-full p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-mono font-bold text-[#0D2C4A] focus:outline-none focus:border-[#00A896] shadow-sm"
@@ -3220,7 +3220,7 @@ export default function AdminDashboardPage() {
                           rows={2}
                           value={settings.whatsappMessageBn || ""}
                           onChange={(e) => setSettings({ ...settings, whatsappMessageBn: e.target.value })}
-                          placeholder="‹ ototeachers.com টিম, ১-অন-১ অনলাইন ক·ক কে জানতে চাই।"
+                          placeholder="হ্যালো ototeachers.com টিম, ১-অন-১ অনলাইন শিক্ষক সম্পর্কে জানতে চাই।"
                           className="w-full p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-sans font-semibold text-[#0D2C4A] focus:outline-none focus:border-[#25D366] shadow-sm"
                         />
                       </div>
@@ -4410,7 +4410,7 @@ export default function AdminDashboardPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block font-bold text-[#0D2C4A] mb-1">Tags in Bengali (কমা দিয়ে আলাদা করুন)</label>
-                    <input type="text" placeholder="১-অন-১ ে‚, শিক্ষা পদ্ধতি, ক—ত ক·ক" value={newBlogTagsBn} onChange={(e) => setNewBlogTagsBn(e.target.value)} className="w-full p-2.5 rounded-xl border bg-white text-xs" />
+                    <input type="text" placeholder="১-অন-১ মেন্টরিং, শিক্ষা পদ্ধতি, যাচাইকৃত শিক্ষক" value={newBlogTagsBn} onChange={(e) => setNewBlogTagsBn(e.target.value)} className="w-full p-2.5 rounded-xl border bg-white text-xs" />
                   </div>
                   <div>
                     <label className="block font-bold text-[#0D2C4A] mb-1">Tags in English (Comma separated)</label>
@@ -4935,7 +4935,7 @@ export default function AdminDashboardPage() {
                 <textarea
                   required
                   rows={3}
-                  placeholder="যেমন: আপনি আপনার ›দের বিষয় ও সময় বেছে নেন। আমরা ৪৮ ˜ার ে আপনার জন্য ‰ক্ত ক·ক খে দিই..."
+                  placeholder="যেমন: আপনি আপনার পছন্দের বিষয় ও সময় বেছে নেন। আমরা ৪৮ ঘণ্টার মধ্যে আপনার জন্য উপযুক্ত শিক্ষক খুঁজে দিই..."
                   value={newFaqABn}
                   onChange={(e) => setNewFaqABn(e.target.value)}
                   className="w-full p-3 rounded-xl border border-slate-200 focus:outline-none focus:border-[#00A896] bg-slate-50 text-sm leading-relaxed"

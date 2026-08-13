@@ -6,6 +6,7 @@ import {
   deleteEnrollment,
   Enrollment,
 } from "@/lib/db";
+import { sendNotificationEmail } from "@/lib/email";
 
 export async function GET() {
   try {
@@ -35,6 +36,27 @@ export async function POST(req: Request) {
     };
 
     const saved = await insertEnrollment(newEnrollment);
+
+    try {
+      await sendNotificationEmail({
+        formName: "Enrollment / Free Trial Modal",
+        details: {
+          "Student Name": newEnrollment.studentName,
+          Phone: newEnrollment.phone,
+          Grade: newEnrollment.grade,
+          District: newEnrollment.district,
+          "Selected Subjects": newEnrollment.selectedSubjects,
+          "Preferred Time": newEnrollment.preferredTime,
+          Medium: newEnrollment.medium,
+          "Selected Plan": newEnrollment.selectedPlan,
+          Fee: `${newEnrollment.fee} BDT`,
+          "Enrollment ID": newEnrollment.id,
+        },
+      });
+    } catch (e) {
+      console.error("Failed to send enrollment notification email:", e);
+    }
+
     return NextResponse.json({ success: true, data: saved });
   } catch (error) {
     return NextResponse.json({ error: "Failed to save enrollment" }, { status: 500 });

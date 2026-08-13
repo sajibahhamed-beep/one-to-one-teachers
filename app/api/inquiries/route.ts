@@ -6,6 +6,7 @@ import {
   deleteInquiry,
   Inquiry,
 } from "@/lib/db";
+import { sendNotificationEmail } from "@/lib/email";
 
 export async function GET() {
   try {
@@ -30,6 +31,22 @@ export async function POST(req: Request) {
     };
 
     const saved = await insertInquiry(newInquiry);
+
+    try {
+      await sendNotificationEmail({
+        formName: "Quick Inquiry Modal",
+        details: {
+          Name: newInquiry.name,
+          Phone: newInquiry.phone,
+          Subject: newInquiry.subject,
+          Message: newInquiry.message,
+          "Inquiry ID": newInquiry.id,
+        },
+      });
+    } catch (e) {
+      console.error("Failed to send inquiry notification email:", e);
+    }
+
     return NextResponse.json({ success: true, inquiry: saved }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: "Failed to create inquiry" }, { status: 500 });
