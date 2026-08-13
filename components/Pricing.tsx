@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useLanguage } from "../context/LanguageContext";
-import { Check, AlertCircle, Calendar, Clock, Star } from "lucide-react";
+import { Check, AlertCircle, Calendar, Clock, Star, Sparkles, HeartHandshake } from "lucide-react";
 
 interface PricingProps {
   onOpenEnroll: (planName?: string, fee?: number) => void;
@@ -44,8 +44,8 @@ export default function Pricing({ onOpenEnroll }: PricingProps) {
           </p>
         </div>
 
-        {/* 2 Packages Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto items-stretch">
+        {/* 3 Packages Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto items-stretch">
           
           {/* PACKAGE 1: FREE PACKAGE (Currently Unavailable) */}
           <div className="bg-[#F1F5F9] border border-slate-300 rounded-[28px] p-6 sm:p-8 flex flex-col justify-between relative shadow-sm opacity-90">
@@ -115,7 +115,85 @@ export default function Pricing({ onOpenEnroll }: PricingProps) {
             </button>
           </div>
 
-          {/* PACKAGE 2: ACTIVE CUSTOM PREMIUM PACKAGE */}
+          {/* PACKAGE 2: PAY WHAT YOU CAN PACKAGE */}
+          <div className="bg-white border-2 border-[#00A896] rounded-[28px] p-6 sm:p-8 flex flex-col justify-between relative shadow-lg hover:shadow-xl transition-all duration-300">
+            <div>
+              {/* Top Badge */}
+              <div className="flex items-center justify-between gap-2 mb-4">
+                <span className="inline-flex items-center gap-1.5 font-bold text-xs sm:text-sm text-[#00A896] bg-[#00A896]/10 px-4 py-1.5 rounded-full border border-[#00A896]/30">
+                  <HeartHandshake className="w-4 h-4 text-[#00A896]" />
+                  <span>{lang === "bn" ? "সাধ্যানুযায়ী সহায়তামূলক ফি" : "Flexible Sliding Scale"}</span>
+                </span>
+              </div>
+
+              {/* Title */}
+              <h3 className="font-sans text-2xl sm:text-3xl font-extrabold text-[#0D2C4A] mb-3">
+                {lang === "bn" ? "পে ওয়াট ইউ ক্যান" : "Pay What You Can"}
+              </h3>
+              <p className="text-xs sm:text-sm text-[#475569] mb-6 leading-relaxed">
+                {lang === "bn"
+                  ? "পারিবারিক আয়ের ওপর ভিত্তি করে সাধ্যানুযায়ী ফি নির্ধারণ করুন — যেন গুণগত শিক্ষা কোনো শিক্ষার্থীর জন্য অধরা না থাকে।"
+                  : "Tailored sliding scale assistance ensuring quality 1-on-1 learning fits your family's budget."}
+              </p>
+
+              {/* Highlighted Box */}
+              <div className="bg-[#E6F4F3] rounded-2xl p-4 text-center mb-6 border border-[#00A896]/30 shadow-sm">
+                <div className="flex items-center justify-center gap-2 text-[#00A896] font-extrabold text-base mb-1">
+                  <Sparkles className="w-4 h-4 text-[#00A896]" />
+                  <span>
+                    {lang === "bn" ? "সাধ্য অনুযায়ী ফি নির্ধারণ" : "Pay What Fits Your Budget"}
+                  </span>
+                </div>
+                <p className="text-xs text-[#008075] font-semibold">
+                  {lang === "bn"
+                    ? "পারিবারিক সামর্থ্য অনুযায়ী প্রতি মাসে ফি প্রদান সুবিধা"
+                    : "Flexible monthly contribution matching family capacity"}
+                </p>
+              </div>
+
+              {/* Features List */}
+              <div className="space-y-3 mb-8 text-xs sm:text-sm text-[#0D2C4A] font-medium">
+                <div className="flex items-center gap-2.5">
+                  <Check className="w-4.5 h-4.5 text-[#00A896] flex-shrink-0 stroke-[2.5]" />
+                  <span className="font-bold text-[#0D2C4A]">
+                    {lang === "bn" ? "১০০% ডেডিকেটেড ১-অন-১ ব্যক্তিগত শিক্ষক" : "100% Dedicated 1-on-1 Tutor"}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <Check className="w-4.5 h-4.5 text-[#00A896] flex-shrink-0 stroke-[2.5]" />
+                  <span>
+                    {lang === "bn" ? "পারিবারিক সাধ্যের সাথে মানানসই ফি" : "Flexible Sliding Scale Fee Support"}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <Check className="w-4.5 h-4.5 text-[#00A896] flex-shrink-0 stroke-[2.5]" />
+                  <span>
+                    {lang === "bn" ? "সাপ্তাহিক লাইভ অনলাইন ক্লাস সেশন" : "Weekly Live 1-on-1 Interactive Classes"}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2.5 text-[#00A896] font-semibold bg-[#00A896]/10 p-2.5 rounded-xl border border-[#00A896]/20">
+                  <Check className="w-4.5 h-4.5 text-[#00A896] flex-shrink-0 stroke-[2.5]" />
+                  <span>
+                    {lang === "bn"
+                      ? "১ম লাইভ সেশন ১০০% ফ্রি ট্রায়াল"
+                      : "1st Live Trial Session 100% Free"}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Active CTA Button */}
+            <button
+              onClick={() => {
+                onOpenEnroll("Pay What You Can", 500);
+              }}
+              className="w-full py-4 rounded-2xl bg-[#00A896] hover:bg-[#008075] text-white font-extrabold text-base sm:text-lg shadow-lg shadow-[#00A896]/25 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <span>{lang === "bn" ? "এখনই ভর্তি হন" : "Enroll Now"}</span>
+            </button>
+          </div>
+
+          {/* PACKAGE 3: ACTIVE CUSTOM PREMIUM PACKAGE */}
           <div className="bg-white border-2 border-[#EAB308] rounded-[28px] p-6 sm:p-8 flex flex-col justify-between relative shadow-xl hover:shadow-2xl transition-all duration-300">
             <div>
               {/* Top Premium Badge */}
@@ -251,17 +329,8 @@ export default function Pricing({ onOpenEnroll }: PricingProps) {
             {/* Active CTA Button */}
             <button
               onClick={() => {
-                fetch("/api/pricing-requests", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({
-                    planName: "Pay-what-you-can",
-                    monthlyFee: 600,
-                    duration: currentDurationList[selectedDurationIndex],
-                    medium: currentDaysList[selectedDaysIndex],
-                  }),
-                }).catch(() => {});
-                onOpenEnroll("Pay-what-you-can", 600);
+                const planDetails = `Custom Premium Package (${currentDaysList[selectedDaysIndex]}, ${currentDurationList[selectedDurationIndex]})`;
+                onOpenEnroll(planDetails, 600);
               }}
               className="w-full py-4 rounded-2xl bg-[#C05621] hover:bg-[#9C4221] text-white font-extrabold text-base sm:text-lg shadow-lg shadow-[#C05621]/25 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 cursor-pointer"
             >

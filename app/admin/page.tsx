@@ -469,7 +469,8 @@ export default function AdminDashboardPage() {
   // Filter & Search states
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("All");
-  const [enrollmentTypeTab, setEnrollmentTypeTab] = useState<"all" | "student" | "trial">("all");
+  const [enrollmentTypeTab, setEnrollmentTypeTab] = useState<"all" | "student" | "trial" | "pricing">("all");
+  const [pricingPackageFilter, setPricingPackageFilter] = useState<"all" | "pay-what-you-can" | "premium">("all");
 
   // Modal forms
   const [showAddBlog, setShowAddBlog] = useState(false);
@@ -1888,9 +1889,8 @@ export default function AdminDashboardPage() {
           <nav className="space-y-1.5 font-sans">
             {[
               { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-                            { id: "enrollments", label: "Student Requests", icon: Users, count: pendingEnrollmentsCount },
+              { id: "enrollments", label: "Student Requests", icon: Users, count: pendingEnrollmentsCount },
               { id: "teachers", label: "Tutors Directory", icon: UserCheck, count: pendingTeacherAppsCount },
-                            { id: "pricing", label: "Pricing Plan", icon: DollarSign, count: pendingPricingCount },
               { id: "inquiries", label: "Support Tickets", icon: MessageSquare, count: pendingInquiriesCount },
               { id: "contacts", label: "Messages", icon: Mail, count: pendingContactsCount },
               { id: "payments", label: "Transactions", icon: CreditCard },
@@ -2232,13 +2232,47 @@ export default function AdminDashboardPage() {
                     e.selectedPlan?.toLowerCase().includes("free")
                   );
 
+                const isPayWhatYouCan = (plan?: string) =>
+                  Boolean(
+                    plan?.toLowerCase().includes("pay-what-you-can") ||
+                    plan?.toLowerCase().includes("pay what you can") ||
+                    plan?.toLowerCase().includes("sliding")
+                  );
+
+                const isPremiumPackage = (plan?: string) =>
+                  Boolean(
+                    plan?.toLowerCase().includes("custom") ||
+                    plan?.toLowerCase().includes("premium")
+                  );
+
+                const isPricingEnrollment = (e: Enrollment) =>
+                  isPayWhatYouCan(e.selectedPlan) ||
+                  isPremiumPackage(e.selectedPlan) ||
+                  Boolean(
+                    e.selectedPlan?.toLowerCase().includes("pricing") ||
+                    e.selectedPlan?.toLowerCase().includes("package")
+                  );
+
+                const isGeneralStudentEnrollment = (e: Enrollment) =>
+                  !isTrialEnrollment(e) && !isPricingEnrollment(e);
+
                 const trialCount = enrollments.filter(isTrialEnrollment).length;
-                const studentCount = enrollments.filter((e) => !isTrialEnrollment(e)).length;
+                const pricingList = enrollments.filter(isPricingEnrollment);
+                const pricingCount = pricingList.length;
+                const payWhatYouCanCount = pricingList.filter((e) => isPayWhatYouCan(e.selectedPlan)).length;
+                const premiumCount = pricingList.filter((e) => isPremiumPackage(e.selectedPlan)).length;
+                const studentCount = enrollments.filter(isGeneralStudentEnrollment).length;
 
                 const displayedEnrollments = enrollments.filter((e) => {
                   if (statusFilter !== "All" && e.status !== statusFilter) return false;
                   if (enrollmentTypeTab === "trial") return isTrialEnrollment(e);
-                  if (enrollmentTypeTab === "student") return !isTrialEnrollment(e);
+                  if (enrollmentTypeTab === "pricing") {
+                    if (!isPricingEnrollment(e)) return false;
+                    if (pricingPackageFilter === "pay-what-you-can") return isPayWhatYouCan(e.selectedPlan);
+                    if (pricingPackageFilter === "premium") return isPremiumPackage(e.selectedPlan);
+                    return true;
+                  }
+                  if (enrollmentTypeTab === "student") return isGeneralStudentEnrollment(e);
                   return true;
                 });
 
@@ -2247,7 +2281,7 @@ export default function AdminDashboardPage() {
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                       <div>
                         <h2 className="text-xl font-extrabold text-[#0D2C4A]">Students request list ({displayedEnrollments.length})</h2>
-                        <p className="text-xs text-slate-500">Manage 1-on-1 online class student enrollments and free trial requests</p>
+                        <p className="text-xs text-slate-500">Manage 1-on-1 online class student enrollments, pricing plan inquiries, and free trial requests</p>
                       </div>
 
                       {/* Status Filter Dropdown */}
@@ -2267,49 +2301,105 @@ export default function AdminDashboardPage() {
                       </div>
                     </div>
 
-                    {/* Content Area 3 Sub-Buttons: 1. All Request | 2. Student Request | 3. Free Trial Request */}
-                    <div className="flex flex-wrap items-center gap-2.5 p-1.5 bg-slate-100/90 rounded-2xl border border-slate-200/80 w-fit">
-                      <button
-                        type="button"
-                        onClick={() => setEnrollmentTypeTab("all")}
-                        className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                          enrollmentTypeTab === "all"
-                            ? "bg-[#0D2C4A] text-white shadow-sm"
-                            : "text-slate-600 hover:text-[#0D2C4A] hover:bg-white/70"
-                        }`}
-                      >
-                        1. All Request ({enrollments.length})
-                      </button>
+                    {/* Content Area 4 Sub-Buttons: 1. All Request | 2. Student Request | 3. Free Trial Request | 4. Pricing Plan */}
+                    <div className="space-y-3">
+                      <div className="flex flex-wrap items-center gap-2.5 p-1.5 bg-slate-100/90 rounded-2xl border border-slate-200/80 w-fit">
+                        <button
+                          type="button"
+                          onClick={() => setEnrollmentTypeTab("all")}
+                          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                            enrollmentTypeTab === "all"
+                              ? "bg-[#0D2C4A] text-white shadow-sm"
+                              : "text-slate-600 hover:text-[#0D2C4A] hover:bg-white/70"
+                          }`}
+                        >
+                          1. All Request ({enrollments.length})
+                        </button>
 
-                      <button
-                        type="button"
-                        onClick={() => setEnrollmentTypeTab("student")}
-                        className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                          enrollmentTypeTab === "student"
-                            ? "bg-[#0D2C4A] text-white shadow-sm"
-                            : "text-slate-600 hover:text-[#0D2C4A] hover:bg-white/70"
-                        }`}
-                      >
-                        2. Student Request ({studentCount})
-                      </button>
+                        <button
+                          type="button"
+                          onClick={() => setEnrollmentTypeTab("student")}
+                          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                            enrollmentTypeTab === "student"
+                              ? "bg-[#0D2C4A] text-white shadow-sm"
+                              : "text-slate-600 hover:text-[#0D2C4A] hover:bg-white/70"
+                          }`}
+                        >
+                          2. Student Request ({studentCount})
+                        </button>
 
-                      <button
-                        type="button"
-                        onClick={() => setEnrollmentTypeTab("trial")}
-                        className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-                          enrollmentTypeTab === "trial"
-                            ? "bg-[#00A896] text-white shadow-sm"
-                            : "text-slate-600 hover:text-[#00A896] hover:bg-white/70"
-                        }`}
-                      >
-                        <Sparkles className="w-3.5 h-3.5" />
-                        <span>3. Free Trial Request ({trialCount})</span>
-                      </button>
+                        <button
+                          type="button"
+                          onClick={() => setEnrollmentTypeTab("trial")}
+                          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                            enrollmentTypeTab === "trial"
+                              ? "bg-[#00A896] text-white shadow-sm"
+                              : "text-slate-600 hover:text-[#00A896] hover:bg-white/70"
+                          }`}
+                        >
+                          <Sparkles className="w-3.5 h-3.5" />
+                          <span>3. Free Trial Request ({trialCount})</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => setEnrollmentTypeTab("pricing")}
+                          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                            enrollmentTypeTab === "pricing"
+                              ? "bg-[#C05621] text-white shadow-sm"
+                              : "text-slate-600 hover:text-[#C05621] hover:bg-white/70"
+                          }`}
+                        >
+                          <DollarSign className="w-3.5 h-3.5" />
+                          <span>4. Pricing Plan ({pricingCount})</span>
+                        </button>
+                      </div>
+
+                      {/* Package Filter Pills inside Pricing Plan sub-tab */}
+                      {enrollmentTypeTab === "pricing" && (
+                        <div className="flex flex-wrap items-center gap-2 p-2 bg-[#FEF3C7]/40 rounded-2xl border border-[#FDE68A] w-fit">
+                          <span className="text-xs font-bold text-[#92400E] px-2 font-mono">Package Filters:</span>
+                          <button
+                            type="button"
+                            onClick={() => setPricingPackageFilter("all")}
+                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                              pricingPackageFilter === "all"
+                                ? "bg-[#0D2C4A] text-white shadow-xs"
+                                : "bg-white text-slate-700 hover:bg-slate-50 border border-slate-200"
+                            }`}
+                          >
+                            All Pricing Packages ({pricingCount})
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setPricingPackageFilter("pay-what-you-can")}
+                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                              pricingPackageFilter === "pay-what-you-can"
+                                ? "bg-[#00A896] text-white shadow-xs"
+                                : "bg-white text-[#00A896] hover:bg-emerald-50 border border-emerald-200"
+                            }`}
+                          >
+                            Pay What You Can ({payWhatYouCanCount})
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setPricingPackageFilter("premium")}
+                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                              pricingPackageFilter === "premium"
+                                ? "bg-[#C05621] text-white shadow-xs"
+                                : "bg-white text-[#92400E] hover:bg-amber-50 border border-amber-200"
+                            }`}
+                          >
+                            Custom Premium Package ({premiumCount})
+                          </button>
+                        </div>
+                      )}
                     </div>
 
                     <div className="space-y-4">
                       {displayedEnrollments.map((e) => {
                         const isTrial = isTrialEnrollment(e);
+                        const isPricing = isPricingEnrollment(e);
                         return (
                           <div
                             key={e.id}
@@ -2326,15 +2416,22 @@ export default function AdminDashboardPage() {
                                     {e.medium}
                                   </span>
                                 )}
-                                <span
-                                  className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${
-                                    isTrial
-                                      ? "bg-amber-50 text-amber-800 border-amber-300"
-                                      : "bg-blue-50 text-blue-800 border-blue-200"
-                                  }`}
-                                >
-                                  {isTrial ? "Free Trial Request" : "Student Request"}
-                                </span>
+                                {enrollmentTypeTab !== "pricing" && (
+                                  <span
+                                    className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${
+                                      isTrial
+                                        ? "bg-amber-50 text-amber-800 border-amber-300"
+                                        : "bg-blue-50 text-blue-800 border-blue-200"
+                                    }`}
+                                  >
+                                    {isTrial ? "Free Trial Request" : "Student Request"}
+                                  </span>
+                                )}
+                                {e.selectedPlan && (
+                                  <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
+                                    {e.selectedPlan}
+                                  </span>
+                                )}
                               </div>
                               <div className="flex flex-wrap items-center gap-3 text-xs text-slate-600 font-mono">
                                   <span className="flex items-center gap-1 font-bold text-[#00A896]">
@@ -2447,93 +2544,6 @@ export default function AdminDashboardPage() {
                   onApproveApplication={(id: string) => handleUpdateTeacherApplicationStatus(id, "Approved")}
                   onDeleteApplication={handleDeleteTeacherApplication}
                 />
-              )}
-
-              {/* ===== TAB 5: PRICING REQUESTS ===== */}
-              {activeTab === "pricing" && (
-                <div className="space-y-6">
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <div>
-                      <h2 className="text-xl font-extrabold text-[#0D2C4A]">Pricing &amp; Sliding Scale Inquiries ({pricingRequests.length})</h2>
-                      <p className="text-xs text-slate-500">Pay-What-You-Can calculator and custom package requests with student phone numbers</p>
-                    </div>
-                  </div>
-
-                  {pricingRequests.length === 0 ? (
-                    <div className="text-center py-16 bg-slate-50 rounded-2xl border border-dashed border-slate-200 text-slate-400">
-                      <DollarSign className="w-10 h-10 mx-auto mb-2 opacity-30 text-[#00A896]" />
-                      <p className="text-xs font-bold">No pricing inquiries submitted yet</p>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      {pricingRequests.map((p, idx) => {
-                        const isPending = (p.status || "Pending") === "Pending";
-                        return (
-                          <div
-                            key={p.id}
-                            className="bg-slate-50/90 rounded-2xl p-5 border border-slate-200/90 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:border-[#00A896]/50 transition-all shadow-xs hover:shadow-sm"
-                          >
-                            <div className="space-y-2 flex-1 min-w-0">
-                              <div className="flex flex-wrap items-center gap-2">
-                                <span className="w-6 h-6 rounded-full bg-[#0D2C4A] text-white font-mono font-extrabold text-[11px] flex items-center justify-center shadow-xs shrink-0">
-                                  {idx + 1}
-                                </span>
-                                <span className="text-[10px] font-mono font-bold text-[#00A896] bg-[#00A896]/10 border border-[#00A896]/20 px-2.5 py-0.5 rounded-full">
-                                  {p.id}
-                                </span>
-                                <h3 className="font-extrabold text-base text-[#0D2C4A]">{p.planName}</h3>
-                                <span className="text-xs font-mono font-bold text-[#00A896] bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
-                                  ৳{p.monthlyFee} / mo
-                                </span>
-                              </div>
-
-                              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs pt-1">
-                                <div className="flex items-center gap-1.5 font-semibold text-[#0D2C4A]">
-                                  <User className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                                  <span className="truncate">{p.studentName || "Prospective Student"}</span>
-                                </div>
-                                <div className="flex items-center gap-1.5 font-mono font-bold text-[#00A896] bg-white px-2.5 py-1 rounded-xl border border-slate-200 w-fit">
-                                  <PhoneCall className="w-3.5 h-3.5 text-[#00A896] shrink-0" />
-                                  <span>{p.phone || "01712345678"}</span>
-                                </div>
-                                <div className="flex items-center gap-1.5 text-slate-500 font-mono">
-                                  <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                                  <span>Duration: {p.duration}</span>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="flex items-center gap-3 shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-slate-200">
-                              <select
-                                value={p.status || "Pending"}
-                                onChange={(e) => handleUpdatePricingStatus(p.id, e.target.value)}
-                                className={`text-xs font-bold px-3 py-2 rounded-xl border cursor-pointer focus:outline-none focus:border-[#00A896] ${
-                                  isPending
-                                    ? "bg-amber-50 text-amber-800 border-amber-200"
-                                    : "bg-emerald-50 text-emerald-800 border-emerald-200"
-                                }`}
-                              >
-                                <option value="Pending">Pending</option>
-                                <option value="Contacted">Contacted</option>
-                                <option value="Completed">Completed</option>
-                                <option value="Cancelled">Cancelled</option>
-                              </select>
-
-                              <button
-                                type="button"
-                                onClick={() => handleDeletePricingRequest(p.id)}
-                                className="p-2 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-100 hover:text-rose-700 transition-colors cursor-pointer border border-rose-100"
-                                title="Delete inquiry"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </button>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
               )}
 
               {/* ===== TAB 6: SUPPORT TICKETS & INQUIRIES ===== */}

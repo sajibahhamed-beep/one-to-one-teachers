@@ -106,6 +106,19 @@ export default function EnrollModal({
           fee: initialFee || 0,
         }),
       });
+
+      // Always post to pricing-requests as well so pricing inquiries include studentName and phone
+      await fetch("/api/pricing-requests", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          studentName: studentName || "Prospective Student",
+          phone: phone || "",
+          planName: initialPlan || "Custom Plan",
+          duration: preferredTime || "Flexible",
+          monthlyFee: initialFee || 600,
+        }),
+      });
     } catch (err) {
       console.error("Enrollment POST error", err);
     } finally {
