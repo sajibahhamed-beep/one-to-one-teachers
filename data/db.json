@@ -1,6 +1,23 @@
 {
   "enrollments": [
     {
+      "id": "ENR-1096",
+      "studentName": "adfdf",
+      "phone": "addfd",
+      "grade": "Class IX (SSC Prep)",
+      "district": "adfdfd",
+      "selectedSubjects": [
+        "Mathematics",
+        "হিসাববিজ্ঞান"
+      ],
+      "preferredTime": "adfdfdf",
+      "medium": "Bangla Medium",
+      "selectedPlan": "Student Request",
+      "fee": 0,
+      "status": "Pending",
+      "createdAt": "2026-08-13T08:35:31.096Z"
+    },
+    {
       "id": "ENR-5779",
       "studentName": "aaaaaaaaaaaaaaaaaa",
       "phone": "025545464679876574",
@@ -697,6 +714,16 @@
     }
   ],
   "pricingRequests": [
+    {
+      "id": "PRC-1382",
+      "studentName": "adfdf",
+      "phone": "addfd",
+      "planName": "Student Request",
+      "duration": "adfdfdf",
+      "monthlyFee": 600,
+      "status": "Pending",
+      "createdAt": "2026-08-13T08:35:31.382Z"
+    },
     {
       "id": "PRC-5802",
       "studentName": "aaaaaaaaaaaaaaaaaa",
