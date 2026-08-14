@@ -1,9 +1,5 @@
-import fs from "fs";
-import path from "path";
 import { supabase, isSupabaseConfigured } from "./supabase";
 import { BlogPost, BLOG_POSTS } from "./blogsData";
-
-const dbPath = path.join(process.cwd(), "data", "db.json");
 
 export interface Enrollment {
   id: string;
@@ -337,38 +333,19 @@ export const initialData: DBData = {
 };
 
 // -------------------------------------------------------------
-// Fallback local file DB handlers
+// In-Memory Data Store (Zero file I/O for serverless Next.js API routes)
 // -------------------------------------------------------------
+let inMemoryDB: DBData | null = null;
+
 export function getDB(): DBData {
-  try {
-    const dir = path.dirname(dbPath);
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
-
-    if (!fs.existsSync(dbPath)) {
-      fs.writeFileSync(dbPath, JSON.stringify(initialData, null, 2));
-      return initialData;
-    }
-
-    const content = fs.readFileSync(dbPath, "utf-8");
-    return JSON.parse(content);
-  } catch (error) {
-    console.error("Error reading database", error);
-    return initialData;
+  if (!inMemoryDB) {
+    inMemoryDB = JSON.parse(JSON.stringify(initialData)) as DBData;
   }
+  return inMemoryDB;
 }
 
 export function saveDB(data: DBData): void {
-  try {
-    const dir = path.dirname(dbPath);
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
-    fs.writeFileSync(dbPath, JSON.stringify(data, null, 2));
-  } catch (error) {
-    console.error("Error saving database", error);
-  }
+  inMemoryDB = data;
 }
 
 // -------------------------------------------------------------
