@@ -1685,7 +1685,7 @@ export default function AdminDashboardPage() {
   // Admin Login Screen
   if (!isAuthenticated) {
     return (
-      <main className="min-h-screen bg-[#0A2239] relative flex items-center justify-center p-4 sm:p-6 font-sans overflow-hidden">
+      <main className="admin-theme min-h-screen bg-[#0A2239] relative flex items-center justify-center p-4 sm:p-6 font-sans overflow-hidden" data-admin-theme="true">
         {/* Background ambient decorative glows */}
         <div className="absolute -top-40 -left-40 w-96 h-96 bg-[#00A896]/20 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-40 -right-40 w-96 h-96 bg-[#38BDF8]/15 rounded-full blur-3xl pointer-events-none" />
