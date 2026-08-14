@@ -109,11 +109,10 @@ function TutorsDirectorySection({
         <button
           type="button"
           onClick={() => setSubTab("all")}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-            subTab === "all"
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${subTab === "all"
               ? "bg-[#0D2C4A] text-white shadow-sm"
               : "text-slate-600 hover:text-[#0D2C4A] hover:bg-white/70"
-          }`}
+            }`}
         >
           1. All Records ({pendingApplications.length + teachers.length})
         </button>
@@ -121,18 +120,16 @@ function TutorsDirectorySection({
         <button
           type="button"
           onClick={() => setSubTab("applications")}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
-            subTab === "applications"
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${subTab === "applications"
               ? "bg-[#00A896] text-white shadow-sm font-extrabold"
               : "text-slate-600 hover:text-[#00A896] hover:bg-white/70"
-          }`}
+            }`}
         >
           <GraduationCap className="w-3.5 h-3.5" />
           <span>2. Mentor Applications</span>
           {pendingCount > 0 && (
-            <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold ${
-              subTab === "applications" ? "bg-white text-[#0D2C4A]" : "bg-[#FFB627] text-[#0D2C4A]"
-            }`}>
+            <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold ${subTab === "applications" ? "bg-white text-[#0D2C4A]" : "bg-[#FFB627] text-[#0D2C4A]"
+              }`}>
               {pendingCount}
             </span>
           )}
@@ -141,11 +138,10 @@ function TutorsDirectorySection({
         <button
           type="button"
           onClick={() => setSubTab("verified")}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
-            subTab === "verified"
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${subTab === "verified"
               ? "bg-[#0D2C4A] text-white shadow-sm font-extrabold"
               : "text-slate-600 hover:text-[#0D2C4A] hover:bg-white/70"
-          }`}
+            }`}
         >
           <UserCheck className="w-3.5 h-3.5" />
           <span>3. Verified Tutors ({teachers.length})</span>
@@ -398,7 +394,7 @@ function TutorsDirectorySection({
 export default function AdminDashboardPage() {
   const [mounted, setMounted] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  
+
   // Auth credential states
   const [email, setEmail] = useState("sajib@sajib.com");
   const [password, setPassword] = useState("");
@@ -549,37 +545,37 @@ export default function AdminDashboardPage() {
     image: "", imageCaptionBn: "", imageCaptionEn: "",
     paragraphsBn: "", paragraphsEn: "",
     points: [
-    {
-      titleBn: "১. বিগত ৫ বছরের বোর্ড প্রশ্ন খুঁটিনাটি সমাধান",
-      titleEn: "1. Thoroughly Solve Past 5 Years Board Papers",
-      descBn: "বোর্ড পরীক্ষার প্রায় ৭০% প্রশ্ন বিগত বছরের প্যাটার্ন অনুসরণ করে থাকে। টেস্ট পেপার সলভ করার মাধ্যমে প্রতিটি চ্যাপ্টারের মূল ধরন আয়ত্ত করা সম্ভব।",
-      descEn: "Nearly 70% of board questions follow past patterns. Solving test papers helps master common question types.",
-    },
-    {
-      titleBn: "২. বিজ্ঞান বিষয়ে স্পষ্ট চিত্র ও সমীকরণের ব্যবহার",
-      titleEn: "2. Use Clear Diagrams & Equations in Science",
-      descBn: "পদার্থ, রসায়ন ও জীববিজ্ঞানে পেন্সিল দিয়ে স্পষ্ট চিত্র আঁকলে পরীক্ষক পূর্ণ নম্বর দিতে উৎসাহিত হন।",
-      descEn: "Drawing clean pencil diagrams in Physics, Chemistry, and Biology encourages examiners to award full marks.",
-    },
-    {
-      titleBn: "৩. টাইমার ধরে ১-অন-১ মক টেস্ট দেওয়া",
-      titleEn: "3. Timed 1-on-1 Mock Tests",
-      descBn: "পরীক্ষার হলে সময় না পাওয়ার সমস্যা দূর করতে প্রতি সপ্তাহে ঘড়ি ধরে মক টেস্ট দিয়ে উত্তরপত্র ১-অন-১ মেন্টরকে দেখিয়ে ফিডব্যাক নেওয়া উচিত।",
-      descEn: "To prevent running out of time in the exam hall, take weekly timed mock tests and get them reviewed 1-on-1.",
-    },
-    {
-      titleBn: "৪. সৃজনশীল (CQ) প্রশ্নের ক ও খ অংশ নিখুঁত করা",
-      titleEn: "4. Perfecting Parts A and B of Creative (CQ) Questions",
-      descBn: "ক ও খ অংশে পূর্ণ নম্বর পাওয়া সহজ। মেন্টরের সহায়তায় সংজ্ঞা ও মূল পয়েন্ট নির্ভুল মুখস্থ ও প্র্যাকটিস করুন।",
-      descEn: "Getting full marks in Parts A and B is straightforward. Master exact definitions and key points with mentor guidance.",
-    },
-    {
-      titleBn: "৫. রিভিশন নোটস ও সূত্র তালিকা প্রস্তুত রাখা",
-      titleEn: "5. Prepare Revision Notes & Formula Sheets",
-      descBn: "পরীক্ষার আগের রাতে সব বই পড়া অসম্ভব। তাই নিজস্ব হাতে লেখা ফর্মুলা শিট ও নোটস দেখে রিভিশন শেষ করুন।",
-      descEn: "Reading the whole textbook the night before exams is impossible. Review hand-written formula sheets and quick notes instead.",
-    },
-  ],
+      {
+        titleBn: "১. বিগত ৫ বছরের বোর্ড প্রশ্ন খুঁটিনাটি সমাধান",
+        titleEn: "1. Thoroughly Solve Past 5 Years Board Papers",
+        descBn: "বোর্ড পরীক্ষার প্রায় ৭০% প্রশ্ন বিগত বছরের প্যাটার্ন অনুসরণ করে থাকে। টেস্ট পেপার সলভ করার মাধ্যমে প্রতিটি চ্যাপ্টারের মূল ধরন আয়ত্ত করা সম্ভব।",
+        descEn: "Nearly 70% of board questions follow past patterns. Solving test papers helps master common question types.",
+      },
+      {
+        titleBn: "২. বিজ্ঞান বিষয়ে স্পষ্ট চিত্র ও সমীকরণের ব্যবহার",
+        titleEn: "2. Use Clear Diagrams & Equations in Science",
+        descBn: "পদার্থ, রসায়ন ও জীববিজ্ঞানে পেন্সিল দিয়ে স্পষ্ট চিত্র আঁকলে পরীক্ষক পূর্ণ নম্বর দিতে উৎসাহিত হন।",
+        descEn: "Drawing clean pencil diagrams in Physics, Chemistry, and Biology encourages examiners to award full marks.",
+      },
+      {
+        titleBn: "৩. টাইমার ধরে ১-অন-১ মক টেস্ট দেওয়া",
+        titleEn: "3. Timed 1-on-1 Mock Tests",
+        descBn: "পরীক্ষার হলে সময় না পাওয়ার সমস্যা দূর করতে প্রতি সপ্তাহে ঘড়ি ধরে মক টেস্ট দিয়ে উত্তরপত্র ১-অন-১ মেন্টরকে দেখিয়ে ফিডব্যাক নেওয়া উচিত।",
+        descEn: "To prevent running out of time in the exam hall, take weekly timed mock tests and get them reviewed 1-on-1.",
+      },
+      {
+        titleBn: "৪. সৃজনশীল (CQ) প্রশ্নের ক ও খ অংশ নিখুঁত করা",
+        titleEn: "4. Perfecting Parts A and B of Creative (CQ) Questions",
+        descBn: "ক ও খ অংশে পূর্ণ নম্বর পাওয়া সহজ। মেন্টরের সহায়তায় সংজ্ঞা ও মূল পয়েন্ট নির্ভুল মুখস্থ ও প্র্যাকটিস করুন।",
+        descEn: "Getting full marks in Parts A and B is straightforward. Master exact definitions and key points with mentor guidance.",
+      },
+      {
+        titleBn: "৫. রিভিশন নোটস ও সূত্র তালিকা প্রস্তুত রাখা",
+        titleEn: "5. Prepare Revision Notes & Formula Sheets",
+        descBn: "পরীক্ষার আগের রাতে সব বই পড়া অসম্ভব। তাই নিজস্ব হাতে লেখা ফর্মুলা শিট ও নোটস দেখে রিভিশন শেষ করুন।",
+        descEn: "Reading the whole textbook the night before exams is impossible. Review hand-written formula sheets and quick notes instead.",
+      },
+    ],
     calloutBn: "", calloutEn: "",
   }]);
 
@@ -629,7 +625,7 @@ export default function AdminDashboardPage() {
   const [editFaqABn, setEditFaqABn] = useState("");
   const [editFaqAEn, setEditFaqAEn] = useState("");
 
-    // New Teacher State
+  // New Teacher State
   const [newTeacherNameBn, setNewTeacherNameBn] = useState("");
   const [newTeacherNameEn, setNewTeacherNameEn] = useState("");
   const [newTeacherUniBn, setNewTeacherUniBn] = useState("বুয়েট (সিএসই)");
@@ -693,7 +689,7 @@ export default function AdminDashboardPage() {
         if (savedUserStr) {
           try {
             setAdminUser(JSON.parse(savedUserStr));
-          } catch (e) {}
+          } catch (e) { }
         }
       }
 
@@ -794,7 +790,7 @@ export default function AdminDashboardPage() {
   const handleLogout = async () => {
     try {
       await fetch("/api/auth/logout", { method: "POST" });
-    } catch (e) {}
+    } catch (e) { }
     localStorage.removeItem("admin_auth");
     localStorage.removeItem("admin_user");
     sessionStorage.clear();
@@ -863,7 +859,7 @@ export default function AdminDashboardPage() {
     }
   };
 
-    // Update Pricing Request Status
+  // Update Pricing Request Status
   const handleUpdatePricingStatus = async (id: string, status: string) => {
     await fetch("/api/pricing-requests", {
       method: "PUT",
@@ -1293,7 +1289,7 @@ export default function AdminDashboardPage() {
     }
   };
 
-    // Teacher Avatar Upload Handlers
+  // Teacher Avatar Upload Handlers
   const handleTeacherAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -1522,7 +1518,7 @@ export default function AdminDashboardPage() {
     setTimeout(() => setSeoSaved(false), 3000);
   };
 
-    // Custom Pages Handlers
+  // Custom Pages Handlers
   const handleStartEditPage = (page: CustomPage) => {
     setEditingPage(JSON.parse(JSON.stringify(page)));
     setShowPageModal(true);
@@ -1781,18 +1777,6 @@ export default function AdminDashboardPage() {
                 />
                 <span className="text-xs font-medium text-slate-600">মনে রাখুন (Remember me)</span>
               </label>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setEmail("sajib@sajib.com");
-                  setPassword("Sajib#123456");
-                }}
-                className="text-[11px] text-[#00A896] hover:text-[#008075] font-bold hover:underline transition-colors cursor-pointer"
-                title="Auto-fill credentials"
-              >
-                Auto-fill credentials
-              </button>
             </div>
 
             {/* Error Message Banner */}
@@ -1842,7 +1826,7 @@ export default function AdminDashboardPage() {
         e.district.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
-    const pendingEnrollmentsCount = enrollments.filter((e) => e.status === "Pending").length;
+  const pendingEnrollmentsCount = enrollments.filter((e) => e.status === "Pending").length;
   const pendingTeacherAppsCount = teacherApplications.filter((a) => (a.status || "Pending") === "Pending").length;
   const pendingPricingCount = pricingRequests.filter((p) => (p.status || "Pending") === "Pending").length;
   const pendingInquiriesCount = inquiries.filter((i) => (i.status || "Pending") === "Pending").length;
@@ -1850,12 +1834,12 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="admin-theme min-h-screen bg-[#F8FAFC] text-[#0D2C4A] font-sans flex" data-admin-theme="true">
-      
+
       {/* ===== FIXED LEFT NAVIGATION SIDEBAR ===== */}
       {/* Locked to screen: fixed left-0 top-0 bottom-0 h-screen w-64 */}
       <aside className="fixed left-0 top-0 bottom-0 h-screen w-64 bg-[#0D2C4A] text-white flex flex-col justify-between p-6 shadow-2xl border-r border-[#00A896]/20 z-30 overflow-y-auto">
         <div className="space-y-6">
-          
+
           {/* Brand Logo & Header */}
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#00A896] to-[#38BDF8] flex items-center justify-center shadow-md">
@@ -1905,11 +1889,10 @@ export default function AdminDashboardPage() {
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id as any)}
-                  className={`w-full relative flex items-center justify-between px-4 py-3 rounded-2xl text-xs transition-all duration-200 cursor-pointer ${
-                    active
+                  className={`w-full relative flex items-center justify-between px-4 py-3 rounded-2xl text-xs transition-all duration-200 cursor-pointer ${active
                       ? "bg-[#00A896] text-white font-extrabold shadow-md shadow-[#00A896]/25 border border-[#00A896]"
                       : "text-slate-300 hover:bg-white/10 hover:text-white font-semibold"
-                  }`}
+                    }`}
                 >
                   {/* Left Active Indicator Bar */}
                   {active && (
@@ -1922,9 +1905,8 @@ export default function AdminDashboardPage() {
                     </span>
                   </div>
                   {item.count !== undefined && item.count > 0 && (
-                    <span className={`admin-chip-label px-2 py-0.5 rounded-full ${
-                      active ? "bg-white text-[#0D2C4A] font-extrabold" : "bg-[#FFB627] text-[#0D2C4A] font-bold"
-                    }`}>
+                    <span className={`admin-chip-label px-2 py-0.5 rounded-full ${active ? "bg-white text-[#0D2C4A] font-extrabold" : "bg-[#FFB627] text-[#0D2C4A] font-bold"
+                      }`}>
                       {item.count}
                     </span>
                   )}
@@ -1957,7 +1939,7 @@ export default function AdminDashboardPage() {
 
       {/* ===== MAIN CONTENT FEED (Margin left: ml-64) ===== */}
       <main className="ml-64 flex-1 flex flex-col min-w-0 bg-[#F8FAFC] min-h-screen overflow-y-auto">
-        
+
         {/* FLOATING TOP NAVBAR */}
         <div className="sticky top-4 z-20 mx-4 sm:mx-8 my-3">
           <header className="bg-white/85 backdrop-blur-xl border border-slate-200/80 rounded-2xl sm:rounded-3xl px-6 py-3.5 flex items-center justify-between gap-6 shadow-lg shadow-slate-900/5 transition-all">
@@ -2018,213 +2000,211 @@ export default function AdminDashboardPage() {
 
         {/* BODY CONTAINER */}
         <div className="p-6 md:p-8 space-y-8 max-w-7xl w-full">
-            
-            {/* ===== TAB 1: DASHBOARD OVERVIEW ===== */}
-            {activeTab === "dashboard" && (
-              <div className="space-y-8">
-                {/* HERO COMMAND CENTER CARD (WHITE THEME) */}
-                <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#0D2C4A]/10 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden bg-gradient-to-br from-white via-slate-50/50 to-[#E6F4F3]/30">
-                  <div className="space-y-2 relative z-10 max-w-2xl">
-                    <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#E6F4F3] border border-[#00A896]/30 text-[#00A896] admin-caption-text font-extrabold">
-                      <Sparkles className="w-3.5 h-3.5 text-[#00A896]" />
-                      Welcome Back, Sajib
-                    </span>
-                    <h1 className="admin-display-xl text-[#0D2C4A]">
-                      Portfolio Command Center
-                    </h1>
-                    <p className="admin-body-text text-slate-500 font-normal leading-relaxed">
-                      Manage your dynamic tutoring platform, student requests, teacher profiles, blogs, inquiries, and global site configurations in one place.
-                    </p>
-                  </div>
 
-                  {/* Action Buttons Top Right */}
-                  <div className="flex flex-wrap items-center gap-3 relative z-10">
-                    <button
-                      onClick={() => setShowAddTeacher(true)}
-                      className="px-5 py-3 rounded-2xl bg-[#00A896] hover:bg-[#008075] text-white admin-caption-text font-extrabold transition-all flex items-center gap-2 shadow-md shadow-[#00A896]/20 active:scale-95 cursor-pointer"
-                    >
-                      <Plus className="w-4 h-4" />
-                      <span>Add Mentor</span>
-                    </button>
-                    <button
-                      onClick={() => setShowAddBlog(true)}
-                      className="px-5 py-3 rounded-2xl bg-[#0D2C4A] hover:bg-[#16385C] text-white admin-caption-text font-extrabold transition-all flex items-center gap-2 shadow-md active:scale-95 cursor-pointer"
-                    >
-                      <Plus className="w-4 h-4" />
-                      <span>New Blog Post</span>
-                    </button>
-                  </div>
+          {/* ===== TAB 1: DASHBOARD OVERVIEW ===== */}
+          {activeTab === "dashboard" && (
+            <div className="space-y-8">
+              {/* HERO COMMAND CENTER CARD (WHITE THEME) */}
+              <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#0D2C4A]/10 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden bg-gradient-to-br from-white via-slate-50/50 to-[#E6F4F3]/30">
+                <div className="space-y-2 relative z-10 max-w-2xl">
+                  <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#E6F4F3] border border-[#00A896]/30 text-[#00A896] admin-caption-text font-extrabold">
+                    <Sparkles className="w-3.5 h-3.5 text-[#00A896]" />
+                    Welcome Back, Sajib
+                  </span>
+                  <h1 className="admin-display-xl text-[#0D2C4A]">
+                    Portfolio Command Center
+                  </h1>
+                  <p className="admin-body-text text-slate-500 font-normal leading-relaxed">
+                    Manage your dynamic tutoring platform, student requests, teacher profiles, blogs, inquiries, and global site configurations in one place.
+                  </p>
                 </div>
 
-                {/* 4 STAT CARDS GRID (WHITE THEME CARDS) */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                  
-                  {/* CARD 1: PUBLISHED BLOGS */}
-                  <div className="bg-white rounded-3xl p-6 border border-[#0D2C4A]/10 shadow-sm hover:shadow-md hover:border-[#00A896]/30 transition-all flex items-center justify-between">
-                    <div className="space-y-1">
-                      <span className="admin-kicker text-slate-400 block">
-                        PUBLISHED BLOGS
-                      </span>
-                      <div className="admin-stat-num text-[#0D2C4A] pt-1">
-                        {blogs.length}
-                      </div>
-                      <span className="admin-caption-text text-slate-500 block pt-1">
-                        Active CMS Articles
-                      </span>
-                    </div>
-                    <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600 shadow-sm shrink-0">
-                      <FileText className="w-6 h-6" />
-                    </div>
-                  </div>
-
-                  {/* CARD 2: INQUIRIES RECEIVED */}
-                  <div className="bg-white rounded-3xl p-6 border border-[#0D2C4A]/10 shadow-sm hover:shadow-md hover:border-[#00A896]/30 transition-all flex items-center justify-between">
-                    <div className="space-y-1">
-                      <span className="admin-kicker text-slate-400 block">
-                        INQUIRIES RECEIVED
-                      </span>
-                      <div className="admin-stat-num text-[#0D2C4A] pt-1">
-                        {inquiries.length + contacts.length}
-                      </div>
-                      <span className="admin-caption-text text-slate-500 block pt-1">
-                        {inquiries.filter((i) => i.status === "Pending").length} Unread Inquiries
-                      </span>
-                    </div>
-                    <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600 shadow-sm shrink-0">
-                      <Mail className="w-6 h-6" />
-                    </div>
-                  </div>
-
-                  {/* CARD 3: PORTFOLIO VISITORS */}
-                  <div className="bg-white rounded-3xl p-6 border border-[#0D2C4A]/10 shadow-sm hover:shadow-md hover:border-[#00A896]/30 transition-all flex items-center justify-between">
-                    <div className="space-y-1">
-                      <span className="admin-kicker text-slate-400 block">
-                        PORTFOLIO VISITORS
-                      </span>
-                      <div className="admin-stat-num text-[#0D2C4A] pt-1">
-                        12,480
-                      </div>
-                      <span className="admin-caption-text text-[#00A896] block font-bold pt-1">
-                        +18.4% this month
-                      </span>
-                    </div>
-                    <div className="w-12 h-12 rounded-2xl bg-[#E6F4F3] border border-[#00A896]/30 flex items-center justify-center text-[#00A896] shadow-sm shrink-0">
-                      <Eye className="w-6 h-6" />
-                    </div>
-                  </div>
-
-                  {/* CARD 4: ACTIVE FAQS */}
-                  <div className="bg-white rounded-3xl p-6 border border-[#0D2C4A]/10 shadow-sm hover:shadow-md hover:border-[#00A896]/30 transition-all flex items-center justify-between">
-                    <div className="space-y-1">
-                      <span className="admin-kicker text-slate-400 block">
-                        ACTIVE FAQS
-                      </span>
-                      <div className="admin-stat-num text-[#0D2C4A] pt-1">
-                        {faqs.length}
-                      </div>
-                      <span className="admin-caption-text text-slate-500 block pt-1">
-                        Customer Q&A items
-                      </span>
-                    </div>
-                    <div className="w-12 h-12 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-600 shadow-sm shrink-0">
-                      <HelpCircle className="w-6 h-6" />
-                    </div>
-                  </div>
-                </div>
-
-                {/* BOTTOM TWO PANELS (WHITE THEME) */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  
-                  {/* LEFT PANEL: RECENT CLIENT INQUIRIES */}
-                  <div className="bg-white rounded-3xl p-6 border border-[#0D2C4A]/10 shadow-sm space-y-4">
-                    <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600">
-                          <Mail className="w-4 h-4" />
-                        </div>
-                        <h3 className="font-extrabold text-base text-[#0D2C4A]">Recent Client Inquiries</h3>
-                      </div>
-                      <button
-                        onClick={() => setActiveTab("inquiries")}
-                        className="text-xs font-extrabold text-[#00A896] hover:underline flex items-center gap-1 cursor-pointer"
-                      >
-                        <span>View All</span>
-                        <ChevronRight className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-
-                    <div className="space-y-3">
-                      {inquiries.slice(0, 4).map((inq) => (
-                        <div key={inq.id} className="p-4 rounded-2xl bg-slate-50/90 border border-slate-200/80 flex items-center justify-between gap-3 hover:border-[#00A896]/30 transition-all">
-                          <div className="space-y-0.5 min-w-0">
-                            <h4 className="font-extrabold text-xs text-[#0D2C4A] truncate">{inq.name}</h4>
-                            <p className="text-[11px] text-slate-500 font-mono truncate">{inq.subject || inq.phone}</p>
-                          </div>
-                          <span className={`text-[10px] font-mono font-bold px-2.5 py-1 rounded-full ${
-                            inq.status === "Pending" ? "bg-amber-100 text-amber-800 border border-amber-200" : "bg-emerald-100 text-emerald-800 border border-emerald-200"
-                          }`}>
-                            {inq.status}
-                          </span>
-                        </div>
-                      ))}
-                      {inquiries.length === 0 && (
-                        <div className="text-xs text-slate-400 text-center py-6">No recent inquiries recorded yet.</div>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* RIGHT PANEL: RECENT STUDENT REQUESTS */}
-                  <div className="bg-white rounded-3xl p-6 border border-[#0D2C4A]/10 shadow-sm space-y-4">
-                    <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-xl bg-[#E6F4F3] border border-[#00A896]/30 flex items-center justify-center text-[#00A896]">
-                          <Users className="w-4 h-4" />
-                        </div>
-                        <h3 className="font-extrabold text-base text-[#0D2C4A]">Student Requests</h3>
-                      </div>
-                      <button
-                        onClick={() => setActiveTab("enrollments")}
-                        className="text-xs font-extrabold text-[#00A896] hover:underline flex items-center gap-1 cursor-pointer"
-                      >
-                        <span>Manage All</span>
-                        <ChevronRight className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-
-                    <div className="space-y-3">
-                      {enrollments.slice(0, 4).map((enr) => (
-                        <div key={enr.id} className="p-4 rounded-2xl bg-slate-50/90 border border-slate-200/80 flex items-center justify-between gap-3 hover:border-[#00A896]/30 transition-all">
-                          <div className="space-y-0.5 min-w-0">
-                            <div className="flex items-center gap-2">
-                              <h4 className="font-extrabold text-xs text-[#0D2C4A] truncate">{enr.studentName}</h4>
-                              <span className="text-[10px] font-mono font-bold text-[#00A896] bg-[#00A896]/10 border border-[#00A896]/20 px-2 py-0.5 rounded-md">{enr.grade}</span>
-                            </div>
-                            <p className="text-[11px] text-slate-500 font-mono truncate flex items-center gap-2">
-                              <span className="flex items-center gap-0.5"><MapPin className="w-3 h-3 text-slate-400" />{enr.district}</span>
-                              <span>•</span>
-                              <span className="flex items-center gap-1 text-xs sm:text-sm font-bold font-mono text-[#00A896]"><PhoneCall className="w-3.5 h-3.5 text-[#00A896]" />{enr.phone}</span>
-                            </p>
-                          </div>
-                          <span className={`text-[10px] font-mono font-bold px-2.5 py-1 rounded-full ${
-                            enr.status === "Pending" ? "bg-amber-100 text-amber-800 border border-amber-200" : "bg-emerald-100 text-emerald-800 border border-emerald-200"
-                          }`}>
-                            {enr.status}
-                          </span>
-                        </div>
-                      ))}
-                      {enrollments.length === 0 && (
-                        <div className="text-xs text-slate-400 text-center py-6">No student requests submitted yet.</div>
-                      )}
-                    </div>
-                  </div>
-
+                {/* Action Buttons Top Right */}
+                <div className="flex flex-wrap items-center gap-3 relative z-10">
+                  <button
+                    onClick={() => setShowAddTeacher(true)}
+                    className="px-5 py-3 rounded-2xl bg-[#00A896] hover:bg-[#008075] text-white admin-caption-text font-extrabold transition-all flex items-center gap-2 shadow-md shadow-[#00A896]/20 active:scale-95 cursor-pointer"
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span>Add Mentor</span>
+                  </button>
+                  <button
+                    onClick={() => setShowAddBlog(true)}
+                    className="px-5 py-3 rounded-2xl bg-[#0D2C4A] hover:bg-[#16385C] text-white admin-caption-text font-extrabold transition-all flex items-center gap-2 shadow-md active:scale-95 cursor-pointer"
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span>New Blog Post</span>
+                  </button>
                 </div>
               </div>
-            )}
 
-            {/* OTHER TABS WRAPPER */}
-            {activeTab !== "dashboard" && (
-              <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#0D2C4A]/10 shadow-sm space-y-6">
+              {/* 4 STAT CARDS GRID (WHITE THEME CARDS) */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+
+                {/* CARD 1: PUBLISHED BLOGS */}
+                <div className="bg-white rounded-3xl p-6 border border-[#0D2C4A]/10 shadow-sm hover:shadow-md hover:border-[#00A896]/30 transition-all flex items-center justify-between">
+                  <div className="space-y-1">
+                    <span className="admin-kicker text-slate-400 block">
+                      PUBLISHED BLOGS
+                    </span>
+                    <div className="admin-stat-num text-[#0D2C4A] pt-1">
+                      {blogs.length}
+                    </div>
+                    <span className="admin-caption-text text-slate-500 block pt-1">
+                      Active CMS Articles
+                    </span>
+                  </div>
+                  <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600 shadow-sm shrink-0">
+                    <FileText className="w-6 h-6" />
+                  </div>
+                </div>
+
+                {/* CARD 2: INQUIRIES RECEIVED */}
+                <div className="bg-white rounded-3xl p-6 border border-[#0D2C4A]/10 shadow-sm hover:shadow-md hover:border-[#00A896]/30 transition-all flex items-center justify-between">
+                  <div className="space-y-1">
+                    <span className="admin-kicker text-slate-400 block">
+                      INQUIRIES RECEIVED
+                    </span>
+                    <div className="admin-stat-num text-[#0D2C4A] pt-1">
+                      {inquiries.length + contacts.length}
+                    </div>
+                    <span className="admin-caption-text text-slate-500 block pt-1">
+                      {inquiries.filter((i) => i.status === "Pending").length} Unread Inquiries
+                    </span>
+                  </div>
+                  <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600 shadow-sm shrink-0">
+                    <Mail className="w-6 h-6" />
+                  </div>
+                </div>
+
+                {/* CARD 3: PORTFOLIO VISITORS */}
+                <div className="bg-white rounded-3xl p-6 border border-[#0D2C4A]/10 shadow-sm hover:shadow-md hover:border-[#00A896]/30 transition-all flex items-center justify-between">
+                  <div className="space-y-1">
+                    <span className="admin-kicker text-slate-400 block">
+                      PORTFOLIO VISITORS
+                    </span>
+                    <div className="admin-stat-num text-[#0D2C4A] pt-1">
+                      12,480
+                    </div>
+                    <span className="admin-caption-text text-[#00A896] block font-bold pt-1">
+                      +18.4% this month
+                    </span>
+                  </div>
+                  <div className="w-12 h-12 rounded-2xl bg-[#E6F4F3] border border-[#00A896]/30 flex items-center justify-center text-[#00A896] shadow-sm shrink-0">
+                    <Eye className="w-6 h-6" />
+                  </div>
+                </div>
+
+                {/* CARD 4: ACTIVE FAQS */}
+                <div className="bg-white rounded-3xl p-6 border border-[#0D2C4A]/10 shadow-sm hover:shadow-md hover:border-[#00A896]/30 transition-all flex items-center justify-between">
+                  <div className="space-y-1">
+                    <span className="admin-kicker text-slate-400 block">
+                      ACTIVE FAQS
+                    </span>
+                    <div className="admin-stat-num text-[#0D2C4A] pt-1">
+                      {faqs.length}
+                    </div>
+                    <span className="admin-caption-text text-slate-500 block pt-1">
+                      Customer Q&A items
+                    </span>
+                  </div>
+                  <div className="w-12 h-12 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-600 shadow-sm shrink-0">
+                    <HelpCircle className="w-6 h-6" />
+                  </div>
+                </div>
+              </div>
+
+              {/* BOTTOM TWO PANELS (WHITE THEME) */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+                {/* LEFT PANEL: RECENT CLIENT INQUIRIES */}
+                <div className="bg-white rounded-3xl p-6 border border-[#0D2C4A]/10 shadow-sm space-y-4">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600">
+                        <Mail className="w-4 h-4" />
+                      </div>
+                      <h3 className="font-extrabold text-base text-[#0D2C4A]">Recent Client Inquiries</h3>
+                    </div>
+                    <button
+                      onClick={() => setActiveTab("inquiries")}
+                      className="text-xs font-extrabold text-[#00A896] hover:underline flex items-center gap-1 cursor-pointer"
+                    >
+                      <span>View All</span>
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+
+                  <div className="space-y-3">
+                    {inquiries.slice(0, 4).map((inq) => (
+                      <div key={inq.id} className="p-4 rounded-2xl bg-slate-50/90 border border-slate-200/80 flex items-center justify-between gap-3 hover:border-[#00A896]/30 transition-all">
+                        <div className="space-y-0.5 min-w-0">
+                          <h4 className="font-extrabold text-xs text-[#0D2C4A] truncate">{inq.name}</h4>
+                          <p className="text-[11px] text-slate-500 font-mono truncate">{inq.subject || inq.phone}</p>
+                        </div>
+                        <span className={`text-[10px] font-mono font-bold px-2.5 py-1 rounded-full ${inq.status === "Pending" ? "bg-amber-100 text-amber-800 border border-amber-200" : "bg-emerald-100 text-emerald-800 border border-emerald-200"
+                          }`}>
+                          {inq.status}
+                        </span>
+                      </div>
+                    ))}
+                    {inquiries.length === 0 && (
+                      <div className="text-xs text-slate-400 text-center py-6">No recent inquiries recorded yet.</div>
+                    )}
+                  </div>
+                </div>
+
+                {/* RIGHT PANEL: RECENT STUDENT REQUESTS */}
+                <div className="bg-white rounded-3xl p-6 border border-[#0D2C4A]/10 shadow-sm space-y-4">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-xl bg-[#E6F4F3] border border-[#00A896]/30 flex items-center justify-center text-[#00A896]">
+                        <Users className="w-4 h-4" />
+                      </div>
+                      <h3 className="font-extrabold text-base text-[#0D2C4A]">Student Requests</h3>
+                    </div>
+                    <button
+                      onClick={() => setActiveTab("enrollments")}
+                      className="text-xs font-extrabold text-[#00A896] hover:underline flex items-center gap-1 cursor-pointer"
+                    >
+                      <span>Manage All</span>
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+
+                  <div className="space-y-3">
+                    {enrollments.slice(0, 4).map((enr) => (
+                      <div key={enr.id} className="p-4 rounded-2xl bg-slate-50/90 border border-slate-200/80 flex items-center justify-between gap-3 hover:border-[#00A896]/30 transition-all">
+                        <div className="space-y-0.5 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <h4 className="font-extrabold text-xs text-[#0D2C4A] truncate">{enr.studentName}</h4>
+                            <span className="text-[10px] font-mono font-bold text-[#00A896] bg-[#00A896]/10 border border-[#00A896]/20 px-2 py-0.5 rounded-md">{enr.grade}</span>
+                          </div>
+                          <p className="text-[11px] text-slate-500 font-mono truncate flex items-center gap-2">
+                            <span className="flex items-center gap-0.5"><MapPin className="w-3 h-3 text-slate-400" />{enr.district}</span>
+                            <span>•</span>
+                            <span className="flex items-center gap-1 text-xs sm:text-sm font-bold font-mono text-[#00A896]"><PhoneCall className="w-3.5 h-3.5 text-[#00A896]" />{enr.phone}</span>
+                          </p>
+                        </div>
+                        <span className={`text-[10px] font-mono font-bold px-2.5 py-1 rounded-full ${enr.status === "Pending" ? "bg-amber-100 text-amber-800 border border-amber-200" : "bg-emerald-100 text-emerald-800 border border-emerald-200"
+                          }`}>
+                          {enr.status}
+                        </span>
+                      </div>
+                    ))}
+                    {enrollments.length === 0 && (
+                      <div className="text-xs text-slate-400 text-center py-6">No student requests submitted yet.</div>
+                    )}
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          )}
+
+          {/* OTHER TABS WRAPPER */}
+          {activeTab !== "dashboard" && (
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#0D2C4A]/10 shadow-sm space-y-6">
 
               {/* ===== TAB 2: ENROLLMENTS MANAGEMENT ===== */}
               {activeTab === "enrollments" && (() => {
@@ -2309,11 +2289,10 @@ export default function AdminDashboardPage() {
                         <button
                           type="button"
                           onClick={() => setEnrollmentTypeTab("all")}
-                          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                            enrollmentTypeTab === "all"
+                          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${enrollmentTypeTab === "all"
                               ? "bg-[#0D2C4A] text-white shadow-sm"
                               : "text-slate-600 hover:text-[#0D2C4A] hover:bg-white/70"
-                          }`}
+                            }`}
                         >
                           1. All Request ({enrollments.length})
                         </button>
@@ -2321,11 +2300,10 @@ export default function AdminDashboardPage() {
                         <button
                           type="button"
                           onClick={() => setEnrollmentTypeTab("student")}
-                          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                            enrollmentTypeTab === "student"
+                          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${enrollmentTypeTab === "student"
                               ? "bg-[#0D2C4A] text-white shadow-sm"
                               : "text-slate-600 hover:text-[#0D2C4A] hover:bg-white/70"
-                          }`}
+                            }`}
                         >
                           2. Student Request ({studentCount})
                         </button>
@@ -2333,11 +2311,10 @@ export default function AdminDashboardPage() {
                         <button
                           type="button"
                           onClick={() => setEnrollmentTypeTab("trial")}
-                          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-                            enrollmentTypeTab === "trial"
+                          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${enrollmentTypeTab === "trial"
                               ? "bg-[#00A896] text-white shadow-sm"
                               : "text-slate-600 hover:text-[#00A896] hover:bg-white/70"
-                          }`}
+                            }`}
                         >
                           <Sparkles className="w-3.5 h-3.5" />
                           <span>3. Free Trial Request ({trialCount})</span>
@@ -2346,11 +2323,10 @@ export default function AdminDashboardPage() {
                         <button
                           type="button"
                           onClick={() => setEnrollmentTypeTab("pricing")}
-                          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-                            enrollmentTypeTab === "pricing"
+                          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${enrollmentTypeTab === "pricing"
                               ? "bg-[#C05621] text-white shadow-sm"
                               : "text-slate-600 hover:text-[#C05621] hover:bg-white/70"
-                          }`}
+                            }`}
                         >
                           <DollarSign className="w-3.5 h-3.5" />
                           <span>4. Pricing Plan ({pricingCount})</span>
@@ -2364,33 +2340,30 @@ export default function AdminDashboardPage() {
                           <button
                             type="button"
                             onClick={() => setPricingPackageFilter("all")}
-                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                              pricingPackageFilter === "all"
+                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${pricingPackageFilter === "all"
                                 ? "bg-[#0D2C4A] text-white shadow-xs"
                                 : "bg-white text-slate-700 hover:bg-slate-50 border border-slate-200"
-                            }`}
+                              }`}
                           >
                             All Pricing Packages ({pricingCount})
                           </button>
                           <button
                             type="button"
                             onClick={() => setPricingPackageFilter("pay-what-you-can")}
-                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                              pricingPackageFilter === "pay-what-you-can"
+                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${pricingPackageFilter === "pay-what-you-can"
                                 ? "bg-[#00A896] text-white shadow-xs"
                                 : "bg-white text-[#00A896] hover:bg-emerald-50 border border-emerald-200"
-                            }`}
+                              }`}
                           >
                             Pay What You Can ({payWhatYouCanCount})
                           </button>
                           <button
                             type="button"
                             onClick={() => setPricingPackageFilter("premium")}
-                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                              pricingPackageFilter === "premium"
+                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${pricingPackageFilter === "premium"
                                 ? "bg-[#C05621] text-white shadow-xs"
                                 : "bg-white text-[#92400E] hover:bg-amber-50 border border-amber-200"
-                            }`}
+                              }`}
                           >
                             Custom Premium Package ({premiumCount})
                           </button>
@@ -2420,11 +2393,10 @@ export default function AdminDashboardPage() {
                                 )}
                                 {enrollmentTypeTab !== "pricing" && (
                                   <span
-                                    className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${
-                                      isTrial
+                                    className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${isTrial
                                         ? "bg-amber-50 text-amber-800 border-amber-300"
                                         : "bg-blue-50 text-blue-800 border-blue-200"
-                                    }`}
+                                      }`}
                                   >
                                     {isTrial ? "Free Trial Request" : "Student Request"}
                                   </span>
@@ -2436,19 +2408,19 @@ export default function AdminDashboardPage() {
                                 )}
                               </div>
                               <div className="flex flex-wrap items-center gap-3 text-xs text-slate-600 font-mono">
-                                  <span className="flex items-center gap-1 font-bold text-[#00A896]">
-                                    <PhoneCall className="w-3.5 h-3.5 text-[#00A896]" />
-                                    <span>{e.phone}</span>
-                                  </span>
-                                  <span className="flex items-center gap-1 text-slate-500">
-                                    <MapPin className="w-3.5 h-3.5 text-slate-400" />
-                                    <span>{e.district}</span>
-                                  </span>
-                                  <span className="flex items-center gap-1 text-slate-500">
-                                    <Clock className="w-3.5 h-3.5 text-slate-400" />
-                                    <span>{e.preferredTime}</span>
-                                  </span>
-                                </div>
+                                <span className="flex items-center gap-1 font-bold text-[#00A896]">
+                                  <PhoneCall className="w-3.5 h-3.5 text-[#00A896]" />
+                                  <span>{e.phone}</span>
+                                </span>
+                                <span className="flex items-center gap-1 text-slate-500">
+                                  <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                                  <span>{e.district}</span>
+                                </span>
+                                <span className="flex items-center gap-1 text-slate-500">
+                                  <Clock className="w-3.5 h-3.5 text-slate-400" />
+                                  <span>{e.preferredTime}</span>
+                                </span>
+                              </div>
                               <p className="text-xs font-bold text-slate-500">
                                 Subjects: {e.selectedSubjects && e.selectedSubjects.length > 0 ? e.selectedSubjects.join(", ") : "All Subjects"}
                               </p>
@@ -2732,11 +2704,10 @@ export default function AdminDashboardPage() {
                         <button
                           key={cat.id}
                           onClick={() => setBlogFilterCategory(cat.id)}
-                          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                            blogFilterCategory === cat.id
+                          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${blogFilterCategory === cat.id
                               ? "bg-[#0D2C4A] text-white shadow-sm"
                               : "bg-white text-slate-600 hover:bg-slate-200 border border-slate-200"
-                          }`}
+                            }`}
                         >
                           {cat.label}
                         </button>
@@ -2867,7 +2838,7 @@ export default function AdminDashboardPage() {
                 </div>
               )}
 
-              
+
               {/* ===== TAB 11: CUSTOM PAGES MANAGEMENT ===== */}
               {activeTab === "pages" && (
                 <div className="space-y-6">
@@ -3267,7 +3238,7 @@ export default function AdminDashboardPage() {
                   </div>
 
                   <form onSubmit={handleSaveSettings} className="space-y-8">
-                    
+
                     {/* SECTION 2: DYNAMIC CUSTOM SOCIAL MEDIA LIST */}
                     <div className="space-y-4 pt-4 border-t border-slate-100">
                       <div className="flex items-center justify-between">
@@ -3278,7 +3249,7 @@ export default function AdminDashboardPage() {
                             {(settings.socialLinks || []).length} Active Channels
                           </span>
                         </div>
-                        
+
                         <button
                           type="button"
                           onClick={() => setShowAddSocialModal(true)}
@@ -3304,7 +3275,7 @@ export default function AdminDashboardPage() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                           {settings.socialLinks.map((item) => (
                             <div key={item.id} className="bg-white p-5 rounded-3xl border border-[#0D2C4A]/10 shadow-sm space-y-4 relative group">
-                              
+
                               {/* Top Bar: Title & Delete */}
                               <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                                 <div className="flex items-center gap-2">
@@ -3352,11 +3323,10 @@ export default function AdminDashboardPage() {
                                       key={preset}
                                       type="button"
                                       onClick={() => handleUpdateSocialLink(item.id, "iconUrl", preset)}
-                                      className={`px-2.5 py-1 rounded-lg text-[10px] font-bold capitalize transition-all cursor-pointer ${
-                                        (item.iconUrl || "").toLowerCase() === preset
+                                      className={`px-2.5 py-1 rounded-lg text-[10px] font-bold capitalize transition-all cursor-pointer ${(item.iconUrl || "").toLowerCase() === preset
                                           ? "bg-[#00A896] text-white shadow-sm"
                                           : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                                      }`}
+                                        }`}
                                     >
                                       {preset}
                                     </button>
@@ -3397,7 +3367,7 @@ export default function AdminDashboardPage() {
                     {/* PLATFORM HOTLINE DETAILS */}
                     <div className="space-y-4 pt-6 border-t border-slate-100">
                       <h3 className="admin-heading-sm text-[#0D2C4A]">General Platform Support Hotline & Address</h3>
-                      
+
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
                           <label className="admin-kicker text-slate-500 block mb-2">HOTLINE / PHONE NUMBER</label>
@@ -3537,7 +3507,7 @@ export default function AdminDashboardPage() {
 
       {/* ===== MODAL OVERLAYS ===== */}
 
-            {/* MODAL 1: ADD TEACHER PROFILE */}
+      {/* MODAL 1: ADD TEACHER PROFILE */}
       {showAddTeacher && (
         <div className="fixed inset-0 z-50 bg-[#0D2C4A]/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
           <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 space-y-5 border border-[#0D2C4A]/10 shadow-2xl my-8">
@@ -5121,7 +5091,7 @@ export default function AdminDashboardPage() {
                 <label className="admin-kicker text-slate-500 block mb-2 uppercase">
                   2. ICON UPLOAD / PRESET OPTION
                 </label>
-                
+
                 {/* File Upload Box */}
                 <div className="p-4 rounded-2xl bg-slate-50 border border-dashed border-slate-300 flex flex-col items-center justify-center gap-2 mb-3">
                   {newSocialIconFilePreview || newSocialIconUrl.startsWith("data:") ? (
@@ -5158,11 +5128,10 @@ export default function AdminDashboardPage() {
                           setNewSocialIconUrl(preset);
                           setNewSocialIconFilePreview(null);
                         }}
-                        className={`px-3 py-1.5 rounded-xl text-xs font-bold capitalize transition-all cursor-pointer ${
-                          newSocialIconUrl === preset
+                        className={`px-3 py-1.5 rounded-xl text-xs font-bold capitalize transition-all cursor-pointer ${newSocialIconUrl === preset
                             ? "bg-[#00A896] text-white shadow-sm"
                             : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                        }`}
+                          }`}
                       >
                         {preset}
                       </button>
