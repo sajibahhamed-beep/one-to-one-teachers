@@ -63,6 +63,561 @@ import { BlogPost } from "@/lib/blogsData";
 
 
 // ============================================================
+// Helper: Format Relative Time for Notifications Feed
+// ============================================================
+function formatRelativeTime(dateString?: string) {
+  if (!dateString) return "Recently";
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return "Recently";
+  const now = new Date();
+  const diffInSec = Math.floor((now.getTime() - date.getTime()) / 1000);
+  if (diffInSec < 60) return "Just now";
+  const diffInMin = Math.floor(diffInSec / 60);
+  if (diffInMin < 60) return `${diffInMin}m ago`;
+  const diffInHours = Math.floor(diffInMin / 60);
+  if (diffInHours < 24) return `${diffInHours}h ago`;
+  const diffInDays = Math.floor(diffInHours / 24);
+  if (diffInDays < 7) return `${diffInDays}d ago`;
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+function cleanWhatsAppLink(phone?: string) {
+  if (!phone) return "";
+  const digits = phone.replace(/[^0-9]/g, "");
+  if (digits.startsWith("880")) return `https://wa.me/${digits}`;
+  if (digits.startsWith("0")) return `https://wa.me/88${digits}`;
+  return `https://wa.me/880${digits}`;
+}
+
+// ============================================================
+// NotificationsSection — Unified Submissions & Live Notification Feed
+// ============================================================
+function NotificationsSection({
+  enrollments,
+  teacherApplications,
+  contacts,
+  inquiries,
+  pricingRequests,
+  onNavigateTab,
+  onUpdateEnrollmentStatus,
+  onUpdateTeacherAppStatus,
+  onUpdateInquiryStatus,
+  onRefresh,
+  loading,
+}: {
+  enrollments: Enrollment[];
+  teacherApplications: TeacherApplication[];
+  contacts: ContactMessage[];
+  inquiries: Inquiry[];
+  pricingRequests: PricingRequest[];
+  onNavigateTab: (tab: any) => void;
+  onUpdateEnrollmentStatus: (id: string, status: string) => void;
+  onUpdateTeacherAppStatus: (id: string, status: string) => void;
+  onUpdateInquiryStatus: (id: string, status: string) => void;
+  onRefresh: () => void;
+  loading: boolean;
+}) {
+  const [filterType, setFilterType] = useState<"all" | "student" | "teacher" | "contact" | "inquiry">("all");
+  const [filterStatus, setFilterStatus] = useState<"all" | "pending" | "handled">("all");
+  const [search, setSearch] = useState("");
+
+  const pendingStudentCount =
+    enrollments.filter((e) => e.status === "Pending").length +
+    pricingRequests.filter((p) => p.status === "Pending").length;
+  const pendingTeacherCount = teacherApplications.filter((t) => (t.status || "Pending") === "Pending").length;
+  const pendingContactCount = contacts.length;
+  const pendingInquiryCount = inquiries.filter((i) => (i.status || "Pending") === "Pending").length;
+  const totalPending = pendingStudentCount + pendingTeacherCount + pendingContactCount + pendingInquiryCount;
+
+  // Build unified notification list
+  const allNotifications = [
+    ...enrollments.map((e) => ({
+      id: e.id,
+      kind: "student" as const,
+      categoryLabel: "Student Request (1-on-1 Class / Trial)",
+      badgeClass: "bg-emerald-50 text-emerald-800 border-emerald-200",
+      icon: Users,
+      name: e.studentName || "Anonymous Student",
+      phone: e.phone,
+      email: undefined as string | undefined,
+      grade: e.grade,
+      district: e.district,
+      subjects: e.selectedSubjects?.length ? e.selectedSubjects.join(", ") : undefined,
+      plan: e.selectedPlan || "Free Trial",
+      fee: e.fee ? `৳${e.fee}` : undefined,
+      message: undefined as string | undefined,
+      status: e.status || "Pending",
+      isPending: (e.status || "Pending") === "Pending",
+      createdAt: e.createdAt,
+      timeAgo: formatRelativeTime(e.createdAt),
+      targetTab: "enrollments",
+      targetLabel: "Student Requests",
+      updateStatus: (newStatus: string) => onUpdateEnrollmentStatus(e.id, newStatus),
+      statusOptions: ["Pending", "Contacted", "Enrolled", "Rejected"],
+    })),
+    ...teacherApplications.map((t) => ({
+      id: t.id,
+      kind: "teacher" as const,
+      categoryLabel: "Teacher Application (Become a Mentor)",
+      badgeClass: "bg-[#E6F4F3] text-[#008075] border-[#00A896]/30",
+      icon: GraduationCap,
+      name: t.fullName || "Teacher Applicant",
+      phone: t.phone,
+      email: t.email,
+      grade: undefined as string | undefined,
+      district: t.institution ? `${t.institution} ${t.department ? `(${t.department})` : ""}` : undefined,
+      subjects: t.subjectExpertise,
+      plan: t.hoursPerWeek ? `${t.hoursPerWeek} / week` : undefined,
+      fee: undefined as string | undefined,
+      message: t.bio || (t.experience ? `Experience: ${t.experience}` : undefined),
+      status: t.status || "Pending",
+      isPending: (t.status || "Pending") === "Pending",
+      createdAt: t.createdAt,
+      timeAgo: formatRelativeTime(t.createdAt),
+      targetTab: "teachers",
+      targetLabel: "Tutors Directory",
+      updateStatus: (newStatus: string) => onUpdateTeacherAppStatus(t.id, newStatus),
+      statusOptions: ["Pending", "Approved", "Rejected"],
+    })),
+    ...contacts.map((c) => ({
+      id: c.id,
+      kind: "contact" as const,
+      categoryLabel: "Contact Form Submission",
+      badgeClass: "bg-amber-50 text-amber-800 border-amber-200",
+      icon: Mail,
+      name: c.name || "Contact Inquirer",
+      phone: c.phone,
+      email: c.email,
+      grade: undefined as string | undefined,
+      district: undefined as string | undefined,
+      subjects: c.subject || "General Inquiry",
+      plan: undefined as string | undefined,
+      fee: undefined as string | undefined,
+      message: c.message,
+      status: "New Message",
+      isPending: true,
+      createdAt: c.createdAt,
+      timeAgo: formatRelativeTime(c.createdAt),
+      targetTab: "contacts",
+      targetLabel: "Messages",
+      updateStatus: undefined as ((s: string) => void) | undefined,
+      statusOptions: [],
+    })),
+    ...inquiries.map((i) => ({
+      id: i.id,
+      kind: "inquiry" as const,
+      categoryLabel: "Support Ticket & Callback Request",
+      badgeClass: "bg-blue-50 text-blue-800 border-blue-200",
+      icon: MessageSquare,
+      name: i.name || "Callback Inquirer",
+      phone: i.phone,
+      email: undefined as string | undefined,
+      grade: undefined as string | undefined,
+      district: undefined as string | undefined,
+      subjects: i.subject || "Support Request",
+      plan: undefined as string | undefined,
+      fee: undefined as string | undefined,
+      message: i.message,
+      status: i.status || "Pending",
+      isPending: (i.status || "Pending") === "Pending",
+      createdAt: i.createdAt,
+      timeAgo: formatRelativeTime(i.createdAt),
+      targetTab: "inquiries",
+      targetLabel: "Support Tickets",
+      updateStatus: (newStatus: string) => onUpdateInquiryStatus(i.id, newStatus),
+      statusOptions: ["Pending", "Contacted", "Resolved"],
+    })),
+    ...pricingRequests.map((p) => ({
+      id: p.id,
+      kind: "student" as const,
+      categoryLabel: "Pricing Plan & Package Inquiry",
+      badgeClass: "bg-orange-50 text-orange-800 border-orange-200",
+      icon: DollarSign,
+      name: p.studentName || "Student / Parent",
+      phone: p.phone,
+      email: undefined as string | undefined,
+      grade: undefined as string | undefined,
+      district: undefined as string | undefined,
+      subjects: `Plan: ${p.planName}`,
+      plan: p.duration,
+      fee: p.monthlyFee ? `৳${p.monthlyFee}` : undefined,
+      message: undefined as string | undefined,
+      status: p.status || "Pending",
+      isPending: (p.status || "Pending") === "Pending",
+      createdAt: p.createdAt,
+      timeAgo: formatRelativeTime(p.createdAt),
+      targetTab: "enrollments",
+      targetLabel: "Pricing Requests",
+      updateStatus: undefined as ((s: string) => void) | undefined,
+      statusOptions: ["Pending", "Contacted", "Completed", "Cancelled"],
+    })),
+  ].sort((a, b) => {
+    const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+    const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+    return timeB - timeA;
+  });
+
+  const filteredNotifications = allNotifications.filter((item) => {
+    if (filterType !== "all" && item.kind !== filterType) return false;
+    if (filterStatus === "pending" && !item.isPending) return false;
+    if (filterStatus === "handled" && item.isPending) return false;
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      const matchName = item.name?.toLowerCase().includes(q);
+      const matchPhone = item.phone?.toLowerCase().includes(q);
+      const matchEmail = item.email?.toLowerCase().includes(q);
+      const matchSubjects = (item.subjects || "").toLowerCase().includes(q);
+      const matchDistrict = (item.district || "").toLowerCase().includes(q);
+      const matchMessage = (item.message || "").toLowerCase().includes(q);
+      if (!matchName && !matchPhone && !matchEmail && !matchSubjects && !matchDistrict && !matchMessage) {
+        return false;
+      }
+    }
+    return true;
+  });
+
+  return (
+    <div className="space-y-6">
+      {/* Header Bar */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+        <div className="flex items-center gap-3">
+          <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-[#00A896] to-[#0D2C4A] text-white flex items-center justify-center shadow-md">
+            <Bell className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <h2 className="text-xl font-extrabold text-[#0D2C4A]">Form Notifications &amp; Submissions</h2>
+              {totalPending > 0 && (
+                <span className="px-2.5 py-0.5 rounded-full bg-rose-500 text-white text-xs font-mono font-extrabold animate-pulse">
+                  {totalPending} New
+                </span>
+              )}
+            </div>
+            <p className="text-xs text-slate-500">
+              Live feed of student requests, teacher signups, contact messages, and callback tickets
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            onClick={onRefresh}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 text-xs font-bold hover:bg-slate-50 hover:text-[#00A896] transition-all cursor-pointer shadow-xs"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin text-[#00A896]" : ""}`} />
+            <span>Refresh Feed</span>
+          </button>
+        </div>
+      </div>
+
+      {/* 4 Summary Stat Cards */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+        <div
+          onClick={() => setFilterType("student")}
+          className={`p-4 rounded-2xl border transition-all cursor-pointer ${
+            filterType === "student"
+              ? "bg-emerald-50/80 border-emerald-300 ring-2 ring-emerald-500/20"
+              : "bg-white border-slate-200/80 hover:border-emerald-300"
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Student Requests</span>
+            <Users className="w-4 h-4 text-emerald-600" />
+          </div>
+          <div className="text-xl font-mono font-black text-[#0D2C4A] pt-1.5">{enrollments.length + pricingRequests.length}</div>
+          <div className="text-[11px] text-emerald-700 font-bold font-mono">{pendingStudentCount} Pending Action</div>
+        </div>
+
+        <div
+          onClick={() => setFilterType("teacher")}
+          className={`p-4 rounded-2xl border transition-all cursor-pointer ${
+            filterType === "teacher"
+              ? "bg-[#E6F4F3] border-[#00A896] ring-2 ring-[#00A896]/20"
+              : "bg-white border-slate-200/80 hover:border-[#00A896]"
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Teacher Signups</span>
+            <GraduationCap className="w-4 h-4 text-[#008075]" />
+          </div>
+          <div className="text-xl font-mono font-black text-[#0D2C4A] pt-1.5">{teacherApplications.length}</div>
+          <div className="text-[11px] text-[#008075] font-bold font-mono">{pendingTeacherCount} Pending Review</div>
+        </div>
+
+        <div
+          onClick={() => setFilterType("contact")}
+          className={`p-4 rounded-2xl border transition-all cursor-pointer ${
+            filterType === "contact"
+              ? "bg-amber-50/80 border-amber-300 ring-2 ring-amber-500/20"
+              : "bg-white border-slate-200/80 hover:border-amber-300"
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Contact Form</span>
+            <Mail className="w-4 h-4 text-amber-600" />
+          </div>
+          <div className="text-xl font-mono font-black text-[#0D2C4A] pt-1.5">{contacts.length}</div>
+          <div className="text-[11px] text-amber-700 font-bold font-mono">{pendingContactCount} Total Messages</div>
+        </div>
+
+        <div
+          onClick={() => setFilterType("inquiry")}
+          className={`p-4 rounded-2xl border transition-all cursor-pointer ${
+            filterType === "inquiry"
+              ? "bg-blue-50/80 border-blue-300 ring-2 ring-blue-500/20"
+              : "bg-white border-slate-200/80 hover:border-blue-300"
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Support Tickets</span>
+            <MessageSquare className="w-4 h-4 text-blue-600" />
+          </div>
+          <div className="text-xl font-mono font-black text-[#0D2C4A] pt-1.5">{inquiries.length}</div>
+          <div className="text-[11px] text-blue-700 font-bold font-mono">{pendingInquiryCount} Pending Callback</div>
+        </div>
+      </div>
+
+      {/* Filter and Search Bar */}
+      <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 bg-slate-50 p-3 rounded-2xl border border-slate-200">
+        {/* Category Pills */}
+        <div className="flex flex-wrap items-center gap-1.5">
+          {[
+            { id: "all", label: "All Submissions", count: allNotifications.length },
+            { id: "student", label: "Student Requests", count: enrollments.length + pricingRequests.length },
+            { id: "teacher", label: "Teacher Applications", count: teacherApplications.length },
+            { id: "contact", label: "Contact Form", count: contacts.length },
+            { id: "inquiry", label: "Support Tickets", count: inquiries.length },
+          ].map((pill) => (
+            <button
+              key={pill.id}
+              onClick={() => setFilterType(pill.id as any)}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                filterType === pill.id
+                  ? "bg-[#0D2C4A] text-white shadow-xs"
+                  : "bg-white text-slate-600 hover:bg-slate-200/70 border border-slate-200"
+              }`}
+            >
+              {pill.label} ({pill.count})
+            </button>
+          ))}
+        </div>
+
+        {/* Status Filter & Search */}
+        <div className="flex items-center gap-2">
+          <select
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value as any)}
+            className="text-xs font-bold px-3 py-2 rounded-xl border border-slate-300 bg-white text-slate-700 focus:outline-none cursor-pointer"
+          >
+            <option value="all">All Status</option>
+            <option value="pending">Pending Only</option>
+            <option value="handled">Handled / Enrolled</option>
+          </select>
+
+          <div className="relative flex-1 sm:w-48">
+            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              placeholder="Search notifications..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-white border border-slate-300 text-xs text-[#0D2C4A] focus:outline-none focus:border-[#00A896]"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Notifications Feed List */}
+      {filteredNotifications.length === 0 ? (
+        <div className="py-16 text-center text-slate-400 bg-slate-50/60 rounded-3xl border border-dashed border-slate-200 space-y-2">
+          <CheckCircle className="w-10 h-10 mx-auto text-[#00A896] opacity-60" />
+          <p className="text-sm font-bold text-slate-600">No notifications match your current filter</p>
+          <p className="text-xs text-slate-400">All submissions are up to date.</p>
+        </div>
+      ) : (
+        <div className="space-y-3.5">
+          {filteredNotifications.map((item, idx) => {
+            const IconComp = item.icon;
+            const waLink = cleanWhatsAppLink(item.phone);
+
+            return (
+              <div
+                key={`${item.id}-${idx}`}
+                className={`p-5 rounded-2xl border transition-all space-y-3.5 ${
+                  item.isPending
+                    ? "bg-white border-slate-200/90 shadow-sm hover:border-[#00A896]/60 hover:shadow-md"
+                    : "bg-slate-50/70 border-slate-200/60 opacity-90"
+                }`}
+              >
+                {/* Top Row: Category badge, ID, Time, Status */}
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+                  <div className="flex items-center gap-2">
+                    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold border ${item.badgeClass}`}>
+                      <IconComp className="w-3.5 h-3.5 shrink-0" />
+                      <span>{item.categoryLabel}</span>
+                    </span>
+                    <span className="font-mono text-[11px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md">
+                      {item.id}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <span className="inline-flex items-center gap-1 text-xs text-slate-400 font-mono">
+                      <Clock className="w-3.5 h-3.5" />
+                      <span>{item.timeAgo}</span>
+                    </span>
+                    <span
+                      className={`text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full border ${
+                        item.isPending
+                          ? "bg-amber-50 text-amber-800 border-amber-200"
+                          : "bg-emerald-50 text-emerald-800 border-emerald-200"
+                      }`}
+                    >
+                      {item.status}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Main Content Info */}
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                  <div className="space-y-1.5 flex-1 min-w-0">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <h3 className="font-black text-base text-[#0D2C4A]">{item.name}</h3>
+
+                      {item.grade && (
+                        <span className="px-2.5 py-0.5 rounded-md bg-[#00A896]/10 text-[#008075] text-[11px] font-mono font-bold">
+                          {item.grade}
+                        </span>
+                      )}
+
+                      {item.plan && (
+                        <span className="px-2.5 py-0.5 rounded-md bg-amber-50 text-amber-800 text-[11px] font-mono font-bold border border-amber-200">
+                          {item.plan}
+                        </span>
+                      )}
+
+                      {item.fee && (
+                        <span className="px-2.5 py-0.5 rounded-md bg-slate-100 text-[#0D2C4A] text-[11px] font-mono font-bold">
+                          {item.fee}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Subtitle / Meta */}
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-600">
+                      {item.district && (
+                        <span className="flex items-center gap-1">
+                          <MapPin className="w-3 h-3 text-slate-400" />
+                          <span>{item.district}</span>
+                        </span>
+                      )}
+                      {item.subjects && (
+                        <span className="flex items-center gap-1 font-medium">
+                          <BookOpen className="w-3 h-3 text-slate-400" />
+                          <span className="text-[#0D2C4A] font-bold">{item.subjects}</span>
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Message snippet if any */}
+                    {item.message && (
+                      <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-xs text-slate-700 leading-relaxed max-w-3xl">
+                        <span className="font-bold text-slate-500 block text-[10px] uppercase font-mono mb-0.5">Details / Message:</span>
+                        {item.message}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Contact Badges: Phone, WhatsApp, Email */}
+                  <div className="flex flex-wrap items-center gap-2 shrink-0">
+                    {item.phone && (
+                      <>
+                        <a
+                          href={`tel:${item.phone}`}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-mono font-extrabold text-[#00A896] hover:bg-[#00A896] hover:text-white transition-all shadow-2xs"
+                          title="Call phone number"
+                        >
+                          <PhoneCall className="w-3.5 h-3.5" />
+                          <span>{item.phone}</span>
+                        </a>
+
+                        {waLink && (
+                          <a
+                            href={waLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-700 transition-all shadow-2xs"
+                            title="Chat on WhatsApp"
+                          >
+                            <MessageSquare className="w-3.5 h-3.5" />
+                            <span>WhatsApp</span>
+                          </a>
+                        )}
+                      </>
+                    )}
+
+                    {item.email && (
+                      <a
+                        href={`mailto:${item.email}`}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-mono text-slate-600 hover:bg-slate-100 transition-all shadow-2xs"
+                        title="Send email"
+                      >
+                        <Mail className="w-3.5 h-3.5 text-slate-400" />
+                        <span>{item.email}</span>
+                      </a>
+                    )}
+                  </div>
+                </div>
+
+                {/* Bottom Actions Bar */}
+                <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-100">
+                  {/* Status Dropdown if editable */}
+                  <div className="flex items-center gap-2">
+                    {item.updateStatus && item.statusOptions.length > 0 ? (
+                      <div className="flex items-center gap-2">
+                        <span className="text-[11px] font-bold text-slate-500 font-mono">Status:</span>
+                        <select
+                          value={item.status}
+                          onChange={(e) => item.updateStatus && item.updateStatus(e.target.value)}
+                          className="text-xs font-bold px-2.5 py-1 rounded-xl border border-slate-300 bg-white text-[#0D2C4A] cursor-pointer focus:border-[#00A896] focus:outline-none"
+                        >
+                          {item.statusOptions.map((opt) => (
+                            <option key={opt} value={opt}>
+                              {opt}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    ) : (
+                      <span className="text-xs text-slate-400 font-mono">Submitted: {item.createdAt ? new Date(item.createdAt).toLocaleString("en-US", { timeZone: "Asia/Dhaka" }) : "N/A"}</span>
+                    )}
+                  </div>
+
+                  {/* Navigate to Section Button */}
+                  <button
+                    type="button"
+                    onClick={() => onNavigateTab(item.targetTab)}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-[#0D2C4A] text-slate-700 hover:text-white text-xs font-bold transition-all cursor-pointer shadow-2xs"
+                  >
+                    <span>Manage in {item.targetLabel}</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ============================================================
 // TutorsDirectorySection — Mentor Apps + Verified Tutors with Full Information
 // ============================================================
 function TutorsDirectorySection({
@@ -411,6 +966,7 @@ export default function AdminDashboardPage() {
 
   const [activeTab, setActiveTab] = useState<
     | "dashboard"
+    | "notifications"
     | "enrollments"
     | "teacher-applications"
     | "teachers"
@@ -1831,6 +2387,12 @@ export default function AdminDashboardPage() {
   const pendingPricingCount = pricingRequests.filter((p) => (p.status || "Pending") === "Pending").length;
   const pendingInquiriesCount = inquiries.filter((i) => (i.status || "Pending") === "Pending").length;
   const pendingContactsCount = contacts.length;
+  const totalPendingNotifications =
+    pendingEnrollmentsCount +
+    pendingTeacherAppsCount +
+    pendingPricingCount +
+    pendingInquiriesCount +
+    pendingContactsCount;
 
   return (
     <div className="admin-theme min-h-screen bg-[#F8FAFC] text-[#0D2C4A] font-sans flex" data-admin-theme="true">
@@ -1873,6 +2435,7 @@ export default function AdminDashboardPage() {
           <nav className="space-y-1.5 font-sans">
             {[
               { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+              { id: "notifications", label: "Notifications", icon: Bell, count: totalPendingNotifications },
               { id: "enrollments", label: "Student Requests", icon: Users, count: pendingEnrollmentsCount },
               { id: "teachers", label: "Tutors Directory", icon: UserCheck, count: pendingTeacherAppsCount },
               { id: "inquiries", label: "Support Tickets", icon: MessageSquare, count: pendingInquiriesCount },
@@ -1972,13 +2535,24 @@ export default function AdminDashboardPage() {
                 <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin text-[#00A896]" : ""}`} />
               </button>
 
-              {/* Notification Icon */}
-              <div className="relative p-2.5 rounded-xl bg-slate-100/80 text-[#0D2C4A] border border-slate-200/80 cursor-pointer shadow-2xs">
+              {/* Notification Icon Button */}
+              <button
+                type="button"
+                onClick={() => setActiveTab("notifications")}
+                title={`Form Notifications & Submissions (${totalPendingNotifications} pending)`}
+                className={`relative p-2.5 rounded-xl border transition-all cursor-pointer shadow-2xs active:scale-95 ${
+                  activeTab === "notifications"
+                    ? "bg-[#00A896] text-white border-[#00A896] shadow-sm shadow-[#00A896]/30"
+                    : "bg-slate-100/80 text-[#0D2C4A] border-slate-200/80 hover:bg-slate-200/80 hover:text-[#00A896]"
+                }`}
+              >
                 <Bell className="w-4 h-4" />
-                {pendingEnrollmentsCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-rose-500 rounded-full animate-ping" />
+                {totalPendingNotifications > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 min-w-4 h-4 px-1 bg-rose-500 text-white rounded-full text-[9px] font-mono font-bold flex items-center justify-center shadow-xs animate-pulse">
+                    {totalPendingNotifications}
+                  </span>
                 )}
-              </div>
+              </button>
 
               {/* Admin Profile User Badge */}
               <div className="flex items-center gap-3 pl-2 border-l border-slate-200/80">
@@ -2205,6 +2779,23 @@ export default function AdminDashboardPage() {
           {/* OTHER TABS WRAPPER */}
           {activeTab !== "dashboard" && (
             <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#0D2C4A]/10 shadow-sm space-y-6">
+
+              {/* ===== TAB: NOTIFICATIONS FEED ===== */}
+              {activeTab === "notifications" && (
+                <NotificationsSection
+                  enrollments={enrollments}
+                  teacherApplications={teacherApplications}
+                  contacts={contacts}
+                  inquiries={inquiries}
+                  pricingRequests={pricingRequests}
+                  onNavigateTab={(tab) => setActiveTab(tab)}
+                  onUpdateEnrollmentStatus={handleUpdateEnrollmentStatus}
+                  onUpdateTeacherAppStatus={(id, status) => handleUpdateTeacherApplicationStatus(id, status)}
+                  onUpdateInquiryStatus={handleUpdateInquiryStatus}
+                  onRefresh={fetchAllData}
+                  loading={loading}
+                />
+              )}
 
               {/* ===== TAB 2: ENROLLMENTS MANAGEMENT ===== */}
               {activeTab === "enrollments" && (() => {
