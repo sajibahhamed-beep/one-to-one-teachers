@@ -14,9 +14,6 @@ interface PageProps {
   };
 }
 
-/**
- * Generate static params for pre-rendering all blog posts at build time (SSG)
- */
 export async function generateStaticParams() {
   try {
     const blogs = await getBlogs();
@@ -24,10 +21,7 @@ export async function generateStaticParams() {
       id: b.slug || b.id,
     }));
   } catch {
-    const staticBlogs = getAllBlogs();
-    return staticBlogs.map((b) => ({
-      id: b.slug || b.id,
-    }));
+    return [];
   }
 }
 

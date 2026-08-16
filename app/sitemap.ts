@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
-import { getAllBlogs } from "@/lib/blogsData";
+import { getBlogs } from "@/lib/db";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://ototeachers.com";
 
   // 1. Core static public pages
@@ -81,7 +81,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
 
   // 2. Dynamic Blog Post URLs
-  const blogs = getAllBlogs();
+  const blogs = await getBlogs();
   const dynamicBlogRoutes: MetadataRoute.Sitemap = blogs.map((blog) => ({
     url: `${baseUrl}/blogs/${blog.slug || blog.id}`,
     lastModified: new Date("2026-08-05"),

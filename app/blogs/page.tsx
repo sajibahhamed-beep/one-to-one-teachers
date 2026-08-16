@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import BlogsClient from "./BlogsClient";
 import JsonLd from "@/components/JsonLd";
-import { getAllBlogs } from "@/lib/blogsData";
+import { getBlogs } from "@/lib/db";
 import { getBreadcrumbSchema, SITE_URL, SITE_NAME } from "@/lib/seoConfig";
 
 export const revalidate = 0;
@@ -36,8 +36,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function BlogsPage() {
-  const posts = getAllBlogs();
+export default async function BlogsPage() {
+  const posts = await getBlogs();
   const breadcrumbSchema = getBreadcrumbSchema([
     { name: "হোম", url: "/" },
     { name: "ব্লগ ও গাইডলাইন", url: "/blogs" },

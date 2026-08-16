@@ -73,13 +73,11 @@ export default function BlogsClient({ initialPosts }: BlogsClientProps) {
       .catch(() => {});
   }, []);
 
-  const basePosts = initialPosts && initialPosts.length > 0 ? initialPosts : BLOG_POSTS;
+  const basePosts = initialPosts && initialPosts.length > 0 ? initialPosts : [];
 
   const allPosts = useMemo(() => {
-    if (apiPosts.length === 0) return basePosts;
-    const existingIds = new Set(apiPosts.map((p) => p.id));
-    const staticFiltered = basePosts.filter((p) => !existingIds.has(p.id));
-    return [...apiPosts, ...staticFiltered];
+    if (apiPosts.length > 0) return apiPosts;
+    return basePosts;
   }, [apiPosts, basePosts]);
 
   // Filter & Search states
@@ -113,6 +111,7 @@ export default function BlogsClient({ initialPosts }: BlogsClientProps) {
   }, [allPosts, selectedCategory, searchQuery]);
 
   const featuredPost = useMemo(() => {
+    if (allPosts.length === 0) return null;
     return allPosts.find((p) => p.featured) || allPosts[0];
   }, [allPosts]);
 

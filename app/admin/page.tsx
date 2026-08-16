@@ -95,7 +95,7 @@ function cleanWhatsAppLink(phone?: string) {
 }
 
 // ============================================================
-// NotificationsSection — Unified Submissions & Live Notification Feed
+// NotificationsSection — Informational Activity & Live Event Feed (No functions needed)
 // ============================================================
 function NotificationsSection({
   enrollments,
@@ -103,43 +103,22 @@ function NotificationsSection({
   contacts,
   inquiries,
   pricingRequests,
-  onNavigateTab,
-  onUpdateEnrollmentStatus,
-  onUpdateTeacherAppStatus,
-  onUpdateInquiryStatus,
   onRefresh,
   loading,
   onMarkAllAsRead,
   lastReadAt,
-  onDeleteEnrollment,
-  onDeletePricingRequest,
-  onDeleteTeacherApp,
-  onDeleteContact,
-  onDeleteInquiry,
-  onDeleteAllNotifications,
 }: {
   enrollments: Enrollment[];
   teacherApplications: TeacherApplication[];
   contacts: ContactMessage[];
   inquiries: Inquiry[];
   pricingRequests: PricingRequest[];
-  onNavigateTab: (tab: any) => void;
-  onUpdateEnrollmentStatus: (id: string, status: string) => void;
-  onUpdateTeacherAppStatus: (id: string, status: string) => void;
-  onUpdateInquiryStatus: (id: string, status: string) => void;
   onRefresh: () => void;
   loading: boolean;
   onMarkAllAsRead?: () => void;
   lastReadAt?: string | null;
-  onDeleteEnrollment?: (id: string) => void;
-  onDeletePricingRequest?: (id: string) => void;
-  onDeleteTeacherApp?: (id: string) => void;
-  onDeleteContact?: (id: string) => void;
-  onDeleteInquiry?: (id: string) => void;
-  onDeleteAllNotifications?: () => void;
 }) {
-  const [filterType, setFilterType] = useState<"all" | "student" | "teacher" | "contact" | "inquiry">("all");
-  const [filterStatus, setFilterStatus] = useState<"all" | "pending" | "handled">("all");
+  const [filterType, setFilterType] = useState<"all" | "student" | "trial" | "pricing" | "teacher" | "contact" | "inquiry">("all");
   const [search, setSearch] = useState("");
 
   const isUnread = (createdAt?: string) => {
@@ -148,145 +127,150 @@ function NotificationsSection({
     return new Date(createdAt).getTime() > new Date(lastReadAt).getTime();
   };
 
-  const pendingStudentCount =
-    enrollments.filter((e) => e.status === "Pending").length +
-    pricingRequests.filter((p) => p.status === "Pending").length;
-  const pendingTeacherCount = teacherApplications.filter((t) => (t.status || "Pending") === "Pending").length;
-  const pendingContactCount = contacts.length;
-  const pendingInquiryCount = inquiries.filter((i) => (i.status || "Pending") === "Pending").length;
-  const totalPending = pendingStudentCount + pendingTeacherCount + pendingContactCount + pendingInquiryCount;
+  const isTrialEnrollment = (e: Enrollment) =>
+    Boolean(
+      e.selectedPlan?.toLowerCase().includes("trial") ||
+      e.selectedPlan?.toLowerCase().includes("free")
+    );
 
-  // Build unified notification list
+  const isPricingEnrollment = (e: Enrollment) =>
+    Boolean(
+      e.selectedPlan?.toLowerCase().includes("pay-what-you-can") ||
+      e.selectedPlan?.toLowerCase().includes("pay what you can") ||
+      e.selectedPlan?.toLowerCase().includes("sliding") ||
+      e.selectedPlan?.toLowerCase().includes("custom") ||
+      e.selectedPlan?.toLowerCase().includes("premium") ||
+      e.selectedPlan?.toLowerCase().includes("pricing") ||
+      e.selectedPlan?.toLowerCase().includes("package")
+    );
+
+  // Build unified notification events stream (What happened log)
   const allNotifications = [
-    ...enrollments.map((e) => ({
-      id: e.id,
-      kind: "student" as const,
-      categoryLabel: "Student Request (1-on-1 Class / Trial)",
-      badgeClass: "bg-emerald-50 text-emerald-800 border-emerald-200",
-      icon: Users,
-      name: e.studentName || "Anonymous Student",
-      phone: e.phone,
-      email: undefined as string | undefined,
-      grade: e.grade,
-      district: e.district,
-      subjects: e.selectedSubjects?.length ? e.selectedSubjects.join(", ") : undefined,
-      plan: e.selectedPlan || "Free Trial",
-      fee: e.fee ? `৳${e.fee}` : undefined,
-      message: undefined as string | undefined,
-      status: e.status || "Pending",
-      isPending: (e.status || "Pending") === "Pending",
-      isNew: isUnread(e.createdAt),
-      createdAt: e.createdAt,
-      timeAgo: formatRelativeTime(e.createdAt),
-      targetTab: "enrollments",
-      targetLabel: "Student Requests",
-      updateStatus: (newStatus: string) => onUpdateEnrollmentStatus(e.id, newStatus),
-      statusOptions: ["Pending", "Contacted", "Enrolled", "Rejected"],
-      deleteItem: () => onDeleteEnrollment && onDeleteEnrollment(e.id),
-    })),
-    ...teacherApplications.map((t) => ({
-      id: t.id,
-      kind: "teacher" as const,
-      categoryLabel: "Teacher Application (Become a Mentor)",
-      badgeClass: "bg-[#E6F4F3] text-[#008075] border-[#00A896]/30",
-      icon: GraduationCap,
-      name: t.fullName || "Teacher Applicant",
-      phone: t.phone,
-      email: t.email,
-      grade: undefined as string | undefined,
-      district: t.institution ? `${t.institution} ${t.department ? `(${t.department})` : ""}` : undefined,
-      subjects: t.subjectExpertise,
-      plan: t.hoursPerWeek ? `${t.hoursPerWeek} / week` : undefined,
-      fee: undefined as string | undefined,
-      message: t.bio || (t.experience ? `Experience: ${t.experience}` : undefined),
-      status: t.status || "Pending",
-      isPending: (t.status || "Pending") === "Pending",
-      isNew: isUnread(t.createdAt),
-      createdAt: t.createdAt,
-      timeAgo: formatRelativeTime(t.createdAt),
-      targetTab: "teachers",
-      targetLabel: "Tutors Directory",
-      updateStatus: (newStatus: string) => onUpdateTeacherAppStatus(t.id, newStatus),
-      statusOptions: ["Pending", "Approved", "Rejected"],
-      deleteItem: () => onDeleteTeacherApp && onDeleteTeacherApp(t.id),
-    })),
-    ...contacts.map((c) => ({
-      id: c.id,
-      kind: "contact" as const,
-      categoryLabel: "Contact Form Submission",
-      badgeClass: "bg-amber-50 text-amber-800 border-amber-200",
-      icon: Mail,
-      name: c.name || "Contact Inquirer",
-      phone: c.phone,
-      email: c.email,
-      grade: undefined as string | undefined,
-      district: undefined as string | undefined,
-      subjects: c.subject || "General Inquiry",
-      plan: undefined as string | undefined,
-      fee: undefined as string | undefined,
-      message: c.message,
-      status: "New Message",
-      isPending: true,
-      isNew: isUnread(c.createdAt),
-      createdAt: c.createdAt,
-      timeAgo: formatRelativeTime(c.createdAt),
-      targetTab: "contacts",
-      targetLabel: "Messages",
-      updateStatus: undefined as ((s: string) => void) | undefined,
-      statusOptions: [],
-      deleteItem: () => onDeleteContact && onDeleteContact(c.id),
-    })),
-    ...inquiries.map((i) => ({
-      id: i.id,
-      kind: "inquiry" as const,
-      categoryLabel: "Support Ticket & Callback Request",
-      badgeClass: "bg-blue-50 text-blue-800 border-blue-200",
-      icon: MessageSquare,
-      name: i.name || "Callback Inquirer",
-      phone: i.phone,
-      email: undefined as string | undefined,
-      grade: undefined as string | undefined,
-      district: undefined as string | undefined,
-      subjects: i.subject || "Support Request",
-      plan: undefined as string | undefined,
-      fee: undefined as string | undefined,
-      message: i.message,
-      status: i.status || "Pending",
-      isPending: (i.status || "Pending") === "Pending",
-      isNew: isUnread(i.createdAt),
-      createdAt: i.createdAt,
-      timeAgo: formatRelativeTime(i.createdAt),
-      targetTab: "inquiries",
-      targetLabel: "Support Tickets",
-      updateStatus: (newStatus: string) => onUpdateInquiryStatus(i.id, newStatus),
-      statusOptions: ["Pending", "Contacted", "Resolved"],
-      deleteItem: () => onDeleteInquiry && onDeleteInquiry(i.id),
-    })),
+    ...enrollments.map((e) => {
+      const isTrial = isTrialEnrollment(e);
+      const isPricing = isPricingEnrollment(e);
+      let eventType: "student" | "trial" | "pricing" = "student";
+      let eventTitle = `New 1-on-1 Tuition Request from ${e.studentName || "Student"}`;
+      let badgeClass = "bg-blue-50 text-blue-800 border-blue-200";
+      let categoryLabel = "Student Tuition Request";
+
+      if (isTrial) {
+        eventType = "trial";
+        eventTitle = `Free Trial Demo Class Booked by ${e.studentName || "Student"}`;
+        badgeClass = "bg-amber-50 text-amber-800 border-amber-300";
+        categoryLabel = "Free Trial Demo Request";
+      } else if (isPricing) {
+        eventType = "pricing";
+        eventTitle = `Pricing Plan Selected: ${e.selectedPlan} by ${e.studentName || "Student"}`;
+        badgeClass = "bg-orange-50 text-orange-800 border-orange-200";
+        categoryLabel = "Pricing Plan Request";
+      }
+
+      return {
+        id: e.id,
+        kind: eventType,
+        title: eventTitle,
+        categoryLabel,
+        badgeClass,
+        icon: isTrial ? Sparkles : Users,
+        name: e.studentName || "Anonymous Student",
+        phone: e.phone,
+        email: undefined as string | undefined,
+        details: [
+          e.grade ? `Class: ${e.grade}` : "",
+          e.medium ? `Medium: ${e.medium}` : "",
+          e.district ? `District: ${e.district}` : "",
+          e.preferredTime ? `Time: ${e.preferredTime}` : "",
+          e.selectedSubjects?.length ? `Subjects: ${e.selectedSubjects.join(", ")}` : "",
+          e.selectedPlan ? `Plan: ${e.selectedPlan}` : "",
+          e.fee ? `Fee: ৳${e.fee}` : "",
+        ].filter(Boolean),
+        message: undefined as string | undefined,
+        status: e.status || "Pending",
+        isNew: isUnread(e.createdAt),
+        createdAt: e.createdAt,
+        timeAgo: formatRelativeTime(e.createdAt),
+      };
+    }),
     ...pricingRequests.map((p) => ({
       id: p.id,
-      kind: "student" as const,
-      categoryLabel: "Pricing Plan & Package Inquiry",
+      kind: "pricing" as const,
+      title: `Custom Pricing Plan Requested by ${p.studentName || "Student / Parent"}`,
+      categoryLabel: "Custom Pricing Inquiry",
       badgeClass: "bg-orange-50 text-orange-800 border-orange-200",
       icon: DollarSign,
       name: p.studentName || "Student / Parent",
       phone: p.phone,
       email: undefined as string | undefined,
-      grade: undefined as string | undefined,
-      district: undefined as string | undefined,
-      subjects: `Plan: ${p.planName}`,
-      plan: p.duration,
-      fee: p.monthlyFee ? `৳${p.monthlyFee}` : undefined,
+      details: [
+        p.planName ? `Plan: ${p.planName}` : "",
+        p.duration ? `Duration: ${p.duration}` : "",
+        p.monthlyFee ? `Monthly Fee: ৳${p.monthlyFee}` : "",
+      ].filter(Boolean),
       message: undefined as string | undefined,
       status: p.status || "Pending",
-      isPending: (p.status || "Pending") === "Pending",
       isNew: isUnread(p.createdAt),
       createdAt: p.createdAt,
       timeAgo: formatRelativeTime(p.createdAt),
-      targetTab: "enrollments",
-      targetLabel: "Pricing Requests",
-      updateStatus: undefined as ((s: string) => void) | undefined,
-      statusOptions: ["Pending", "Contacted", "Completed", "Cancelled"],
-      deleteItem: () => onDeletePricingRequest && onDeletePricingRequest(p.id),
+    })),
+    ...teacherApplications.map((t) => ({
+      id: t.id,
+      kind: "teacher" as const,
+      title: `Teacher Application Submitted by ${t.fullName || "Applicant"}`,
+      categoryLabel: "Teacher Join Application",
+      badgeClass: "bg-[#E6F4F3] text-[#008075] border-[#00A896]/30",
+      icon: GraduationCap,
+      name: t.fullName || "Teacher Applicant",
+      phone: t.phone,
+      email: t.email,
+      details: [
+        t.institution ? `Institution: ${t.institution} ${t.department ? `(${t.department})` : ""}` : "",
+        t.subjectExpertise ? `Subject Expertise: ${t.subjectExpertise}` : "",
+        t.hoursPerWeek ? `Availability: ${t.hoursPerWeek} / week` : "",
+      ].filter(Boolean),
+      message: t.bio || (t.experience ? `Experience: ${t.experience}` : undefined),
+      status: t.status || "Pending",
+      isNew: isUnread(t.createdAt),
+      createdAt: t.createdAt,
+      timeAgo: formatRelativeTime(t.createdAt),
+    })),
+    ...contacts.map((c) => ({
+      id: c.id,
+      kind: "contact" as const,
+      title: `Contact Form Message from ${c.name || "Visitor"}`,
+      categoryLabel: "Contact Form Message",
+      badgeClass: "bg-amber-50 text-amber-800 border-amber-200",
+      icon: Mail,
+      name: c.name || "Contact Inquirer",
+      phone: c.phone,
+      email: c.email,
+      details: [
+        c.subject ? `Subject: ${c.subject}` : "",
+      ].filter(Boolean),
+      message: c.message,
+      status: "Submitted",
+      isNew: isUnread(c.createdAt),
+      createdAt: c.createdAt,
+      timeAgo: formatRelativeTime(c.createdAt),
+    })),
+    ...inquiries.map((i) => ({
+      id: i.id,
+      kind: "inquiry" as const,
+      title: `Callback Inquiry Submitted by ${i.name || "Student/Parent"}`,
+      categoryLabel: "Support Ticket & Callback",
+      badgeClass: "bg-blue-50 text-blue-800 border-blue-200",
+      icon: MessageSquare,
+      name: i.name || "Callback Inquirer",
+      phone: i.phone,
+      email: undefined as string | undefined,
+      details: [
+        i.subject ? `Topic: ${i.subject}` : "",
+      ].filter(Boolean),
+      message: i.message,
+      status: i.status || "Pending",
+      isNew: isUnread(i.createdAt),
+      createdAt: i.createdAt,
+      timeAgo: formatRelativeTime(i.createdAt),
     })),
   ].sort((a, b) => {
     const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
@@ -294,21 +278,19 @@ function NotificationsSection({
     return timeB - timeA;
   });
 
-  const unreadCount = allNotifications.filter((n) => n.isPending && n.isNew).length;
+  const unreadCount = allNotifications.filter((n) => n.isNew).length;
 
   const filteredNotifications = allNotifications.filter((item) => {
     if (filterType !== "all" && item.kind !== filterType) return false;
-    if (filterStatus === "pending" && !item.isPending) return false;
-    if (filterStatus === "handled" && item.isPending) return false;
     if (search.trim()) {
       const q = search.toLowerCase();
+      const matchTitle = item.title.toLowerCase().includes(q);
       const matchName = item.name?.toLowerCase().includes(q);
       const matchPhone = item.phone?.toLowerCase().includes(q);
       const matchEmail = item.email?.toLowerCase().includes(q);
-      const matchSubjects = (item.subjects || "").toLowerCase().includes(q);
-      const matchDistrict = (item.district || "").toLowerCase().includes(q);
+      const matchDetails = item.details.some(d => d.toLowerCase().includes(q));
       const matchMessage = (item.message || "").toLowerCase().includes(q);
-      if (!matchName && !matchPhone && !matchEmail && !matchSubjects && !matchDistrict && !matchMessage) {
+      if (!matchTitle && !matchName && !matchPhone && !matchEmail && !matchDetails && !matchMessage) {
         return false;
       }
     }
@@ -325,7 +307,7 @@ function NotificationsSection({
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-xl font-extrabold text-[#0D2C4A]">Form Notifications &amp; Submissions</h2>
+              <h2 className="text-xl font-extrabold text-[#0D2C4A]">Form Notifications &amp; Activity Log</h2>
               {unreadCount > 0 ? (
                 <span className="px-2.5 py-0.5 rounded-full bg-rose-500 text-white text-xs font-mono font-extrabold animate-pulse">
                   {unreadCount} New
@@ -333,12 +315,12 @@ function NotificationsSection({
               ) : (
                 <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-mono font-bold flex items-center gap-1">
                   <Check className="w-3 h-3 text-emerald-600" />
-                  0 New (All Read)
+                  All Read
                 </span>
               )}
             </div>
             <p className="text-xs text-slate-500">
-              Live feed of student requests, teacher signups, contact messages, and callback tickets
+              Chronological log of platform events, requests, and submissions (Informational feed)
             </p>
           </div>
         </div>
@@ -349,22 +331,10 @@ function NotificationsSection({
               type="button"
               onClick={onMarkAllAsRead}
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all cursor-pointer shadow-xs active:scale-95"
-              title="Mark all notifications as read and stop icon blinking"
+              title="Mark all notifications as read"
             >
               <CheckCircle className="w-3.5 h-3.5" />
               <span>Mark all as read</span>
-            </button>
-          )}
-
-          {onDeleteAllNotifications && allNotifications.length > 0 && (
-            <button
-              type="button"
-              onClick={onDeleteAllNotifications}
-              className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white border border-rose-200 text-xs font-bold transition-all cursor-pointer shadow-xs active:scale-95"
-              title="Delete all form notifications and submissions"
-            >
-              <Trash2 className="w-3.5 h-3.5" />
-              <span>Delete All Notifications</span>
             </button>
           )}
 
@@ -378,83 +348,18 @@ function NotificationsSection({
         </div>
       </div>
 
-      {/* 4 Summary Stat Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
-        <div
-          onClick={() => setFilterType("student")}
-          className={`p-4 rounded-2xl border transition-all cursor-pointer ${
-            filterType === "student"
-              ? "bg-emerald-50/80 border-emerald-300 ring-2 ring-emerald-500/20"
-              : "bg-white border-slate-200/80 hover:border-emerald-300"
-          }`}
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Student Requests</span>
-            <Users className="w-4 h-4 text-emerald-600" />
-          </div>
-          <div className="text-xl font-mono font-black text-[#0D2C4A] pt-1.5">{enrollments.length + pricingRequests.length}</div>
-          <div className="text-[11px] text-emerald-700 font-bold font-mono">{pendingStudentCount} Pending Action</div>
-        </div>
-
-        <div
-          onClick={() => setFilterType("teacher")}
-          className={`p-4 rounded-2xl border transition-all cursor-pointer ${
-            filterType === "teacher"
-              ? "bg-[#E6F4F3] border-[#00A896] ring-2 ring-[#00A896]/20"
-              : "bg-white border-slate-200/80 hover:border-[#00A896]"
-          }`}
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Teacher Signups</span>
-            <GraduationCap className="w-4 h-4 text-[#008075]" />
-          </div>
-          <div className="text-xl font-mono font-black text-[#0D2C4A] pt-1.5">{teacherApplications.length}</div>
-          <div className="text-[11px] text-[#008075] font-bold font-mono">{pendingTeacherCount} Pending Review</div>
-        </div>
-
-        <div
-          onClick={() => setFilterType("contact")}
-          className={`p-4 rounded-2xl border transition-all cursor-pointer ${
-            filterType === "contact"
-              ? "bg-amber-50/80 border-amber-300 ring-2 ring-amber-500/20"
-              : "bg-white border-slate-200/80 hover:border-amber-300"
-          }`}
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Contact Form</span>
-            <Mail className="w-4 h-4 text-amber-600" />
-          </div>
-          <div className="text-xl font-mono font-black text-[#0D2C4A] pt-1.5">{contacts.length}</div>
-          <div className="text-[11px] text-amber-700 font-bold font-mono">{pendingContactCount} Total Messages</div>
-        </div>
-
-        <div
-          onClick={() => setFilterType("inquiry")}
-          className={`p-4 rounded-2xl border transition-all cursor-pointer ${
-            filterType === "inquiry"
-              ? "bg-blue-50/80 border-blue-300 ring-2 ring-blue-500/20"
-              : "bg-white border-slate-200/80 hover:border-blue-300"
-          }`}
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wide">Support Tickets</span>
-            <MessageSquare className="w-4 h-4 text-blue-600" />
-          </div>
-          <div className="text-xl font-mono font-black text-[#0D2C4A] pt-1.5">{inquiries.length}</div>
-          <div className="text-[11px] text-blue-700 font-bold font-mono">{pendingInquiryCount} Pending Callback</div>
-        </div>
-      </div>
-
       {/* Filter and Search Bar */}
       <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 bg-slate-50 p-3 rounded-2xl border border-slate-200">
         {/* Category Pills */}
         <div className="flex flex-wrap items-center gap-1.5">
           {[
-            { id: "all", label: "All Submissions", count: allNotifications.length },
-            { id: "student", label: "Student Requests", count: enrollments.length + pricingRequests.length },
-            { id: "teacher", label: "Teacher Applications", count: teacherApplications.length },
-            { id: "contact", label: "Contact Form", count: contacts.length },
-            { id: "inquiry", label: "Support Tickets", count: inquiries.length },
+            { id: "all", label: "All Activity", count: allNotifications.length },
+            { id: "student", label: "1-on-1 Tuition", count: allNotifications.filter(n => n.kind === "student").length },
+            { id: "trial", label: "Free Trials", count: allNotifications.filter(n => n.kind === "trial").length },
+            { id: "pricing", label: "Pricing Inquiries", count: allNotifications.filter(n => n.kind === "pricing").length },
+            { id: "teacher", label: "Teacher Signups", count: allNotifications.filter(n => n.kind === "teacher").length },
+            { id: "contact", label: "Messages", count: allNotifications.filter(n => n.kind === "contact").length },
+            { id: "inquiry", label: "Callbacks", count: allNotifications.filter(n => n.kind === "inquiry").length },
           ].map((pill) => (
             <button
               key={pill.id}
@@ -470,55 +375,37 @@ function NotificationsSection({
           ))}
         </div>
 
-        {/* Status Filter & Search */}
-        <div className="flex items-center gap-2">
-          <select
-            value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value as any)}
-            className="text-xs font-bold px-3 py-2 rounded-xl border border-slate-300 bg-white text-slate-700 focus:outline-none cursor-pointer"
-          >
-            <option value="all">All Status</option>
-            <option value="pending">Pending Only</option>
-            <option value="handled">Handled / Enrolled</option>
-          </select>
-
-          <div className="relative flex-1 sm:w-48">
-            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              placeholder="Search notifications..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-white border border-slate-300 text-xs text-[#0D2C4A] focus:outline-none focus:border-[#00A896]"
-            />
-          </div>
+        {/* Search */}
+        <div className="relative flex-1 sm:w-56">
+          <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <input
+            type="text"
+            placeholder="Search activity log..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-white border border-slate-300 text-xs text-[#0D2C4A] focus:outline-none focus:border-[#00A896]"
+          />
         </div>
       </div>
 
-      {/* Notifications Feed List */}
+      {/* Notifications Feed List (Informational Only - No action buttons) */}
       {filteredNotifications.length === 0 ? (
         <div className="py-16 text-center text-slate-400 bg-slate-50/60 rounded-3xl border border-dashed border-slate-200 space-y-2">
           <CheckCircle className="w-10 h-10 mx-auto text-[#00A896] opacity-60" />
-          <p className="text-sm font-bold text-slate-600">No notifications match your current filter</p>
+          <p className="text-sm font-bold text-slate-600">No activity log found</p>
           <p className="text-xs text-slate-400">All submissions are up to date.</p>
         </div>
       ) : (
-        <div className="space-y-3.5">
+        <div className="space-y-3">
           {filteredNotifications.map((item, idx) => {
             const IconComp = item.icon;
-            const waLink = cleanWhatsAppLink(item.phone);
-
             return (
               <div
                 key={`${item.id}-${idx}`}
-                className={`p-5 rounded-2xl border transition-all space-y-3.5 ${
-                  item.isPending
-                    ? "bg-white border-slate-200/90 shadow-sm hover:border-[#00A896]/60 hover:shadow-md"
-                    : "bg-slate-50/70 border-slate-200/60 opacity-90"
-                }`}
+                className={`p-4 sm:p-5 rounded-2xl border transition-all space-y-2.5 bg-white border-slate-200/90 shadow-2xs hover:border-[#00A896]/50 hover:shadow-sm`}
               >
-                {/* Top Row: Category badge, ID, Time, Status */}
-                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+                {/* Event Top Bar: Badge, Timestamp, ID */}
+                <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
                     <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold border ${item.badgeClass}`}>
                       <IconComp className="w-3.5 h-3.5 shrink-0" />
@@ -529,163 +416,53 @@ function NotificationsSection({
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <span className="inline-flex items-center gap-1 text-xs text-slate-400 font-mono">
+                  <div className="flex items-center gap-2 text-xs text-slate-400 font-mono">
+                    <span className="inline-flex items-center gap-1">
                       <Clock className="w-3.5 h-3.5" />
-                      <span>{item.timeAgo}</span>
+                      <span className="font-bold">{item.timeAgo}</span>
                     </span>
-                    <span
-                      className={`text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full border ${
-                        item.isPending
-                          ? "bg-amber-50 text-amber-800 border-amber-200"
-                          : "bg-emerald-50 text-emerald-800 border-emerald-200"
-                      }`}
-                    >
-                      {item.status}
-                    </span>
+                    <span>•</span>
+                    <span>{item.createdAt ? new Date(item.createdAt).toLocaleString("en-US", { timeZone: "Asia/Dhaka", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "Recently"}</span>
                   </div>
                 </div>
 
-                {/* Main Content Info */}
-                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                  <div className="space-y-1.5 flex-1 min-w-0">
-                    <div className="flex flex-wrap items-center gap-3">
-                      <h3 className="font-black text-base text-[#0D2C4A]">{item.name}</h3>
+                {/* Event Headline */}
+                <div>
+                  <h3 className="font-extrabold text-sm sm:text-base text-[#0D2C4A] leading-snug">
+                    {item.title}
+                  </h3>
+                </div>
 
-                      {item.grade && (
-                        <span className="px-2.5 py-0.5 rounded-md bg-[#00A896]/10 text-[#008075] text-[11px] font-mono font-bold">
-                          {item.grade}
-                        </span>
-                      )}
-
-                      {item.plan && (
-                        <span className="px-2.5 py-0.5 rounded-md bg-amber-50 text-amber-800 text-[11px] font-mono font-bold border border-amber-200">
-                          {item.plan}
-                        </span>
-                      )}
-
-                      {item.fee && (
-                        <span className="px-2.5 py-0.5 rounded-md bg-slate-100 text-[#0D2C4A] text-[11px] font-mono font-bold">
-                          {item.fee}
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Subtitle / Meta */}
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-600">
-                      {item.district && (
-                        <span className="flex items-center gap-1">
-                          <MapPin className="w-3 h-3 text-slate-400" />
-                          <span>{item.district}</span>
-                        </span>
-                      )}
-                      {item.subjects && (
-                        <span className="flex items-center gap-1 font-medium">
-                          <BookOpen className="w-3 h-3 text-slate-400" />
-                          <span className="text-[#0D2C4A] font-bold">{item.subjects}</span>
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Message snippet if any */}
-                    {item.message && (
-                      <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-xs text-slate-700 leading-relaxed max-w-3xl">
-                        <span className="font-bold text-slate-500 block text-[10px] uppercase font-mono mb-0.5">Details / Message:</span>
-                        {item.message}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Contact Badges: Phone, WhatsApp, Email */}
-                  <div className="flex flex-wrap items-center gap-2 shrink-0">
+                {/* Event Details Badges */}
+                {item.details.length > 0 && (
+                  <div className="flex flex-wrap items-center gap-1.5 pt-1">
                     {item.phone && (
-                      <>
-                        <a
-                          href={`tel:${item.phone}`}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-mono font-extrabold text-[#00A896] hover:bg-[#00A896] hover:text-white transition-all shadow-2xs"
-                          title="Call phone number"
-                        >
-                          <PhoneCall className="w-3.5 h-3.5" />
-                          <span>{item.phone}</span>
-                        </a>
-
-                        {waLink && (
-                          <a
-                            href={waLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-700 transition-all shadow-2xs"
-                            title="Chat on WhatsApp"
-                          >
-                            <MessageSquare className="w-3.5 h-3.5" />
-                            <span>WhatsApp</span>
-                          </a>
-                        )}
-                      </>
+                      <span className="font-mono font-bold text-[11px] text-[#008075] bg-[#E6F4F3] px-2.5 py-1 rounded-lg border border-[#00A896]/20 flex items-center gap-1">
+                        <PhoneCall className="w-3 h-3" />
+                        <span>{item.phone}</span>
+                      </span>
                     )}
-
                     {item.email && (
-                      <a
-                        href={`mailto:${item.email}`}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-mono text-slate-600 hover:bg-slate-100 transition-all shadow-2xs"
-                        title="Send email"
-                      >
-                        <Mail className="w-3.5 h-3.5 text-slate-400" />
+                      <span className="font-mono text-[11px] text-slate-600 bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-200 flex items-center gap-1">
+                        <Mail className="w-3 h-3 text-slate-400" />
                         <span>{item.email}</span>
-                      </a>
+                      </span>
                     )}
+                    {item.details.map((detail, dIdx) => (
+                      <span key={dIdx} className="text-[11px] font-bold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-200">
+                        {detail}
+                      </span>
+                    ))}
                   </div>
-                </div>
+                )}
 
-                {/* Bottom Actions Bar */}
-                <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-100">
-                  {/* Status Dropdown if editable */}
-                  <div className="flex items-center gap-2">
-                    {item.updateStatus && item.statusOptions.length > 0 ? (
-                      <div className="flex items-center gap-2">
-                        <span className="text-[11px] font-bold text-slate-500 font-mono">Status:</span>
-                        <select
-                          value={item.status}
-                          onChange={(e) => item.updateStatus && item.updateStatus(e.target.value)}
-                          className="text-xs font-bold px-2.5 py-1 rounded-xl border border-slate-300 bg-white text-[#0D2C4A] cursor-pointer focus:border-[#00A896] focus:outline-none"
-                        >
-                          {item.statusOptions.map((opt) => (
-                            <option key={opt} value={opt}>
-                              {opt}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    ) : (
-                      <span className="text-xs text-slate-400 font-mono">Submitted: {item.createdAt ? new Date(item.createdAt).toLocaleString("en-US", { timeZone: "Asia/Dhaka" }) : "N/A"}</span>
-                    )}
+                {/* Message snippet if any */}
+                {item.message && (
+                  <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs text-slate-700 leading-relaxed">
+                    <span className="font-bold text-slate-500 block text-[10px] uppercase font-mono mb-0.5">Submitted Note / Message:</span>
+                    {item.message}
                   </div>
-
-                  {/* Actions: Delete & Navigate to Section */}
-                  <div className="flex items-center gap-2">
-                    {item.deleteItem && (
-                      <button
-                        type="button"
-                        onClick={item.deleteItem}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white border border-rose-200/80 text-xs font-bold transition-all cursor-pointer shadow-2xs active:scale-95"
-                        title="Delete this notification"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                        <span>Delete</span>
-                      </button>
-                    )}
-
-                    {/* Navigate to Section Button */}
-                    <button
-                      type="button"
-                      onClick={() => onNavigateTab(item.targetTab)}
-                      className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-[#0D2C4A] text-slate-700 hover:text-white text-xs font-bold transition-all cursor-pointer shadow-2xs"
-                    >
-                      <span>Manage in {item.targetLabel}</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                </div>
+                )}
               </div>
             );
           })}
@@ -2561,7 +2338,9 @@ export default function AdminDashboardPage() {
     return new Date(createdAt).getTime() > new Date(lastReadNotificationsAt).getTime();
   };
 
-  const pendingEnrollmentsCount = enrollments.filter((e) => e.status === "Pending").length;
+  const pendingEnrollmentsCount =
+    enrollments.filter((e) => e.status === "Pending").length +
+    pricingRequests.filter((p) => (p.status || "Pending") === "Pending").length;
   const pendingTeacherAppsCount = teacherApplications.filter((a) => (a.status || "Pending") === "Pending").length;
   const pendingPricingCount = pricingRequests.filter((p) => (p.status || "Pending") === "Pending").length;
   const pendingInquiriesCount = inquiries.filter((i) => (i.status || "Pending") === "Pending").length;
@@ -2837,21 +2616,21 @@ export default function AdminDashboardPage() {
                   </div>
                 </div>
 
-                {/* CARD 3: PORTFOLIO VISITORS */}
+                {/* CARD 3: VERIFIED MENTORS */}
                 <div className="bg-white rounded-3xl p-6 border border-[#0D2C4A]/10 shadow-sm hover:shadow-md hover:border-[#00A896]/30 transition-all flex items-center justify-between">
                   <div className="space-y-1">
                     <span className="admin-kicker text-slate-400 block">
-                      PORTFOLIO VISITORS
+                      VERIFIED MENTORS
                     </span>
                     <div className="admin-stat-num text-[#0D2C4A] pt-1">
-                      12,480
+                      {teachers.length}
                     </div>
                     <span className="admin-caption-text text-[#00A896] block font-bold pt-1">
-                      +18.4% this month
+                      {teacherApplications.length} Total Applications
                     </span>
                   </div>
                   <div className="w-12 h-12 rounded-2xl bg-[#E6F4F3] border border-[#00A896]/30 flex items-center justify-center text-[#00A896] shadow-sm shrink-0">
-                    <Eye className="w-6 h-6" />
+                    <GraduationCap className="w-6 h-6" />
                   </div>
                 </div>
 
@@ -2974,24 +2753,14 @@ export default function AdminDashboardPage() {
                   contacts={contacts}
                   inquiries={inquiries}
                   pricingRequests={pricingRequests}
-                  onNavigateTab={(tab) => setActiveTab(tab)}
-                  onUpdateEnrollmentStatus={handleUpdateEnrollmentStatus}
-                  onUpdateTeacherAppStatus={(id, status) => handleUpdateTeacherApplicationStatus(id, status)}
-                  onUpdateInquiryStatus={handleUpdateInquiryStatus}
                   onRefresh={fetchAllData}
                   loading={loading}
                   onMarkAllAsRead={handleMarkAllNotificationsAsRead}
                   lastReadAt={lastReadNotificationsAt}
-                  onDeleteEnrollment={handleDeleteEnrollment}
-                  onDeletePricingRequest={handleDeletePricingRequest}
-                  onDeleteTeacherApp={handleDeleteTeacherApplication}
-                  onDeleteContact={handleDeleteContact}
-                  onDeleteInquiry={handleDeleteInquiry}
-                  onDeleteAllNotifications={handleDeleteAllNotifications}
                 />
               )}
 
-              {/* ===== TAB 2: ENROLLMENTS MANAGEMENT ===== */}
+              {/* ===== TAB 2: STUDENT REQUESTS HUB (Criteria Specific Tabs List) ===== */}
               {activeTab === "enrollments" && (() => {
                 const isTrialEnrollment = (e: Enrollment) =>
                   Boolean(
@@ -3023,32 +2792,155 @@ export default function AdminDashboardPage() {
                 const isGeneralStudentEnrollment = (e: Enrollment) =>
                   !isTrialEnrollment(e) && !isPricingEnrollment(e);
 
-                const trialCount = enrollments.filter(isTrialEnrollment).length;
-                const pricingList = enrollments.filter(isPricingEnrollment);
-                const pricingCount = pricingList.length;
-                const payWhatYouCanCount = pricingList.filter((e) => isPayWhatYouCan(e.selectedPlan)).length;
-                const premiumCount = pricingList.filter((e) => isPremiumPackage(e.selectedPlan)).length;
-                const studentCount = enrollments.filter(isGeneralStudentEnrollment).length;
+                const trialEnrollments = enrollments.filter(isTrialEnrollment);
+                const generalEnrollments = enrollments.filter(isGeneralStudentEnrollment);
+                const pricingEnrollments = enrollments.filter(isPricingEnrollment);
 
-                const displayedEnrollments = enrollments.filter((e) => {
-                  if (statusFilter !== "All" && e.status !== statusFilter) return false;
-                  if (enrollmentTypeTab === "trial") return isTrialEnrollment(e);
-                  if (enrollmentTypeTab === "pricing") {
-                    if (!isPricingEnrollment(e)) return false;
-                    if (pricingPackageFilter === "pay-what-you-can") return isPayWhatYouCan(e.selectedPlan);
-                    if (pricingPackageFilter === "premium") return isPremiumPackage(e.selectedPlan);
-                    return true;
+                const trialCount = trialEnrollments.length;
+                const studentCount = generalEnrollments.length;
+                const pricingCount = pricingEnrollments.length + pricingRequests.length;
+                const payWhatYouCanCount = pricingEnrollments.filter((e) => isPayWhatYouCan(e.selectedPlan)).length;
+                const premiumCount = pricingEnrollments.filter((e) => isPremiumPackage(e.selectedPlan)).length + pricingRequests.length;
+                const callbackCount = inquiries.length;
+                const totalAllStudentRequests = enrollments.length + pricingRequests.length + inquiries.length;
+
+                // Build unified unified list based on active sub tab
+                type UnifiedStudentItem = {
+                  id: string;
+                  source: "enrollment" | "pricing_request" | "inquiry";
+                  studentName: string;
+                  phone: string;
+                  grade?: string;
+                  medium?: string;
+                  district?: string;
+                  preferredTime?: string;
+                  subjects?: string;
+                  planName?: string;
+                  fee?: string;
+                  message?: string;
+                  status: string;
+                  createdAt?: string;
+                  typeBadge: { label: string; class: string };
+                  onUpdateStatus: (newStatus: string) => void;
+                  onDelete: () => void;
+                };
+
+                const allItems: UnifiedStudentItem[] = [
+                  ...enrollments.map((e) => {
+                    const isTrial = isTrialEnrollment(e);
+                    const isPricing = isPricingEnrollment(e);
+                    let typeBadge = { label: "1-on-1 Tuition", class: "bg-blue-50 text-blue-800 border-blue-200" };
+                    if (isTrial) {
+                      typeBadge = { label: "Free Trial Demo", class: "bg-amber-50 text-amber-800 border-amber-300" };
+                    } else if (isPricing) {
+                      typeBadge = { label: "Pricing Package", class: "bg-orange-50 text-orange-800 border-orange-200" };
+                    }
+
+                    return {
+                      id: e.id,
+                      source: "enrollment" as const,
+                      studentName: e.studentName || "Anonymous Student",
+                      phone: e.phone,
+                      grade: e.grade,
+                      medium: e.medium,
+                      district: e.district,
+                      preferredTime: e.preferredTime,
+                      subjects: e.selectedSubjects?.length ? e.selectedSubjects.join(", ") : undefined,
+                      planName: e.selectedPlan || (isTrial ? "Free Trial" : "Student Request"),
+                      fee: e.fee ? `৳${e.fee}` : undefined,
+                      status: e.status || "Pending",
+                      createdAt: e.createdAt,
+                      typeBadge,
+                      onUpdateStatus: (status: string) => handleUpdateEnrollmentStatus(e.id, status),
+                      onDelete: () => handleDeleteEnrollment(e.id),
+                    };
+                  }),
+                  ...pricingRequests.map((p) => ({
+                    id: p.id,
+                    source: "pricing_request" as const,
+                    studentName: p.studentName || "Student / Parent",
+                    phone: p.phone || "",
+                    subjects: `Requested Plan: ${p.planName}`,
+                    planName: p.duration ? `Duration: ${p.duration}` : p.planName,
+                    fee: p.monthlyFee ? `৳${p.monthlyFee}/month` : undefined,
+                    status: p.status || "Pending",
+                    createdAt: p.createdAt,
+                    typeBadge: { label: "Custom Pricing Request", class: "bg-orange-50 text-orange-800 border-orange-200" },
+                    onUpdateStatus: (status: string) => handleUpdatePricingStatus(p.id, status),
+                    onDelete: () => handleDeletePricingRequest(p.id),
+                  })),
+                  ...inquiries.map((i) => ({
+                    id: i.id,
+                    source: "inquiry" as const,
+                    studentName: i.name || "Inquirer",
+                    phone: i.phone || "",
+                    subjects: i.subject || "Callback / Consultation Request",
+                    message: i.message,
+                    status: i.status || "Pending",
+                    createdAt: i.createdAt,
+                    typeBadge: { label: "Callback Request", class: "bg-purple-50 text-purple-800 border-purple-200" },
+                    onUpdateStatus: (status: string) => handleUpdateInquiryStatus(i.id, status),
+                    onDelete: () => handleDeleteInquiry(i.id),
+                  })),
+                ];
+
+                // Filter by criteria tab
+                const displayedItems = allItems.filter((item) => {
+                  if (statusFilter !== "All" && item.status !== statusFilter) return false;
+
+                  if (searchQuery.trim()) {
+                    const q = searchQuery.toLowerCase();
+                    const matchName = item.studentName.toLowerCase().includes(q);
+                    const matchPhone = item.phone.toLowerCase().includes(q);
+                    const matchDistrict = (item.district || "").toLowerCase().includes(q);
+                    const matchSubjects = (item.subjects || "").toLowerCase().includes(q);
+                    const matchGrade = (item.grade || "").toLowerCase().includes(q);
+                    const matchPlan = (item.planName || "").toLowerCase().includes(q);
+                    if (!matchName && !matchPhone && !matchDistrict && !matchSubjects && !matchGrade && !matchPlan) {
+                      return false;
+                    }
                   }
-                  if (enrollmentTypeTab === "student") return isGeneralStudentEnrollment(e);
+
+                  if (enrollmentTypeTab === "student") {
+                    return item.source === "enrollment" && item.typeBadge.label === "1-on-1 Tuition";
+                  }
+                  if (enrollmentTypeTab === "trial") {
+                    return item.source === "enrollment" && item.typeBadge.label === "Free Trial Demo";
+                  }
+                  if (enrollmentTypeTab === "pricing") {
+                    if (item.source === "pricing_request") return true;
+                    if (item.source === "enrollment" && item.typeBadge.label === "Pricing Package") {
+                      if (pricingPackageFilter === "pay-what-you-can") return isPayWhatYouCan(item.planName);
+                      if (pricingPackageFilter === "premium") return isPremiumPackage(item.planName);
+                      return true;
+                    }
+                    return false;
+                  }
+                  if ((enrollmentTypeTab as any) === "callback") {
+                    return item.source === "inquiry";
+                  }
+
                   return true;
+                }).sort((a, b) => {
+                  const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+                  const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+                  return timeB - timeA;
                 });
 
                 return (
                   <div className="space-y-6">
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    {/* Header */}
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
                       <div>
-                        <h2 className="text-xl font-extrabold text-[#0D2C4A]">Students request list ({displayedEnrollments.length})</h2>
-                        <p className="text-xs text-slate-500">Manage 1-on-1 online class student enrollments, pricing plan inquiries, and free trial requests</p>
+                        <div className="flex items-center gap-2">
+                          <h2 className="text-xl font-extrabold text-[#0D2C4A]">Student Requests Hub</h2>
+                          <span className="px-2.5 py-0.5 rounded-full bg-[#00A896]/10 text-[#008075] text-xs font-mono font-extrabold">
+                            {displayedItems.length} Total
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-500 pt-0.5">
+                          Manage all types of incoming student requests categorized by criteria (1-on-1 tuition, demo trial, pricing plans, and callbacks)
+                        </p>
                       </div>
 
                       {/* Status Filter Dropdown */}
@@ -3057,64 +2949,82 @@ export default function AdminDashboardPage() {
                         <select
                           value={statusFilter}
                           onChange={(e) => setStatusFilter(e.target.value)}
-                          className="text-xs font-bold px-3 py-2 rounded-xl border border-slate-300 bg-white cursor-pointer"
+                          className="text-xs font-bold px-3 py-2 rounded-xl border border-slate-300 bg-white cursor-pointer focus:border-[#00A896] focus:outline-none"
                         >
                           <option value="All">All Statuses</option>
-                          <option value="Pending">Pending</option>
-                          <option value="Contacted">Contacted</option>
-                          <option value="Enrolled">Enrolled</option>
-                          <option value="Rejected">Rejected</option>
+                          <option value="Pending">🟡 Pending</option>
+                          <option value="Contacted">🔵 Contacted</option>
+                          <option value="Enrolled">🟢 Enrolled / Resolved</option>
+                          <option value="Rejected">🔴 Rejected</option>
                         </select>
                       </div>
                     </div>
 
-                    {/* Content Area 4 Sub-Buttons: 1. All Request | 2. Student Request | 3. Free Trial Request | 4. Pricing Plan */}
+                    {/* Criteria-Specific Tabs List */}
                     <div className="space-y-3">
-                      <div className="flex flex-wrap items-center gap-2.5 p-1.5 bg-slate-100/90 rounded-2xl border border-slate-200/80 w-fit">
+                      <div className="flex flex-wrap items-center gap-2 p-1.5 bg-slate-100/90 rounded-2xl border border-slate-200/80 w-fit">
                         <button
                           type="button"
                           onClick={() => setEnrollmentTypeTab("all")}
-                          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${enrollmentTypeTab === "all"
+                          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                            enrollmentTypeTab === "all"
                               ? "bg-[#0D2C4A] text-white shadow-sm"
                               : "text-slate-600 hover:text-[#0D2C4A] hover:bg-white/70"
-                            }`}
+                          }`}
                         >
-                          1. All Request ({enrollments.length})
+                          1. All Requests ({totalAllStudentRequests})
                         </button>
 
                         <button
                           type="button"
                           onClick={() => setEnrollmentTypeTab("student")}
-                          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${enrollmentTypeTab === "student"
-                              ? "bg-[#0D2C4A] text-white shadow-sm"
-                              : "text-slate-600 hover:text-[#0D2C4A] hover:bg-white/70"
-                            }`}
+                          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                            enrollmentTypeTab === "student"
+                              ? "bg-[#008075] text-white shadow-sm"
+                              : "text-slate-600 hover:text-[#008075] hover:bg-white/70"
+                          }`}
                         >
-                          2. Student Request ({studentCount})
+                          <Users className="w-3.5 h-3.5" />
+                          <span>2. 1-on-1 Tuition ({studentCount})</span>
                         </button>
 
                         <button
                           type="button"
                           onClick={() => setEnrollmentTypeTab("trial")}
-                          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${enrollmentTypeTab === "trial"
+                          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                            enrollmentTypeTab === "trial"
                               ? "bg-[#00A896] text-white shadow-sm"
                               : "text-slate-600 hover:text-[#00A896] hover:bg-white/70"
-                            }`}
+                          }`}
                         >
                           <Sparkles className="w-3.5 h-3.5" />
-                          <span>3. Free Trial Request ({trialCount})</span>
+                          <span>3. Free Trial Requests ({trialCount})</span>
                         </button>
 
                         <button
                           type="button"
                           onClick={() => setEnrollmentTypeTab("pricing")}
-                          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${enrollmentTypeTab === "pricing"
+                          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                            enrollmentTypeTab === "pricing"
                               ? "bg-[#C05621] text-white shadow-sm"
                               : "text-slate-600 hover:text-[#C05621] hover:bg-white/70"
-                            }`}
+                          }`}
                         >
                           <DollarSign className="w-3.5 h-3.5" />
-                          <span>4. Pricing Plan ({pricingCount})</span>
+                          <span>4. Pricing Plan Requests ({pricingCount})</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => setEnrollmentTypeTab("callback" as any)}
+                          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                            (enrollmentTypeTab as any) === "callback"
+                              ? "bg-[#6B21A8] text-white shadow-sm"
+                              : "text-slate-600 hover:text-[#6B21A8] hover:bg-white/70"
+                          }`}
+                        >
+                          <PhoneCall className="w-3.5 h-3.5" />
+                          <span>5. Callback Inquiries ({callbackCount})</span>
                         </button>
                       </div>
 
@@ -3125,30 +3035,33 @@ export default function AdminDashboardPage() {
                           <button
                             type="button"
                             onClick={() => setPricingPackageFilter("all")}
-                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${pricingPackageFilter === "all"
+                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                              pricingPackageFilter === "all"
                                 ? "bg-[#0D2C4A] text-white shadow-xs"
                                 : "bg-white text-slate-700 hover:bg-slate-50 border border-slate-200"
-                              }`}
+                            }`}
                           >
                             All Pricing Packages ({pricingCount})
                           </button>
                           <button
                             type="button"
                             onClick={() => setPricingPackageFilter("pay-what-you-can")}
-                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${pricingPackageFilter === "pay-what-you-can"
+                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                              pricingPackageFilter === "pay-what-you-can"
                                 ? "bg-[#00A896] text-white shadow-xs"
                                 : "bg-white text-[#00A896] hover:bg-emerald-50 border border-emerald-200"
-                              }`}
+                            }`}
                           >
                             Pay What You Can ({payWhatYouCanCount})
                           </button>
                           <button
                             type="button"
                             onClick={() => setPricingPackageFilter("premium")}
-                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${pricingPackageFilter === "premium"
+                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                              pricingPackageFilter === "premium"
                                 ? "bg-[#C05621] text-white shadow-xs"
                                 : "bg-white text-[#92400E] hover:bg-amber-50 border border-amber-200"
-                              }`}
+                            }`}
                           >
                             Custom Premium Package ({premiumCount})
                           </button>
@@ -3156,95 +3069,170 @@ export default function AdminDashboardPage() {
                       )}
                     </div>
 
-                    <div className="space-y-4">
-                      {displayedEnrollments.map((e) => {
-                        const isTrial = isTrialEnrollment(e);
-                        const isPricing = isPricingEnrollment(e);
+                    {/* Student Requests Cards Feed */}
+                    <div className="space-y-3.5">
+                      {displayedItems.map((item) => {
+                        const waLink = cleanWhatsAppLink(item.phone);
+
                         return (
                           <div
-                            key={e.id}
-                            className="bg-slate-50 rounded-2xl p-5 border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:border-[#00A896]/40 transition-all shadow-xs"
+                            key={item.id}
+                            className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-2xs hover:border-[#00A896]/50 hover:shadow-sm transition-all space-y-3.5"
                           >
-                            <div className="space-y-1.5 min-w-0">
+                            {/* Card Top Row: Type Badge, ID, Time, Plan/Fee */}
+                            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
                               <div className="flex flex-wrap items-center gap-2">
-                                <h3 className="font-extrabold text-base text-[#0D2C4A]">{e.studentName}</h3>
-                                <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-[#00A896]/10 text-[#00A896]">
-                                  {e.grade}
+                                <span className={`text-xs font-extrabold px-3 py-1 rounded-full border ${item.typeBadge.class}`}>
+                                  {item.typeBadge.label}
                                 </span>
-                                {e.medium && (
-                                  <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-slate-200 text-slate-700">
-                                    {e.medium}
+                                <span className="font-mono text-[11px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-md">
+                                  {item.id}
+                                </span>
+                                {item.grade && (
+                                  <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-[#00A896]/10 text-[#008075]">
+                                    {item.grade}
                                   </span>
                                 )}
-                                {enrollmentTypeTab !== "pricing" && (
-                                  <span
-                                    className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${isTrial
-                                        ? "bg-amber-50 text-amber-800 border-amber-300"
-                                        : "bg-blue-50 text-blue-800 border-blue-200"
-                                      }`}
-                                  >
-                                    {isTrial ? "Free Trial Request" : "Student Request"}
-                                  </span>
-                                )}
-                                {e.selectedPlan && (
-                                  <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
-                                    {e.selectedPlan}
+                                {item.medium && (
+                                  <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700">
+                                    {item.medium}
                                   </span>
                                 )}
                               </div>
-                              <div className="flex flex-wrap items-center gap-3 text-xs text-slate-600 font-mono">
-                                <span className="flex items-center gap-1 font-bold text-[#00A896]">
-                                  <PhoneCall className="w-3.5 h-3.5 text-[#00A896]" />
-                                  <span>{e.phone}</span>
-                                </span>
-                                <span className="flex items-center gap-1 text-slate-500">
-                                  <MapPin className="w-3.5 h-3.5 text-slate-400" />
-                                  <span>{e.district}</span>
-                                </span>
-                                <span className="flex items-center gap-1 text-slate-500">
-                                  <Clock className="w-3.5 h-3.5 text-slate-400" />
-                                  <span>{e.preferredTime}</span>
-                                </span>
+
+                              <div className="flex items-center gap-2 text-xs font-mono text-slate-400">
+                                <Clock className="w-3.5 h-3.5" />
+                                <span>{item.createdAt ? new Date(item.createdAt).toLocaleString("en-US", { timeZone: "Asia/Dhaka", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "Recently"}</span>
                               </div>
-                              <p className="text-xs font-bold text-slate-500">
-                                Subjects: {e.selectedSubjects && e.selectedSubjects.length > 0 ? e.selectedSubjects.join(", ") : "All Subjects"}
-                              </p>
                             </div>
 
-                            <div className="flex items-center gap-3 shrink-0">
-                              <select
-                                value={e.status}
-                                onChange={(ev) => handleUpdateEnrollmentStatus(e.id, ev.target.value)}
-                                className="text-xs font-bold px-3 py-2 rounded-xl border border-slate-300 bg-white cursor-pointer"
-                              >
-                                <option value="Pending">Pending</option>
-                                <option value="Contacted">Contacted</option>
-                                <option value="Enrolled">Enrolled</option>
-                                <option value="Rejected">Rejected</option>
-                              </select>
+                            {/* Card Body: Student Info, Phone, Location, Subjects, Message */}
+                            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                              <div className="space-y-1.5 flex-1 min-w-0">
+                                <div className="flex flex-wrap items-center gap-3">
+                                  <h3 className="font-black text-base text-[#0D2C4A]">{item.studentName}</h3>
+                                  {item.planName && (
+                                    <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
+                                      {item.planName}
+                                    </span>
+                                  )}
+                                  {item.fee && (
+                                    <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-[#0D2C4A]">
+                                      {item.fee}
+                                    </span>
+                                  )}
+                                </div>
+
+                                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-600 font-mono">
+                                  {item.district && (
+                                    <span className="flex items-center gap-1">
+                                      <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                                      <span>{item.district}</span>
+                                    </span>
+                                  )}
+                                  {item.preferredTime && (
+                                    <span className="flex items-center gap-1">
+                                      <Clock className="w-3.5 h-3.5 text-slate-400" />
+                                      <span>Time: {item.preferredTime}</span>
+                                    </span>
+                                  )}
+                                </div>
+
+                                {item.subjects && (
+                                  <p className="text-xs font-bold text-slate-600">
+                                    {item.subjects}
+                                  </p>
+                                )}
+
+                                {item.message && (
+                                  <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-xs text-slate-700 leading-relaxed max-w-3xl">
+                                    <span className="font-bold text-slate-500 block text-[10px] uppercase font-mono mb-0.5">Details / Note:</span>
+                                    {item.message}
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Contact Badges: Phone Call & WhatsApp Button */}
+                              <div className="flex flex-wrap items-center gap-2 shrink-0">
+                                {item.phone && (
+                                  <>
+                                    <a
+                                      href={`tel:${item.phone}`}
+                                      className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-mono font-extrabold text-[#00A896] hover:bg-[#00A896] hover:text-white transition-all shadow-2xs"
+                                      title="Call student / parent"
+                                    >
+                                      <PhoneCall className="w-3.5 h-3.5" />
+                                      <span>{item.phone}</span>
+                                    </a>
+
+                                    {waLink && (
+                                      <a
+                                        href={waLink}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-700 transition-all shadow-2xs"
+                                        title="Chat on WhatsApp"
+                                      >
+                                        <MessageSquare className="w-3.5 h-3.5" />
+                                        <span>WhatsApp</span>
+                                      </a>
+                                    )}
+                                  </>
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Card Footer: Status Update & Delete */}
+                            <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-100">
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs font-bold text-slate-500 font-mono">Status:</span>
+                                <select
+                                  value={item.status}
+                                  onChange={(ev) => item.onUpdateStatus(ev.target.value)}
+                                  className={`text-xs font-bold px-3 py-1.5 rounded-xl border transition-all cursor-pointer ${
+                                    item.status === "Enrolled" || item.status === "Resolved" || item.status === "Completed"
+                                      ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+                                      : item.status === "Contacted"
+                                      ? "bg-blue-50 text-blue-800 border-blue-200"
+                                      : item.status === "Rejected" || item.status === "Cancelled"
+                                      ? "bg-rose-50 text-rose-800 border-rose-200"
+                                      : "bg-amber-50 text-amber-800 border-amber-200"
+                                  }`}
+                                >
+                                  <option value="Pending">🟡 Pending</option>
+                                  <option value="Contacted">🔵 Contacted</option>
+                                  <option value="Enrolled">🟢 Enrolled</option>
+                                  <option value="Rejected">🔴 Rejected</option>
+                                </select>
+                              </div>
 
                               <button
-                                onClick={() => handleDeleteEnrollment(e.id)}
-                                className="p-2 rounded-xl bg-rose-100 text-rose-600 hover:bg-rose-200 transition-colors cursor-pointer"
-                                title="Delete Request"
+                                type="button"
+                                onClick={item.onDelete}
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white border border-rose-200/80 text-xs font-bold transition-all cursor-pointer shadow-2xs active:scale-95"
+                                title="Delete this student request"
                               >
-                                <Trash2 className="w-4 h-4" />
+                                <Trash2 className="w-3.5 h-3.5" />
+                                <span>Delete Request</span>
                               </button>
                             </div>
                           </div>
                         );
                       })}
-                      {displayedEnrollments.length === 0 && (
-                        <div className="text-center py-12 bg-slate-50 rounded-2xl border border-slate-200 text-slate-400 text-xs">
-                          No requests found under this filter.
+
+                      {displayedItems.length === 0 && (
+                        <div className="text-center py-16 bg-slate-50/70 rounded-3xl border border-dashed border-slate-200 text-slate-400 space-y-2">
+                          <Users className="w-10 h-10 mx-auto text-slate-300" />
+                          <p className="text-sm font-bold text-slate-500">No student requests found in this category.</p>
+                          <p className="text-xs text-slate-400">Incoming requests will appear here dynamically.</p>
                         </div>
                       )}
                     </div>
                   </div>
                 );
               })()}
-
-              {/* ===== TAB 3: TEACHER APPLICATIONS ===== */}
+              
+{/* ===== TAB 3: TEACHER APPLICATIONS ===== */}
               {activeTab === "teacher-applications" && (
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
