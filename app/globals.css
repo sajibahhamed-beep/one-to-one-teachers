@@ -188,7 +188,8 @@ html[data-lang="bn"] span,
 .animate-marquee {
   display: flex;
   width: max-content;
-  animation: marquee 65s linear infinite !important;
+  animation: marquee 70s linear infinite !important;
+  will-change: transform;
 }
 
 .animate-marquee:hover {

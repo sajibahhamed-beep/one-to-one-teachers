@@ -109,6 +109,14 @@ function NotificationsSection({
   onUpdateInquiryStatus,
   onRefresh,
   loading,
+  onMarkAllAsRead,
+  lastReadAt,
+  onDeleteEnrollment,
+  onDeletePricingRequest,
+  onDeleteTeacherApp,
+  onDeleteContact,
+  onDeleteInquiry,
+  onDeleteAllNotifications,
 }: {
   enrollments: Enrollment[];
   teacherApplications: TeacherApplication[];
@@ -121,10 +129,24 @@ function NotificationsSection({
   onUpdateInquiryStatus: (id: string, status: string) => void;
   onRefresh: () => void;
   loading: boolean;
+  onMarkAllAsRead?: () => void;
+  lastReadAt?: string | null;
+  onDeleteEnrollment?: (id: string) => void;
+  onDeletePricingRequest?: (id: string) => void;
+  onDeleteTeacherApp?: (id: string) => void;
+  onDeleteContact?: (id: string) => void;
+  onDeleteInquiry?: (id: string) => void;
+  onDeleteAllNotifications?: () => void;
 }) {
   const [filterType, setFilterType] = useState<"all" | "student" | "teacher" | "contact" | "inquiry">("all");
   const [filterStatus, setFilterStatus] = useState<"all" | "pending" | "handled">("all");
   const [search, setSearch] = useState("");
+
+  const isUnread = (createdAt?: string) => {
+    if (!lastReadAt) return true;
+    if (!createdAt) return false;
+    return new Date(createdAt).getTime() > new Date(lastReadAt).getTime();
+  };
 
   const pendingStudentCount =
     enrollments.filter((e) => e.status === "Pending").length +
@@ -153,12 +175,14 @@ function NotificationsSection({
       message: undefined as string | undefined,
       status: e.status || "Pending",
       isPending: (e.status || "Pending") === "Pending",
+      isNew: isUnread(e.createdAt),
       createdAt: e.createdAt,
       timeAgo: formatRelativeTime(e.createdAt),
       targetTab: "enrollments",
       targetLabel: "Student Requests",
       updateStatus: (newStatus: string) => onUpdateEnrollmentStatus(e.id, newStatus),
       statusOptions: ["Pending", "Contacted", "Enrolled", "Rejected"],
+      deleteItem: () => onDeleteEnrollment && onDeleteEnrollment(e.id),
     })),
     ...teacherApplications.map((t) => ({
       id: t.id,
@@ -177,12 +201,14 @@ function NotificationsSection({
       message: t.bio || (t.experience ? `Experience: ${t.experience}` : undefined),
       status: t.status || "Pending",
       isPending: (t.status || "Pending") === "Pending",
+      isNew: isUnread(t.createdAt),
       createdAt: t.createdAt,
       timeAgo: formatRelativeTime(t.createdAt),
       targetTab: "teachers",
       targetLabel: "Tutors Directory",
       updateStatus: (newStatus: string) => onUpdateTeacherAppStatus(t.id, newStatus),
       statusOptions: ["Pending", "Approved", "Rejected"],
+      deleteItem: () => onDeleteTeacherApp && onDeleteTeacherApp(t.id),
     })),
     ...contacts.map((c) => ({
       id: c.id,
@@ -201,12 +227,14 @@ function NotificationsSection({
       message: c.message,
       status: "New Message",
       isPending: true,
+      isNew: isUnread(c.createdAt),
       createdAt: c.createdAt,
       timeAgo: formatRelativeTime(c.createdAt),
       targetTab: "contacts",
       targetLabel: "Messages",
       updateStatus: undefined as ((s: string) => void) | undefined,
       statusOptions: [],
+      deleteItem: () => onDeleteContact && onDeleteContact(c.id),
     })),
     ...inquiries.map((i) => ({
       id: i.id,
@@ -225,12 +253,14 @@ function NotificationsSection({
       message: i.message,
       status: i.status || "Pending",
       isPending: (i.status || "Pending") === "Pending",
+      isNew: isUnread(i.createdAt),
       createdAt: i.createdAt,
       timeAgo: formatRelativeTime(i.createdAt),
       targetTab: "inquiries",
       targetLabel: "Support Tickets",
       updateStatus: (newStatus: string) => onUpdateInquiryStatus(i.id, newStatus),
       statusOptions: ["Pending", "Contacted", "Resolved"],
+      deleteItem: () => onDeleteInquiry && onDeleteInquiry(i.id),
     })),
     ...pricingRequests.map((p) => ({
       id: p.id,
@@ -249,18 +279,22 @@ function NotificationsSection({
       message: undefined as string | undefined,
       status: p.status || "Pending",
       isPending: (p.status || "Pending") === "Pending",
+      isNew: isUnread(p.createdAt),
       createdAt: p.createdAt,
       timeAgo: formatRelativeTime(p.createdAt),
       targetTab: "enrollments",
       targetLabel: "Pricing Requests",
       updateStatus: undefined as ((s: string) => void) | undefined,
       statusOptions: ["Pending", "Contacted", "Completed", "Cancelled"],
+      deleteItem: () => onDeletePricingRequest && onDeletePricingRequest(p.id),
     })),
   ].sort((a, b) => {
     const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
     const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
     return timeB - timeA;
   });
+
+  const unreadCount = allNotifications.filter((n) => n.isPending && n.isNew).length;
 
   const filteredNotifications = allNotifications.filter((item) => {
     if (filterType !== "all" && item.kind !== filterType) return false;
@@ -292,9 +326,14 @@ function NotificationsSection({
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-xl font-extrabold text-[#0D2C4A]">Form Notifications &amp; Submissions</h2>
-              {totalPending > 0 && (
+              {unreadCount > 0 ? (
                 <span className="px-2.5 py-0.5 rounded-full bg-rose-500 text-white text-xs font-mono font-extrabold animate-pulse">
-                  {totalPending} New
+                  {unreadCount} New
+                </span>
+              ) : (
+                <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-mono font-bold flex items-center gap-1">
+                  <Check className="w-3 h-3 text-emerald-600" />
+                  0 New (All Read)
                 </span>
               )}
             </div>
@@ -304,7 +343,31 @@ function NotificationsSection({
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
+          {onMarkAllAsRead && (
+            <button
+              type="button"
+              onClick={onMarkAllAsRead}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all cursor-pointer shadow-xs active:scale-95"
+              title="Mark all notifications as read and stop icon blinking"
+            >
+              <CheckCircle className="w-3.5 h-3.5" />
+              <span>Mark all as read</span>
+            </button>
+          )}
+
+          {onDeleteAllNotifications && allNotifications.length > 0 && (
+            <button
+              type="button"
+              onClick={onDeleteAllNotifications}
+              className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white border border-rose-200 text-xs font-bold transition-all cursor-pointer shadow-xs active:scale-95"
+              title="Delete all form notifications and submissions"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              <span>Delete All Notifications</span>
+            </button>
+          )}
+
           <button
             onClick={onRefresh}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 text-xs font-bold hover:bg-slate-50 hover:text-[#00A896] transition-all cursor-pointer shadow-xs"
@@ -598,15 +661,30 @@ function NotificationsSection({
                     )}
                   </div>
 
-                  {/* Navigate to Section Button */}
-                  <button
-                    type="button"
-                    onClick={() => onNavigateTab(item.targetTab)}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-[#0D2C4A] text-slate-700 hover:text-white text-xs font-bold transition-all cursor-pointer shadow-2xs"
-                  >
-                    <span>Manage in {item.targetLabel}</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
+                  {/* Actions: Delete & Navigate to Section */}
+                  <div className="flex items-center gap-2">
+                    {item.deleteItem && (
+                      <button
+                        type="button"
+                        onClick={item.deleteItem}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white border border-rose-200/80 text-xs font-bold transition-all cursor-pointer shadow-2xs active:scale-95"
+                        title="Delete this notification"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>Delete</span>
+                      </button>
+                    )}
+
+                    {/* Navigate to Section Button */}
+                    <button
+                      type="button"
+                      onClick={() => onNavigateTab(item.targetTab)}
+                      className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-[#0D2C4A] text-slate-700 hover:text-white text-xs font-bold transition-all cursor-pointer shadow-2xs"
+                    >
+                      <span>Manage in {item.targetLabel}</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
               </div>
             );
@@ -982,6 +1060,22 @@ export default function AdminDashboardPage() {
     | "settings"
   >("dashboard");
   const [loading, setLoading] = useState(true);
+  const [lastReadNotificationsAt, setLastReadNotificationsAt] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("oto_admin_notifications_read_at");
+      if (stored) setLastReadNotificationsAt(stored);
+    }
+  }, []);
+
+  const handleMarkAllNotificationsAsRead = () => {
+    const now = new Date().toISOString();
+    setLastReadNotificationsAt(now);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("oto_admin_notifications_read_at", now);
+    }
+  };
 
   // Data states
   const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
@@ -1220,6 +1314,7 @@ export default function AdminDashboardPage() {
   const [newInquiryMessage, setNewInquiryMessage] = useState("");
 
   // New Payment State
+  const [newPaymentTrxId, setNewPaymentTrxId] = useState("");
   const [newPaymentName, setNewPaymentName] = useState("");
   const [newPaymentPhone, setNewPaymentPhone] = useState("");
   const [newPaymentAmount, setNewPaymentAmount] = useState<number>(6000);
@@ -1227,6 +1322,8 @@ export default function AdminDashboardPage() {
   const [newPaymentMethod, setNewPaymentMethod] = useState<"bKash" | "Nagad" | "Bank Transfer" | "Cash">("bKash");
 
   const [settingsSaved, setSettingsSaved] = useState(false);
+  const [socialMediaSaved, setSocialMediaSaved] = useState(false);
+  const [hotlineAddressSaved, setHotlineAddressSaved] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -1954,7 +2051,9 @@ export default function AdminDashboardPage() {
       await fetch(`/api/teachers?id=${id}`, { method: "DELETE" });
       fetchAllData();
     }
-  };// Save Settings
+  };
+
+  // Save All Settings
   const handleSaveSettings = async (e: React.FormEvent) => {
     e.preventDefault();
     await fetch("/api/settings", {
@@ -1964,6 +2063,30 @@ export default function AdminDashboardPage() {
     });
     setSettingsSaved(true);
     setTimeout(() => setSettingsSaved(false), 3000);
+  };
+
+  // Save Social Media Settings
+  const handleSaveSocialMedia = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await fetch("/api/settings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(settings),
+    });
+    setSocialMediaSaved(true);
+    setTimeout(() => setSocialMediaSaved(false), 3000);
+  };
+
+  // Save Hotline & Address Settings
+  const handleSaveHotlineAddress = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await fetch("/api/settings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(settings),
+    });
+    setHotlineAddressSaved(true);
+    setTimeout(() => setHotlineAddressSaved(false), 3000);
   };
 
   // Add new dynamic social link item
@@ -2204,6 +2327,46 @@ export default function AdminDashboardPage() {
     }
   };
 
+  // Delete All Notifications (Form submissions across all categories)
+  const handleDeleteAllNotifications = async () => {
+    const totalCount =
+      enrollments.length +
+      pricingRequests.length +
+      teacherApplications.length +
+      contacts.length +
+      inquiries.length;
+
+    if (totalCount === 0) {
+      alert("No notifications to delete.");
+      return;
+    }
+
+    if (
+      !confirm(
+        `Are you sure you want to delete ALL ${totalCount} form notifications and submissions? This action cannot be undone.`
+      )
+    ) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const deletePromises: Promise<any>[] = [];
+      enrollments.forEach((e) => deletePromises.push(fetch(`/api/enrollments?id=${e.id}`, { method: "DELETE" })));
+      pricingRequests.forEach((p) => deletePromises.push(fetch(`/api/pricing-requests?id=${p.id}`, { method: "DELETE" })));
+      teacherApplications.forEach((t) => deletePromises.push(fetch(`/api/teacher-applications?id=${t.id}`, { method: "DELETE" })));
+      contacts.forEach((c) => deletePromises.push(fetch(`/api/contacts?id=${c.id}`, { method: "DELETE" })));
+      inquiries.forEach((i) => deletePromises.push(fetch(`/api/inquiries?id=${i.id}`, { method: "DELETE" })));
+
+      await Promise.all(deletePromises);
+      await fetchAllData();
+    } catch (err) {
+      console.error("Failed to delete all notifications", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Create Payment
   const handleCreatePayment = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -2211,6 +2374,7 @@ export default function AdminDashboardPage() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        trxId: newPaymentTrxId.trim() || undefined,
         studentName: newPaymentName,
         phone: newPaymentPhone,
         amount: newPaymentAmount,
@@ -2220,6 +2384,7 @@ export default function AdminDashboardPage() {
       }),
     });
     setShowAddPayment(false);
+    setNewPaymentTrxId("");
     setNewPaymentName("");
     setNewPaymentPhone("");
     setNewPaymentAmount(6000);
@@ -2234,6 +2399,14 @@ export default function AdminDashboardPage() {
       body: JSON.stringify({ id, status }),
     });
     fetchAllData();
+  };
+
+  // Delete Payment Record
+  const handleDeletePayment = async (id: string) => {
+    if (confirm("Are you sure you want to delete this transaction record? This cannot be undone.")) {
+      await fetch(`/api/payments?id=${id}`, { method: "DELETE" });
+      fetchAllData();
+    }
   };
 
   if (!mounted) return null;
@@ -2382,17 +2555,30 @@ export default function AdminDashboardPage() {
         e.district.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
+  const isSubmissionUnread = (createdAt?: string) => {
+    if (!lastReadNotificationsAt) return true;
+    if (!createdAt) return false;
+    return new Date(createdAt).getTime() > new Date(lastReadNotificationsAt).getTime();
+  };
+
   const pendingEnrollmentsCount = enrollments.filter((e) => e.status === "Pending").length;
   const pendingTeacherAppsCount = teacherApplications.filter((a) => (a.status || "Pending") === "Pending").length;
   const pendingPricingCount = pricingRequests.filter((p) => (p.status || "Pending") === "Pending").length;
   const pendingInquiriesCount = inquiries.filter((i) => (i.status || "Pending") === "Pending").length;
   const pendingContactsCount = contacts.length;
-  const totalPendingNotifications =
-    pendingEnrollmentsCount +
-    pendingTeacherAppsCount +
-    pendingPricingCount +
-    pendingInquiriesCount +
-    pendingContactsCount;
+
+  const unreadEnrollmentsCount = enrollments.filter((e) => e.status === "Pending" && isSubmissionUnread(e.createdAt)).length;
+  const unreadTeacherAppsCount = teacherApplications.filter((a) => (a.status || "Pending") === "Pending" && isSubmissionUnread(a.createdAt)).length;
+  const unreadPricingCount = pricingRequests.filter((p) => (p.status || "Pending") === "Pending" && isSubmissionUnread(p.createdAt)).length;
+  const unreadInquiriesCount = inquiries.filter((i) => (i.status || "Pending") === "Pending" && isSubmissionUnread(i.createdAt)).length;
+  const unreadContactsCount = contacts.filter((c) => isSubmissionUnread(c.createdAt)).length;
+
+  const totalUnreadNotifications =
+    unreadEnrollmentsCount +
+    unreadTeacherAppsCount +
+    unreadPricingCount +
+    unreadInquiriesCount +
+    unreadContactsCount;
 
   return (
     <div className="admin-theme min-h-screen bg-[#F8FAFC] text-[#0D2C4A] font-sans flex" data-admin-theme="true">
@@ -2435,7 +2621,7 @@ export default function AdminDashboardPage() {
           <nav className="space-y-1.5 font-sans">
             {[
               { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-              { id: "notifications", label: "Notifications", icon: Bell, count: totalPendingNotifications },
+              { id: "notifications", label: "Notifications", icon: Bell, count: totalUnreadNotifications },
               { id: "enrollments", label: "Student Requests", icon: Users, count: pendingEnrollmentsCount },
               { id: "teachers", label: "Tutors Directory", icon: UserCheck, count: pendingTeacherAppsCount },
               { id: "inquiries", label: "Support Tickets", icon: MessageSquare, count: pendingInquiriesCount },
@@ -2443,7 +2629,7 @@ export default function AdminDashboardPage() {
               { id: "payments", label: "Transactions", icon: CreditCard },
               { id: "blogs", label: "Blog Posts", icon: FileText },
               { id: "faqs", label: "FAQ Items", icon: HelpCircle },
-              { id: "pages", label: "Pages Management", icon: Layers, count: customPages.length },
+              { id: "pages", label: "Pages Management", icon: Layers },
               { id: "settings", label: "Settings", icon: Settings },
             ].map((item) => {
               const IconComp = item.icon;
@@ -2539,7 +2725,7 @@ export default function AdminDashboardPage() {
               <button
                 type="button"
                 onClick={() => setActiveTab("notifications")}
-                title={`Form Notifications & Submissions (${totalPendingNotifications} pending)`}
+                title={`Form Notifications & Submissions (${totalUnreadNotifications} new)`}
                 className={`relative p-2.5 rounded-xl border transition-all cursor-pointer shadow-2xs active:scale-95 ${
                   activeTab === "notifications"
                     ? "bg-[#00A896] text-white border-[#00A896] shadow-sm shadow-[#00A896]/30"
@@ -2547,9 +2733,9 @@ export default function AdminDashboardPage() {
                 }`}
               >
                 <Bell className="w-4 h-4" />
-                {totalPendingNotifications > 0 && (
+                {totalUnreadNotifications > 0 && (
                   <span className="absolute -top-1.5 -right-1.5 min-w-4 h-4 px-1 bg-rose-500 text-white rounded-full text-[9px] font-mono font-bold flex items-center justify-center shadow-xs animate-pulse">
-                    {totalPendingNotifications}
+                    {totalUnreadNotifications}
                   </span>
                 )}
               </button>
@@ -2794,6 +2980,14 @@ export default function AdminDashboardPage() {
                   onUpdateInquiryStatus={handleUpdateInquiryStatus}
                   onRefresh={fetchAllData}
                   loading={loading}
+                  onMarkAllAsRead={handleMarkAllNotificationsAsRead}
+                  lastReadAt={lastReadNotificationsAt}
+                  onDeleteEnrollment={handleDeleteEnrollment}
+                  onDeletePricingRequest={handleDeletePricingRequest}
+                  onDeleteTeacherApp={handleDeleteTeacherApplication}
+                  onDeleteContact={handleDeleteContact}
+                  onDeleteInquiry={handleDeleteInquiry}
+                  onDeleteAllNotifications={handleDeleteAllNotifications}
                 />
               )}
 
@@ -3114,14 +3308,14 @@ export default function AdminDashboardPage() {
               {/* ===== TAB 6: SUPPORT TICKETS & INQUIRIES ===== */}
               {activeTab === "inquiries" && (
                 <div className="space-y-6">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div>
                       <h2 className="text-xl font-extrabold text-[#0D2C4A]">Support Tickets &amp; Inquiries ({inquiries.length})</h2>
-                      <p className="text-xs text-slate-500">Parent and student callback tickets with contact numbers</p>
+                      <p className="text-xs text-slate-500">Parent and student callback tickets with direct contact numbers</p>
                     </div>
                     <button
                       onClick={() => setShowAddInquiry(true)}
-                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#00A896] text-white text-xs font-extrabold hover:bg-[#008075] transition-all cursor-pointer"
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#00A896] text-white text-xs font-extrabold hover:bg-[#008075] transition-all cursor-pointer shadow-md"
                     >
                       <Plus className="w-4 h-4" />
                       <span>New Ticket</span>
@@ -3129,40 +3323,105 @@ export default function AdminDashboardPage() {
                   </div>
 
                   <div className="space-y-4">
-                    {inquiries.map((inq, idx) => (
-                      <div key={inq.id} className="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3 hover:border-[#00A896]/40 transition-all">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2.5">
-                            <span className="w-6 h-6 rounded-full bg-[#0D2C4A] text-white font-mono font-extrabold text-[11px] flex items-center justify-center shadow-xs shrink-0">
-                              {idx + 1}
-                            </span>
-                            <h3 className="font-extrabold text-sm text-[#0D2C4A]">{inq.name}</h3>
-                          </div>
-                          <span className="text-xs font-mono font-bold text-[#00A896] bg-white px-2.5 py-1 rounded-xl border border-slate-200 flex items-center gap-1.5">
-                            <PhoneCall className="w-3.5 h-3.5 text-[#00A896]" />
-                            <span>{inq.phone}</span>
-                          </span>
-                        </div>
-                        <p className="text-xs font-bold text-[#00A896]">Subject: {inq.subject}</p>
-                        <p className="text-xs text-slate-600 bg-white p-3 rounded-xl border border-slate-100 leading-relaxed">{inq.message}</p>
-
-                        <div className="flex items-center justify-between pt-2">
-                          <select
-                            value={inq.status || "Pending"}
-                            onChange={(e) => handleUpdateInquiryStatus(inq.id, e.target.value)}
-                            className="text-xs font-bold px-3 py-1 rounded-xl border border-slate-300 bg-white cursor-pointer"
-                          >
-                            <option value="Pending">Pending</option>
-                            <option value="Contacted">Contacted</option>
-                            <option value="Resolved">Resolved</option>
-                          </select>
-
-                          <button onClick={() => handleDeleteInquiry(inq.id)} className="p-1.5 text-rose-600 hover:bg-rose-100 rounded-lg cursor-pointer">
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
+                    {inquiries.length === 0 ? (
+                      <div className="p-10 text-center bg-white rounded-3xl border border-dashed border-slate-200 space-y-2">
+                        <p className="text-sm font-bold text-slate-400">No support tickets found.</p>
+                        <p className="text-xs text-slate-400">New callback requests from parents and students will appear here.</p>
                       </div>
-                    ))}
+                    ) : (
+                      inquiries.map((inq, idx) => (
+                        <div key={inq.id} className="bg-white rounded-3xl p-5 sm:p-6 border border-[#0D2C4A]/10 space-y-4 hover:border-[#00A896]/40 transition-all shadow-sm">
+                          {/* Header: Serial Number, Name, Ticket ID & Status */}
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+                            <div className="flex items-center gap-3">
+                              <span className="w-8 h-8 rounded-2xl bg-gradient-to-tr from-[#00A896] to-[#0D2C4A] text-white font-mono font-extrabold text-xs flex items-center justify-center shadow-xs shrink-0">
+                                #{idx + 1}
+                              </span>
+                              <div>
+                                <h3 className="font-extrabold text-base text-[#0D2C4A] leading-snug">{inq.name}</h3>
+                                <span className="font-mono text-[11px] font-bold text-slate-400">Ticket ID: {inq.id}</span>
+                              </div>
+                            </div>
+
+                            {/* Contact Badges: Phone Number & WhatsApp */}
+                            <div className="flex flex-wrap items-center gap-2">
+                              <a
+                                href={inq.phone ? `tel:${inq.phone}` : undefined}
+                                className="font-mono font-bold text-xs text-[#0D2C4A] bg-slate-50 hover:bg-[#E6F4F3] hover:text-[#00A896] px-3.5 py-1.5 rounded-xl border border-slate-200 transition-all flex items-center gap-1.5 shadow-2xs"
+                                title="Click to call phone number"
+                              >
+                                <PhoneCall className="w-3.5 h-3.5 text-[#00A896]" />
+                                <span>Phone: {inq.phone || "N/A"}</span>
+                              </a>
+
+                              {cleanWhatsAppLink(inq.phone) && (
+                                <a
+                                  href={cleanWhatsAppLink(inq.phone)}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="font-mono font-bold text-xs text-[#25D366] bg-emerald-50 hover:bg-emerald-100 px-3 py-1.5 rounded-xl border border-emerald-200 transition-all flex items-center gap-1.5 shadow-2xs"
+                                  title="Chat on WhatsApp"
+                                >
+                                  <MessageSquare className="w-3.5 h-3.5 text-[#25D366]" />
+                                  <span>WhatsApp</span>
+                                </a>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Subject & Message Content */}
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-2 text-xs">
+                              <span className="font-mono font-bold uppercase text-[10px] text-[#00A896] bg-[#E6F4F3] px-2 py-0.5 rounded-md">
+                                Subject
+                              </span>
+                              <span className="font-bold text-[#0D2C4A]">{inq.subject || "General Inquiry"}</span>
+                            </div>
+                            <p className="text-xs text-slate-700 bg-slate-50 p-4 rounded-2xl border border-slate-100 leading-relaxed font-normal">
+                              {inq.message}
+                            </p>
+                          </div>
+
+                          {/* Footer: Date, Status Selector & Delete */}
+                          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-3 border-t border-slate-100 text-xs">
+                            <div className="text-slate-400 font-mono text-[11px] flex items-center gap-1.5">
+                              <Clock className="w-3.5 h-3.5 text-slate-400" />
+                              <span>Submitted: {inq.createdAt ? new Date(inq.createdAt).toLocaleString("en-US", { timeZone: "Asia/Dhaka" }) : "N/A"}</span>
+                            </div>
+
+                            <div className="flex items-center gap-2.5 self-end sm:self-auto">
+                              <div className="flex items-center gap-1.5">
+                                <span className="text-[11px] font-bold text-slate-400">Status:</span>
+                                <select
+                                  value={inq.status || "Pending"}
+                                  onChange={(e) => handleUpdateInquiryStatus(inq.id, e.target.value)}
+                                  className={`text-xs font-extrabold px-3 py-1.5 rounded-xl border transition-all cursor-pointer ${
+                                    inq.status === "Resolved"
+                                      ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                      : inq.status === "Contacted"
+                                      ? "bg-blue-50 text-blue-700 border-blue-200"
+                                      : "bg-amber-50 text-amber-800 border-amber-200"
+                                  }`}
+                                >
+                                  <option value="Pending">🟡 Pending</option>
+                                  <option value="Contacted">🔵 Contacted</option>
+                                  <option value="Resolved">🟢 Resolved</option>
+                                </select>
+                              </div>
+
+                              <button
+                                type="button"
+                                onClick={() => handleDeleteInquiry(inq.id)}
+                                className="p-2 rounded-xl bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white border border-rose-200/80 transition-all cursor-pointer shadow-2xs active:scale-95"
+                                title="Delete Ticket"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    )}
                   </div>
                 </div>
               )}
@@ -3222,40 +3481,69 @@ export default function AdminDashboardPage() {
                     </div>
                     <button
                       onClick={() => setShowAddPayment(true)}
-                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#00A896] text-white text-xs font-extrabold hover:bg-[#008075] transition-all cursor-pointer"
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#00A896] text-white text-xs font-extrabold hover:bg-[#008075] transition-all cursor-pointer shadow-md"
                     >
                       <Plus className="w-4 h-4" />
                       <span>Record Payment</span>
                     </button>
                   </div>
 
-                  <div className="overflow-x-auto">
+                  <div className="overflow-x-auto bg-white rounded-3xl border border-[#0D2C4A]/10 shadow-sm p-2">
                     <table className="w-full text-left text-xs font-sans">
                       <thead>
                         <tr className="bg-slate-50 text-[#0D2C4A] font-mono uppercase font-bold border-b border-slate-200">
-                          <th className="p-3">TRX ID</th>
-                          <th className="p-3">Name</th>
-                          <th className="p-3">Amount</th>
-                          <th className="p-3">Type</th>
-                          <th className="p-3">Method</th>
-                          <th className="p-3">Status</th>
+                          <th className="p-3.5">TRX ID</th>
+                          <th className="p-3.5">Name / Contact</th>
+                          <th className="p-3.5">Amount</th>
+                          <th className="p-3.5">Type</th>
+                          <th className="p-3.5">Method</th>
+                          <th className="p-3.5">Status</th>
+                          <th className="p-3.5 text-right">Actions</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100">
-                        {payments.map((p) => (
-                          <tr key={p.id}>
-                            <td className="p-3 font-mono font-bold text-[#00A896]">{p.trxId}</td>
-                            <td className="p-3 font-bold text-[#0D2C4A]">{p.studentName}</td>
-                            <td className="p-3 font-mono font-extrabold">৳{p.amount}</td>
-                            <td className="p-3">{p.type}</td>
-                            <td className="p-3 font-mono">{p.paymentMethod}</td>
-                            <td className="p-3">
-                              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-100 text-emerald-800">
-                                {p.status}
-                              </span>
+                        {payments.length === 0 ? (
+                          <tr>
+                            <td colSpan={7} className="p-8 text-center text-slate-400 font-bold">
+                              No transaction records found. Click "Record Payment" to add one.
                             </td>
                           </tr>
-                        ))}
+                        ) : (
+                          payments.map((p) => (
+                            <tr key={p.id} className="hover:bg-slate-50/70 transition-colors">
+                              <td className="p-3.5 font-mono font-bold text-[#00A896]">{p.trxId}</td>
+                              <td className="p-3.5">
+                                <div className="font-bold text-[#0D2C4A]">{p.studentName}</div>
+                                {p.phone && <div className="text-[11px] font-mono text-slate-400">{p.phone}</div>}
+                              </td>
+                              <td className="p-3.5 font-mono font-extrabold text-[#0D2C4A]">৳{p.amount}</td>
+                              <td className="p-3.5">
+                                <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                                  p.type === "Fee Collection" ? "bg-blue-50 text-blue-700" : "bg-purple-50 text-purple-700"
+                                }`}>
+                                  {p.type}
+                                </span>
+                              </td>
+                              <td className="p-3.5 font-mono font-semibold">{p.paymentMethod}</td>
+                              <td className="p-3.5">
+                                <span className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold bg-emerald-100 text-emerald-800">
+                                  {p.status}
+                                </span>
+                              </td>
+                              <td className="p-3.5 text-right">
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeletePayment(p.id)}
+                                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white border border-rose-200/80 text-xs font-bold transition-all cursor-pointer shadow-2xs active:scale-95"
+                                  title="Delete transaction record"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                  <span>Delete</span>
+                                </button>
+                              </td>
+                            </tr>
+                          ))
+                        )}
                       </tbody>
                     </table>
                   </div>
@@ -3438,7 +3726,7 @@ export default function AdminDashboardPage() {
                     <div>
                       <h2 className="text-xl font-extrabold text-[#0D2C4A] flex items-center gap-2">
                         <Layers className="w-5 h-5 text-[#00A896]" />
-                        <span>Pages &amp; Policies Management ({customPages.length})</span>
+                        <span>Pages &amp; Policies Management</span>
                       </h2>
                       <p className="text-xs text-slate-500">
                         Manage Privacy Policy, Terms of Service, Refund Policy, and custom pages dynamically
@@ -3777,10 +4065,19 @@ export default function AdminDashboardPage() {
                       <div>
                         <label className="admin-kicker text-slate-500 block mb-2">WHATSAPP PHONE NUMBER (WITH COUNTRY CODE)</label>
                         <input
-                          type="text"
+                          type="tel"
+                          inputMode="tel"
                           placeholder="8801775551325"
                           value={settings.whatsappPhone || ""}
-                          onChange={(e) => setSettings({ ...settings, whatsappPhone: e.target.value })}
+                          onChange={(e) => {
+                            const sanitized = e.target.value.replace(/[^0-9+() -০-৯]/g, "");
+                            setSettings({ ...settings, whatsappPhone: sanitized });
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key.length === 1 && !/[0-9+() -০-৯]/.test(e.key) && !e.ctrlKey && !e.metaKey) {
+                              e.preventDefault();
+                            }
+                          }}
                           className="w-full p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-mono font-bold text-[#0D2C4A] focus:outline-none focus:border-[#25D366] shadow-sm"
                         />
                         <span className="text-[11px] text-slate-400 font-mono pt-1 block">
@@ -3828,29 +4125,35 @@ export default function AdminDashboardPage() {
                     </form>
                   </div>
 
-                  <form onSubmit={handleSaveSettings} className="space-y-8">
-
-                    {/* SECTION 2: DYNAMIC CUSTOM SOCIAL MEDIA LIST */}
-                    <div className="space-y-4 pt-4 border-t border-slate-100">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Share2 className="w-5 h-5 text-[#00A896]" />
-                          <h3 className="admin-heading-sm text-[#0D2C4A]">Custom Social Media Channels</h3>
-                          <span className="admin-chip-label bg-[#E6F4F3] text-[#00A896] px-2.5 py-0.5 rounded-full font-bold">
-                            {(settings.socialLinks || []).length} Active Channels
-                          </span>
+                  {/* SECTION 3: DYNAMIC CUSTOM SOCIAL MEDIA LIST */}
+                  <div className="bg-white p-6 sm:p-7 rounded-3xl border border-[#0D2C4A]/10 shadow-sm space-y-6">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-9 h-9 rounded-2xl bg-[#E6F4F3] text-[#00A896] flex items-center justify-center border border-[#00A896]/20">
+                          <Share2 className="w-5 h-5" />
                         </div>
-
-                        <button
-                          type="button"
-                          onClick={() => setShowAddSocialModal(true)}
-                          className="px-4 py-2 rounded-xl bg-[#00A896] hover:bg-[#008075] text-white text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all cursor-pointer"
-                        >
-                          <Plus className="w-3.5 h-3.5" />
-                          <span>+ Add Social Media</span>
-                        </button>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <h3 className="admin-heading-sm text-[#0D2C4A]">Custom Social Media Channels</h3>
+                            <span className="admin-chip-label bg-[#E6F4F3] text-[#00A896] px-2.5 py-0.5 rounded-full font-bold">
+                              {(settings.socialLinks || []).length} Active Channels
+                            </span>
+                          </div>
+                          <p className="text-xs text-slate-500 font-normal">Add or edit custom social media links displayed across the footer</p>
+                        </div>
                       </div>
 
+                      <button
+                        type="button"
+                        onClick={() => setShowAddSocialModal(true)}
+                        className="px-4 py-2.5 rounded-2xl bg-[#00A896] hover:bg-[#008075] text-white text-xs font-extrabold flex items-center gap-1.5 shadow-sm transition-all cursor-pointer active:scale-95"
+                      >
+                        <Plus className="w-4 h-4" />
+                        <span>+ Add Social Media</span>
+                      </button>
+                    </div>
+
+                    <form onSubmit={handleSaveSocialMedia} className="space-y-6">
                       {(!settings.socialLinks || settings.socialLinks.length === 0) ? (
                         <div className="p-8 text-center bg-slate-50 rounded-3xl border border-dashed border-slate-200 space-y-3">
                           <p className="text-xs font-bold text-slate-400">No social media links added yet.</p>
@@ -3865,12 +4168,11 @@ export default function AdminDashboardPage() {
                       ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                           {settings.socialLinks.map((item) => (
-                            <div key={item.id} className="bg-white p-5 rounded-3xl border border-[#0D2C4A]/10 shadow-sm space-y-4 relative group">
-
+                            <div key={item.id} className="bg-slate-50/70 p-5 rounded-3xl border border-slate-200 shadow-xs space-y-4 relative group">
                               {/* Top Bar: Title & Delete */}
-                              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-                                <div className="flex items-center gap-2">
-                                  <span className="w-7 h-7 rounded-xl bg-[#E6F4F3] text-[#00A896] flex items-center justify-center text-xs font-extrabold">
+                              <div className="flex items-center justify-between pb-3 border-b border-slate-200">
+                                <div className="flex items-center gap-2 flex-1">
+                                  <span className="w-7 h-7 rounded-xl bg-white border border-slate-200 text-[#00A896] flex items-center justify-center text-xs font-extrabold shadow-2xs">
                                     {(item.name || "S")[0].toUpperCase()}
                                   </span>
                                   <input
@@ -3878,7 +4180,7 @@ export default function AdminDashboardPage() {
                                     placeholder="Platform Name (e.g. Facebook, TikTok)"
                                     value={item.name}
                                     onChange={(e) => handleUpdateSocialLink(item.id, "name", e.target.value)}
-                                    className="p-1.5 rounded-lg border border-transparent hover:border-slate-200 focus:border-[#00A896] text-xs font-extrabold text-[#0D2C4A] focus:outline-none"
+                                    className="p-1.5 rounded-lg border border-transparent hover:border-slate-300 focus:border-[#00A896] text-xs font-extrabold text-[#0D2C4A] focus:outline-none bg-transparent w-full"
                                   />
                                 </div>
 
@@ -3907,7 +4209,7 @@ export default function AdminDashboardPage() {
 
                               {/* Preset Icon Selector Quick Badges */}
                               <div className="space-y-1.5">
-                                <label className="admin-kicker text-slate-400 block">SELECT ICON PRESET OR PASTE CUSTOM IMAGE URL</label>
+                                <label className="admin-kicker text-slate-400 block">SELECT ICON PRESET</label>
                                 <div className="flex flex-wrap items-center gap-1.5">
                                   {["facebook", "instagram", "youtube", "linkedin", "twitter", "whatsapp", "telegram", "tiktok", "discord", "website"].map((preset) => (
                                     <button
@@ -3916,7 +4218,7 @@ export default function AdminDashboardPage() {
                                       onClick={() => handleUpdateSocialLink(item.id, "iconUrl", preset)}
                                       className={`px-2.5 py-1 rounded-lg text-[10px] font-bold capitalize transition-all cursor-pointer ${(item.iconUrl || "").toLowerCase() === preset
                                           ? "bg-[#00A896] text-white shadow-sm"
-                                          : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                                          : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-100"
                                         }`}
                                     >
                                       {preset}
@@ -3925,48 +4227,84 @@ export default function AdminDashboardPage() {
                                 </div>
                               </div>
 
-                              {/* Custom Icon Image URL Input / File Upload */}
+                              {/* Custom Icon Image URL Input */}
                               <div className="space-y-1.5">
                                 <label className="admin-kicker text-slate-400 block">ICON IMAGE URL / KEYWORD</label>
                                 <input
                                   type="text"
-                                  placeholder="Preset keyword (e.g. facebook) or Custom Icon Image URL (https://...)"
+                                  placeholder="Preset keyword (e.g. facebook) or Custom Icon Image URL"
                                   value={item.iconUrl || ""}
                                   onChange={(e) => handleUpdateSocialLink(item.id, "iconUrl", e.target.value)}
-                                  className="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-mono font-semibold text-[#0D2C4A] focus:outline-none focus:border-[#00A896]"
+                                  className="w-full p-2.5 rounded-xl bg-white border border-slate-200 text-xs font-mono font-semibold text-[#0D2C4A] focus:outline-none focus:border-[#00A896]"
                                 />
                               </div>
 
                               {/* Target URL Input */}
                               <div className="space-y-1.5">
-                                <label className="admin-kicker text-slate-400 block">TARGET URL LINK</label>
+                                <label className="admin-kicker text-slate-400 block">TARGET REDIRECT URL</label>
                                 <input
                                   type="url"
                                   placeholder="https://facebook.com/yourpage"
                                   value={item.url || ""}
                                   onChange={(e) => handleUpdateSocialLink(item.id, "url", e.target.value)}
-                                  className="w-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-mono font-semibold text-[#0D2C4A] focus:outline-none focus:border-[#00A896]"
+                                  className="w-full p-2.5 rounded-xl bg-white border border-slate-200 text-xs font-mono font-semibold text-[#0D2C4A] focus:outline-none focus:border-[#00A896]"
                                 />
                               </div>
-
                             </div>
                           ))}
                         </div>
                       )}
+
+                      {/* SOCIAL MEDIA SAVE BUTTON */}
+                      <div className="flex items-center gap-4 pt-4 border-t border-slate-100">
+                        <button
+                          type="submit"
+                          className="flex items-center gap-2 px-7 py-3 rounded-2xl bg-[#00A896] hover:bg-[#008075] text-white admin-caption-text font-extrabold transition-all shadow-md cursor-pointer active:scale-95"
+                        >
+                          <CheckCircle className="w-4 h-4" />
+                          <span>Save Social Media Channels</span>
+                        </button>
+
+                        {socialMediaSaved && (
+                          <span className="admin-caption-text text-emerald-600 font-extrabold flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 px-4 py-2 rounded-xl">
+                            ✓ Social media channels saved and published to footer!
+                          </span>
+                        )}
+                      </div>
+                    </form>
+                  </div>
+
+                  {/* SECTION 4: PLATFORM SUPPORT HOTLINE & ADDRESS */}
+                  <div className="bg-white p-6 sm:p-7 rounded-3xl border border-[#0D2C4A]/10 shadow-sm space-y-6">
+                    <div className="flex items-center gap-2.5 pb-4 border-b border-slate-100">
+                      <div className="w-9 h-9 rounded-2xl bg-blue-50 text-[#0D2C4A] flex items-center justify-center border border-blue-100">
+                        <MapPin className="w-5 h-5 text-[#0D2C4A]" />
+                      </div>
+                      <div>
+                        <h3 className="admin-heading-sm text-[#0D2C4A]">General Platform Support Hotline & Address</h3>
+                        <p className="text-xs text-slate-500 font-normal">Configure support hotline number, contact email, and physical office address shown in footer</p>
+                      </div>
                     </div>
 
-                    {/* PLATFORM HOTLINE DETAILS */}
-                    <div className="space-y-4 pt-6 border-t border-slate-100">
-                      <h3 className="admin-heading-sm text-[#0D2C4A]">General Platform Support Hotline & Address</h3>
-
+                    <form onSubmit={handleSaveHotlineAddress} className="space-y-6">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
                           <label className="admin-kicker text-slate-500 block mb-2">HOTLINE / PHONE NUMBER</label>
                           <input
-                            type="text"
+                            type="tel"
+                            inputMode="tel"
+                            placeholder="01775551325"
                             value={settings.phone || ""}
-                            onChange={(e) => setSettings({ ...settings, phone: e.target.value })}
-                            className="w-full p-3.5 rounded-2xl bg-white border border-[#0D2C4A]/10 text-xs font-mono font-bold text-[#0D2C4A] focus:outline-none focus:border-[#00A896] shadow-sm"
+                            onChange={(e) => {
+                              const sanitized = e.target.value.replace(/[^0-9+() -০-৯]/g, "");
+                              setSettings({ ...settings, phone: sanitized });
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key.length === 1 && !/[0-9+() -০-৯]/.test(e.key) && !e.ctrlKey && !e.metaKey) {
+                                e.preventDefault();
+                              }
+                            }}
+                            className="w-full p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-mono font-bold text-[#0D2C4A] focus:outline-none focus:border-[#00A896] shadow-sm"
                           />
                         </div>
 
@@ -3974,9 +4312,10 @@ export default function AdminDashboardPage() {
                           <label className="admin-kicker text-slate-500 block mb-2">SUPPORT EMAIL ADDRESS</label>
                           <input
                             type="email"
+                            placeholder="support@ototeachers.com"
                             value={settings.email || ""}
                             onChange={(e) => setSettings({ ...settings, email: e.target.value })}
-                            className="w-full p-3.5 rounded-2xl bg-white border border-[#0D2C4A]/10 text-xs font-mono font-bold text-[#0D2C4A] focus:outline-none focus:border-[#00A896] shadow-sm"
+                            className="w-full p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-mono font-bold text-[#0D2C4A] focus:outline-none focus:border-[#00A896] shadow-sm"
                           />
                         </div>
 
@@ -3984,9 +4323,10 @@ export default function AdminDashboardPage() {
                           <label className="admin-kicker text-slate-500 block mb-2">OFFICE ADDRESS (BENGALI)</label>
                           <input
                             type="text"
+                            placeholder="ধানমণ্ডি, ঢাকা, বাংলাদেশ"
                             value={settings.addressBn || ""}
                             onChange={(e) => setSettings({ ...settings, addressBn: e.target.value })}
-                            className="w-full p-3.5 rounded-2xl bg-white border border-[#0D2C4A]/10 text-xs font-sans font-bold text-[#0D2C4A] focus:outline-none focus:border-[#00A896] shadow-sm"
+                            className="w-full p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-sans font-bold text-[#0D2C4A] focus:outline-none focus:border-[#00A896] shadow-sm"
                           />
                         </div>
 
@@ -3994,32 +4334,32 @@ export default function AdminDashboardPage() {
                           <label className="admin-kicker text-slate-500 block mb-2">OFFICE ADDRESS (ENGLISH)</label>
                           <input
                             type="text"
+                            placeholder="Dhanmondi, Dhaka, Bangladesh"
                             value={settings.addressEn || ""}
                             onChange={(e) => setSettings({ ...settings, addressEn: e.target.value })}
-                            className="w-full p-3.5 rounded-2xl bg-white border border-[#0D2C4A]/10 text-xs font-sans font-bold text-[#0D2C4A] focus:outline-none focus:border-[#00A896] shadow-sm"
+                            className="w-full p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-sans font-bold text-[#0D2C4A] focus:outline-none focus:border-[#00A896] shadow-sm"
                           />
                         </div>
                       </div>
-                    </div>
 
-                    {/* SAVE BUTTON */}
-                    <div className="flex items-center gap-4 pt-4 border-t border-slate-100">
-                      <button
-                        type="submit"
-                        className="flex items-center gap-2 px-7 py-3.5 rounded-2xl bg-[#00A896] hover:bg-[#008075] text-white admin-caption-text font-extrabold transition-all shadow-md cursor-pointer active:scale-95"
-                      >
-                        <CheckCircle className="w-4 h-4" />
-                        <span>Save Social Media & Settings</span>
-                      </button>
+                      {/* HOTLINE & ADDRESS SAVE BUTTON */}
+                      <div className="flex items-center gap-4 pt-4 border-t border-slate-100">
+                        <button
+                          type="submit"
+                          className="flex items-center gap-2 px-7 py-3.5 rounded-2xl bg-[#0D2C4A] hover:bg-[#16385C] text-white admin-caption-text font-extrabold transition-all shadow-md cursor-pointer active:scale-95"
+                        >
+                          <CheckCircle className="w-4 h-4 text-[#00A896]" />
+                          <span>Save Hotline & Address</span>
+                        </button>
 
-                      {settingsSaved && (
-                        <span className="admin-caption-text text-emerald-600 font-extrabold flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 px-4 py-2 rounded-xl">
-                          ✓ Social media links updated and published to footer!
-                        </span>
-                      )}
-                    </div>
-
-                  </form>
+                        {hotlineAddressSaved && (
+                          <span className="admin-caption-text text-emerald-600 font-extrabold flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 px-4 py-2 rounded-xl">
+                            ✓ Hotline & Address information saved successfully!
+                          </span>
+                        )}
+                      </div>
+                    </form>
+                  </div>
                 </div>
               )}
 
@@ -4203,10 +4543,19 @@ export default function AdminDashboardPage() {
                 <div>
                   <label className="block font-bold text-[#0D2C4A] mb-1">Phone Number (ফোন নম্বর)</label>
                   <input
-                    type="text"
+                    type="tel"
+                    inputMode="tel"
                     placeholder="019xxxxxxxx"
                     value={newTeacherPhone}
-                    onChange={(e) => setNewTeacherPhone(e.target.value)}
+                    onChange={(e) => {
+                      const sanitized = e.target.value.replace(/[^0-9+() -০-৯]/g, "");
+                      setNewTeacherPhone(sanitized);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key.length === 1 && !/[0-9+() -০-৯]/.test(e.key) && !e.ctrlKey && !e.metaKey) {
+                        e.preventDefault();
+                      }
+                    }}
                     className="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 font-mono focus:outline-none focus:border-[#00A896]"
                   />
                 </div>
@@ -4400,9 +4749,18 @@ export default function AdminDashboardPage() {
                 <div>
                   <label className="block font-bold text-[#0D2C4A] mb-1">Phone Number (ফোন নম্বর)</label>
                   <input
-                    type="text"
+                    type="tel"
+                    inputMode="tel"
                     value={editTeacherPhone}
-                    onChange={(e) => setEditTeacherPhone(e.target.value)}
+                    onChange={(e) => {
+                      const sanitized = e.target.value.replace(/[^0-9+() -০-৯]/g, "");
+                      setEditTeacherPhone(sanitized);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key.length === 1 && !/[0-9+() -০-৯]/.test(e.key) && !e.ctrlKey && !e.metaKey) {
+                        e.preventDefault();
+                      }
+                    }}
                     className="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 font-mono focus:outline-none focus:border-[#00A896]"
                   />
                 </div>
@@ -4510,7 +4868,23 @@ export default function AdminDashboardPage() {
               </div>
               <div>
                 <label className="block font-bold mb-1">Phone Number</label>
-                <input required type="text" placeholder="017xxxxxxxx" value={newInquiryPhone} onChange={(e) => setNewInquiryPhone(e.target.value)} className="w-full p-2.5 rounded-xl border" />
+                <input
+                  required
+                  type="tel"
+                  inputMode="tel"
+                  placeholder="017xxxxxxxx"
+                  value={newInquiryPhone}
+                  onChange={(e) => {
+                    const sanitized = e.target.value.replace(/[^0-9+() -০-৯]/g, "");
+                    setNewInquiryPhone(sanitized);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key.length === 1 && !/[0-9+() -০-৯]/.test(e.key) && !e.ctrlKey && !e.metaKey) {
+                      e.preventDefault();
+                    }
+                  }}
+                  className="w-full p-2.5 rounded-xl border font-mono"
+                />
               </div>
               <div>
                 <label className="block font-bold mb-1">Subject</label>
@@ -4529,34 +4903,89 @@ export default function AdminDashboardPage() {
       {/* MODAL 3: ADD PAYMENT */}
       {showAddPayment && (
         <div className="fixed inset-0 z-50 bg-[#0D2C4A]/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 border border-[#0D2C4A]/10 shadow-2xl">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-7 space-y-4 border border-[#0D2C4A]/10 shadow-2xl animate-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between border-b pb-3">
-              <h3 className="font-extrabold text-base text-[#0D2C4A]">Record Payment / Payout</h3>
-              <button onClick={() => setShowAddPayment(false)} className="p-1 text-slate-400 hover:text-slate-600">
+              <div>
+                <h3 className="font-extrabold text-base text-[#0D2C4A]">Record Payment / Payout</h3>
+                <p className="text-[11px] text-slate-500 font-normal">Add manual transaction record to platform financials</p>
+              </div>
+              <button onClick={() => setShowAddPayment(false)} className="p-1 text-slate-400 hover:text-slate-600 cursor-pointer">
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <form onSubmit={handleCreatePayment} className="space-y-3 text-xs">
+            <form onSubmit={handleCreatePayment} className="space-y-3.5 text-xs">
+              {/* Transaction ID (TRX ID) */}
               <div>
-                <label className="block font-bold mb-1">Name</label>
-                <input required type="text" placeholder="Student or Tutor Name" value={newPaymentName} onChange={(e) => setNewPaymentName(e.target.value)} className="w-full p-2.5 rounded-xl border" />
+                <label className="block font-bold text-slate-700 mb-1 uppercase font-mono text-[10px]">
+                  Transaction ID (TRX ID)
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. TRX-983421 or bKash TrxID (Optional - leave blank to auto-generate)"
+                  value={newPaymentTrxId}
+                  onChange={(e) => setNewPaymentTrxId(e.target.value)}
+                  className="w-full p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#00A896] font-mono text-xs font-bold text-[#00A896] bg-slate-50 shadow-2xs"
+                />
               </div>
+
               <div>
-                <label className="block font-bold mb-1">Phone</label>
-                <input required type="text" placeholder="017xxxxxxxx" value={newPaymentPhone} onChange={(e) => setNewPaymentPhone(e.target.value)} className="w-full p-2.5 rounded-xl border" />
+                <label className="block font-bold text-slate-700 mb-1">Student / Tutor Name *</label>
+                <input required type="text" placeholder="Student or Tutor Name" value={newPaymentName} onChange={(e) => setNewPaymentName(e.target.value)} className="w-full p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#00A896] font-bold text-[#0D2C4A] shadow-2xs" />
               </div>
+
               <div>
-                <label className="block font-bold mb-1">Amount (৳)</label>
-                <input required type="number" value={newPaymentAmount} onChange={(e) => setNewPaymentAmount(Number(e.target.value))} className="w-full p-2.5 rounded-xl border font-mono" />
+                <label className="block font-bold text-slate-700 mb-1">Phone Number *</label>
+                <input
+                  required
+                  type="tel"
+                  inputMode="tel"
+                  placeholder="017xxxxxxxx"
+                  value={newPaymentPhone}
+                  onChange={(e) => {
+                    const sanitized = e.target.value.replace(/[^0-9+() -০-৯]/g, "");
+                    setNewPaymentPhone(sanitized);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key.length === 1 && !/[0-9+() -০-৯]/.test(e.key) && !e.ctrlKey && !e.metaKey) {
+                      e.preventDefault();
+                    }
+                  }}
+                  className="w-full p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#00A896] font-mono shadow-2xs"
+                />
               </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">Amount (৳) *</label>
+                  <input required type="number" value={newPaymentAmount} onChange={(e) => setNewPaymentAmount(Number(e.target.value))} className="w-full p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#00A896] font-mono font-extrabold shadow-2xs" />
+                </div>
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">Payment Method</label>
+                  <select value={newPaymentMethod} onChange={(e) => setNewPaymentMethod(e.target.value as any)} className="w-full p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#00A896] font-bold shadow-2xs bg-white cursor-pointer">
+                    <option value="bKash">bKash</option>
+                    <option value="Nagad">Nagad</option>
+                    <option value="Bank Transfer">Bank Transfer</option>
+                    <option value="Cash">Cash</option>
+                  </select>
+                </div>
+              </div>
+
               <div>
-                <label className="block font-bold mb-1">Type</label>
-                <select value={newPaymentType} onChange={(e) => setNewPaymentType(e.target.value as any)} className="w-full p-2.5 rounded-xl border">
+                <label className="block font-bold text-slate-700 mb-1">Transaction Type</label>
+                <select value={newPaymentType} onChange={(e) => setNewPaymentType(e.target.value as any)} className="w-full p-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-[#00A896] font-bold shadow-2xs bg-white cursor-pointer">
                   <option value="Fee Collection">Fee Collection (From Student)</option>
                   <option value="Tutor Honorarium">Tutor Honorarium (To Tutor)</option>
                 </select>
               </div>
-              <button type="submit" className="w-full py-3 rounded-xl bg-[#00A896] text-white font-extrabold">Save Transaction Record</button>
+
+              <div className="flex items-center gap-3 pt-2">
+                <button type="button" onClick={() => setShowAddPayment(false)} className="w-1/2 py-3 rounded-xl border border-slate-200 text-slate-600 font-bold hover:bg-slate-50 cursor-pointer">
+                  Cancel
+                </button>
+                <button type="submit" className="w-1/2 py-3 rounded-xl bg-[#00A896] hover:bg-[#008075] text-white font-extrabold shadow-md cursor-pointer transition-all active:scale-95">
+                  Save Transaction Record
+                </button>
+              </div>
             </form>
           </div>
         </div>

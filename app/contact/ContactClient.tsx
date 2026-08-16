@@ -150,11 +150,25 @@ export default function ContactClient() {
                       <Phone className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                       <input
                         type="tel"
+                        inputMode="tel"
                         required
                         value={formData.phone}
-                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                        onChange={(e) => {
+                          const sanitized = e.target.value.replace(/[^0-9+() -০-৯]/g, "");
+                          setFormData({ ...formData, phone: sanitized });
+                        }}
+                        onKeyDown={(e) => {
+                          if (
+                            e.key.length === 1 &&
+                            !/[0-9+() -০-৯]/.test(e.key) &&
+                            !e.ctrlKey &&
+                            !e.metaKey
+                          ) {
+                            e.preventDefault();
+                          }
+                        }}
                         placeholder="017XXXXXXXX"
-                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#00A896]"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#00A896] font-mono"
                       />
                     </div>
                   </div>
