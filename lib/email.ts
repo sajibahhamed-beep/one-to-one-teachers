@@ -57,39 +57,87 @@ export async function sendNotificationEmail(payload: NotificationPayload) {
   `;
 
   // Transporter configuration: try env vars first, fallback to standard settings
-  const host = (process.env.SMTP_HOST || "smtp.gmail.com").trim();
-  const port = Number(process.env.SMTP_PORT) || 587;
+  const host = (process.env.SMTP_HOST || "").trim();
+  const port = Number(process.env.SMTP_PORT) || 465;
   const rawUser = process.env.SMTP_USER || process.env.EMAIL_USER || "";
   const rawPass = process.env.SMTP_PASS || process.env.EMAIL_PASS || "";
   const user = rawUser.trim().replace(/^["']|["']$/g, "");
   const pass = rawPass.trim().replace(/^["']|["']$/g, "");
 
   if (user && pass) {
-    try {
-      const transporter = nodemailer.createTransport({
-        host,
-        port,
-        secure: port === 465,
-        auth: { user, pass },
-      });
+    // Determine transport options: prefer port 465 or Gmail service for serverless reliability
+    const isGmail = !host || host.includes("gmail");
+    
+    const transportOptions: nodemailer.TransportOptions = isGmail && (!host || port === 465)
+      ? ({
+          service: "gmail",
+          auth: { user, pass },
+          connectionTimeout: 10000,
+          greetingTimeout: 8000,
+          socketTimeout: 15000,
+        } as any)
+      : ({
+          host: host || "smtp.gmail.com",
+          port: port,
+          secure: port === 465,
+          auth: { user, pass },
+          connectionTimeout: 10000,
+          greetingTimeout: 8000,
+          socketTimeout: 15000,
+          tls: {
+            rejectUnauthorized: false,
+          },
+        } as any);
 
-      await transporter.sendMail({
+    try {
+      const transporter = nodemailer.createTransport(transportOptions);
+
+      const info = await transporter.sendMail({
         from: `"ototeachers" <${user}>`,
         to: NOTIFICATION_RECIPIENTS.join(", "),
         subject: emailSubject,
         text: textContent,
         html: htmlContent,
       });
-      console.log(`[ototeachers email] Notification sent to ${NOTIFICATION_RECIPIENTS.join(", ")}`);
+      console.log(`[ototeachers email] Notification sent to ${NOTIFICATION_RECIPIENTS.join(", ")} (Message ID: ${info.messageId})`);
       return true;
-    } catch (error) {
-      console.error("[ototeachers email] SMTP send error:", error);
+    } catch (primaryError) {
+      console.error("[ototeachers email] Primary SMTP attempt failed:", primaryError);
+
+      // Fallback attempt on port 587 if port 465 was used or vice versa
+      try {
+        const fallbackPort = port === 465 ? 587 : 465;
+        console.log(`[ototeachers email] Retrying with fallback port ${fallbackPort}...`);
+        const fallbackTransporter = nodemailer.createTransport({
+          host: host || "smtp.gmail.com",
+          port: fallbackPort,
+          secure: fallbackPort === 465,
+          auth: { user, pass },
+          connectionTimeout: 10000,
+          greetingTimeout: 8000,
+          socketTimeout: 15000,
+          tls: {
+            rejectUnauthorized: false,
+          },
+        });
+
+        const fallbackInfo = await fallbackTransporter.sendMail({
+          from: `"ototeachers" <${user}>`,
+          to: NOTIFICATION_RECIPIENTS.join(", "),
+          subject: emailSubject,
+          text: textContent,
+          html: htmlContent,
+        });
+        console.log(`[ototeachers email] Fallback notification sent successfully (Message ID: ${fallbackInfo.messageId})`);
+        return true;
+      } catch (fallbackError) {
+        console.error("[ototeachers email] Fallback SMTP attempt also failed:", fallbackError);
+      }
     }
   } else {
-    console.log(`[ototeachers email] SMTP credentials not set (Set SMTP_USER & SMTP_PASS in .env.local). Logged payload:`);
-    console.log(`Recipients: ${NOTIFICATION_RECIPIENTS.join(", ")}`);
-    console.log(`Subject: ${emailSubject}`);
-    console.log(`Text Body:\n${textContent}`);
+    console.warn(`[ototeachers email] ⚠️ SMTP credentials missing in environment variables!`);
+    console.warn(`Please configure SMTP_USER (or EMAIL_USER) and SMTP_PASS (or EMAIL_PASS) in your production hosting dashboard (e.g. Vercel Project Settings > Environment Variables).`);
+    console.log(`Payload was: Subject="${emailSubject}", Recipients="${NOTIFICATION_RECIPIENTS.join(", ")}"`);
   }
 
   return false;
