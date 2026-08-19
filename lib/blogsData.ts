@@ -680,16 +680,15 @@ export const BLOG_POSTS: BlogPost[] = [
 ];
 
 /**
- * Get all blog posts combining static items and database items (if on server)
+ * Get all blog posts directly from the database (server-side helper)
  */
 export function getAllBlogs(): BlogPost[] {
   try {
     if (typeof window === "undefined") {
-      // Server-side: require getDB safely
       const { getDB } = require("@/lib/db");
       const db = getDB();
-      if (db && Array.isArray(db.blogs) && db.blogs.length > 0) {
-        const dbMapped: BlogPost[] = db.blogs.map((b: any) => ({
+      if (db && Array.isArray(db.blogs)) {
+        return db.blogs.map((b: any) => ({
           id: b.id || b.slug,
           slug: b.slug || b.id,
           titleBn: b.titleBn || b.title_bn || "নিবন্ধ",
@@ -698,8 +697,8 @@ export function getAllBlogs(): BlogPost[] {
           featured: Boolean(b.featured),
           excerptBn: b.excerptBn || b.excerpt_bn || "",
           excerptEn: b.excerptEn || b.excerpt_en || "",
-          publishedDateBn: b.publishedDateBn || b.published_date_bn || "০৬ আগস্ট, ২০২৬",
-          publishedDateEn: b.publishedDateEn || b.published_date_en || "06 August 2026",
+          publishedDateBn: b.publishedDateBn || b.published_date_bn || "",
+          publishedDateEn: b.publishedDateEn || b.published_date_en || "",
           readTimeBn: b.readTimeBn || b.read_time_bn || "৫ মিনিট পড়া",
           readTimeEn: b.readTimeEn || b.read_time_en || "5 min read",
           image: b.image || "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=800&q=80",
@@ -712,53 +711,21 @@ export function getAllBlogs(): BlogPost[] {
             institutionBn: b.authorUniBn || "বুয়েট ও ঢাবি",
             institutionEn: b.authorUniEn || "BUET & DU",
           },
-          tagsBn: Array.isArray(b.tagsBn) && b.tagsBn.length > 0 ? b.tagsBn : ["১-অন-১ শিক্ষক", "পড়াশোনা", "পরামর্শ"],
-          tagsEn: Array.isArray(b.tagsEn) && b.tagsEn.length > 0 ? b.tagsEn : ["1-on-1 Tutor", "Study", "Preparation"],
-          introBn: b.introBn || b.excerptBn || "১-অন-১ ব্যক্তিগত শিক্ষক এর মাধ্যমে আপনার সন্তানের পড়ালেখার অগ্রগতি নিশ্চিত করুন।",
-          introEn: b.introEn || b.excerptEn || "Ensure your child's learning progress with 1-on-1 personalized tutoring.",
-          sectionsBn: Array.isArray(b.sectionsBn) && b.sectionsBn.length > 0 ? b.sectionsBn : [
-            {
-              heading: b.titleBn || "১-অন-১ শিক্ষাদানের বিশেষ সুবিধা",
-              subheading: "কেন একজন ডেডিকেটেড শিক্ষক প্রয়োজন?",
-              paragraphs: [
-                b.excerptBn || "১-অন-১ লাইভ ক্লাসে প্রতিটি শিক্ষার্থী তাদের নিজস্ব গতিতে শিখতে পারে এবং সকল জটিল প্রশ্নের সমাধান তাৎক্ষণিক পেয়ে থাকে।",
-                "আমাদের বুয়েট, ঢাবি ও মেডিকেলের শিক্ষকেরা প্রতিটি বিষয় ধরে ধরে ১-অন-১ সহজ ভাষায় বুঝিয়ে দেন।"
-              ],
-              callout: "অর্থ যেন কখনো কোনো শিক্ষার্থীর শিক্ষার পথে বাধা না হয়।"
-            }
-          ],
-          sectionsEn: Array.isArray(b.sectionsEn) && b.sectionsEn.length > 0 ? b.sectionsEn : [
-            {
-              heading: b.titleEn || "Benefits of 1-on-1 Tutoring",
-              subheading: "Why a dedicated tutor matters?",
-              paragraphs: [
-                b.excerptEn || "In 1-on-1 live sessions, students learn at their own pace and get instant solutions to complex doubts.",
-                "Tutors from BUET, DU & DMC break down difficult concepts step by step."
-              ],
-              callout: "Money should never be a restriction for education."
-            }
-          ],
-          keyTakeawaysBn: Array.isArray(b.keyTakeawaysBn) && b.keyTakeawaysBn.length > 0 ? b.keyTakeawaysBn : [
-            "ব্যক্তিগত ১-অন-১ মনোযোগ",
-            "প্রথম ক্লাস সম্পূর্ণ ফ্রি",
-            "অনুকূল সময়সূচী বেছে নেওয়ার সুযোগ"
-          ],
-          keyTakeawaysEn: Array.isArray(b.keyTakeawaysEn) && b.keyTakeawaysEn.length > 0 ? b.keyTakeawaysEn : [
-            "Personalized 1-on-1 attention",
-            "First session completely free",
-            "Flexible schedule selection"
-          ]
+          tagsBn: Array.isArray(b.tagsBn) && b.tagsBn.length > 0 ? b.tagsBn : (Array.isArray(b.tags_bn) ? b.tags_bn : ["১-অন-১ শিক্ষক", "পড়াশোনা"]),
+          tagsEn: Array.isArray(b.tagsEn) && b.tagsEn.length > 0 ? b.tagsEn : (Array.isArray(b.tags_en) ? b.tags_en : ["1-on-1 Tutor", "Study"]),
+          introBn: b.introBn || b.intro_bn || b.excerptBn || "",
+          introEn: b.introEn || b.intro_en || b.excerptEn || "",
+          sectionsBn: Array.isArray(b.sectionsBn) && b.sectionsBn.length > 0 ? b.sectionsBn : (Array.isArray(b.sections_bn) ? b.sections_bn : []),
+          sectionsEn: Array.isArray(b.sectionsEn) && b.sectionsEn.length > 0 ? b.sectionsEn : (Array.isArray(b.sections_en) ? b.sections_en : []),
+          keyTakeawaysBn: Array.isArray(b.keyTakeawaysBn) ? b.keyTakeawaysBn : (Array.isArray(b.key_takeaways_bn) ? b.key_takeaways_bn : []),
+          keyTakeawaysEn: Array.isArray(b.keyTakeawaysEn) ? b.keyTakeawaysEn : (Array.isArray(b.key_takeaways_en) ? b.key_takeaways_en : []),
         }));
-        
-        const existingIds = new Set(dbMapped.map((p) => p.id));
-        const staticFiltered = BLOG_POSTS.filter((p) => !existingIds.has(p.id));
-        return [...dbMapped, ...staticFiltered];
       }
     }
   } catch (e) {
-    // Fallback to static
+    // Database query failed
   }
-  return BLOG_POSTS;
+  return [];
 }
 
 /**

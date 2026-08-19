@@ -24,40 +24,13 @@ export default function Mentors({ onOpenEnroll }: MentorsProps) {
       .catch(() => {});
   }, []);
 
-  const defaultMentors = [
-    {
-      name: lang === "bn" ? "নুসরাত জাহান" : "Nusrat Jahan",
-      university: lang === "bn" ? "বুয়েট (সিএসই)" : "BUET (CSE)",
-      subject: lang === "bn" ? "গণিত ও আইসিটি শিক্ষক" : "Math & ICT Tutor",
-      students: lang === "bn" ? "৩ জন শিক্ষার্থী" : "3 Students",
-      img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80",
-    },
-    {
-      name: lang === "bn" ? "আরিফুর রহমান" : "Arifur Rahman",
-      university: lang === "bn" ? "ঢাকা বিশ্ববিদ্যালয় (পদার্থবিজ্ঞান)" : "Dhaka University (Physics)",
-      subject: lang === "bn" ? "পদার্থবিজ্ঞান ও রসায়ন শিক্ষক" : "Physics & Chemistry Tutor",
-      students: lang === "bn" ? "৪ জন শিক্ষার্থী" : "4 Students",
-      img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80",
-    },
-    {
-      name: lang === "bn" ? "ডাঃ তাসনিম ফারহানা" : "Dr. Tasnim Farhana",
-      university: lang === "bn" ? "ঢাকা মেডিকেল কলেজ (এমবিবিএস)" : "Dhaka Medical College (MBBS)",
-      subject: lang === "bn" ? "জীববিজ্ঞান ও স্বাস্থ্য শিক্ষা" : "Biology & Health Science",
-      students: lang === "bn" ? "৫ জন শিক্ষার্থী" : "5 Students",
-      img: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=400&q=80",
-    },
-  ];
-
-  const displayMentors =
-    teacherList.length > 0
-      ? teacherList.map((t) => ({
-          name: lang === "bn" ? t.nameBn || t.nameEn : t.nameEn || t.nameBn,
-          university: lang === "bn" ? t.universityBn || t.universityEn : t.universityEn || t.universityBn,
-          subject: lang === "bn" ? t.subjectBn || t.subjectEn : t.subjectEn || t.subjectBn,
-          students: lang === "bn" ? "যাচাইকৃত অনলাইন শিক্ষক" : "Verified 1-on-1 Tutor",
-          img: t.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80",
-        }))
-      : defaultMentors;
+  const displayMentors = teacherList.map((t) => ({
+    name: lang === "bn" ? t.nameBn || t.nameEn : t.nameEn || t.nameBn,
+    university: lang === "bn" ? t.universityBn || t.universityEn : t.universityEn || t.universityBn,
+    subject: lang === "bn" ? t.subjectBn || t.subjectEn : t.subjectEn || t.subjectBn,
+    students: lang === "bn" ? "যাচাইকৃত অনলাইন শিক্ষক" : "Verified 1-on-1 Tutor",
+    img: t.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80",
+  }));
 
   return (
     <section id="mentors" className="py-24 md:py-32 bg-[#F8FAFC] border-b border-[#0D2C4A]/10 font-sans">

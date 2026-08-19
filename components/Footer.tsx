@@ -3,12 +3,10 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useLanguage } from "../context/LanguageContext";
-import { Send, CheckCircle, Heart, MapPin, Phone, Mail, ChevronRight } from "lucide-react";
+import { Heart, MapPin, Phone, Mail, ChevronRight } from "lucide-react";
 
 export default function Footer() {
   const { t, lang } = useLanguage();
-  const [email, setEmail] = useState("");
-  const [subscribed, setSubscribed] = useState(false);
   const [settings, setSettings] = useState<{
     socialLinks?: any[];
     phone?: string;
@@ -29,6 +27,8 @@ export default function Footer() {
     addressEn: "Dhanmondi, Dhaka, Bangladesh",
   });
 
+  const [customPages, setCustomPages] = useState<any[]>([]);
+
   useEffect(() => {
     fetch("/api/settings")
       .then((res) => res.json())
@@ -38,57 +38,20 @@ export default function Footer() {
         }
       })
       .catch(() => {});
-  }, []);
 
-  const handleSubscribe = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email) {
-      setSubscribed(true);
-      setEmail("");
-    }
-  };
+    fetch("/api/pages")
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setCustomPages(data);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   return (
     <footer id="contact" className="bg-[#0A1D33] text-[#F8FAFC]/80 pt-16 pb-8 font-sans border-t border-[#00A896]/20">
       <div className="max-w-[1240px] mx-auto px-6 md:px-8">
-        {/* Tahzib Institute Style Newsletter Bar */}
-        <div className="bg-[#005B54] text-white rounded-2xl p-6 md:p-8 mb-16 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl border border-white/10">
-          <div className="space-y-1 text-center md:text-left">
-            <h4 className="font-sans text-xl md:text-2xl font-bold text-white">
-              {t.footNewsletter}
-            </h4>
-            <p className="text-xs text-white/80 font-normal">
-              {lang === "bn"
-                ? "ব্যক্তিগত অনলাইন শিক্ষা ও নিয়মিত পরামর্শ পেতে আপনার ইমেইল দিন"
-                : "Enter your email for regular online teaching updates"}
-            </p>
-          </div>
-
-          {!subscribed ? (
-            <form onSubmit={handleSubscribe} className="flex w-full md:w-auto max-w-md">
-              <input
-                type="email"
-                required
-                placeholder={lang === "bn" ? "your@mail.com" : "your@mail.com"}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-5 py-3 rounded-l-xl bg-white text-[#0D2C4A] text-sm focus:outline-none focus:ring-2 focus:ring-[#00A896]"
-              />
-              <button
-                type="submit"
-                className="px-6 py-3 bg-[#00A896] text-white rounded-r-xl text-sm font-bold hover:bg-[#008075] transition-colors flex items-center gap-2 flex-shrink-0"
-              >
-                <span>{lang === "bn" ? "সাবমিট" : "Submit"}</span>
-                <Send className="w-4 h-4" />
-              </button>
-            </form>
-          ) : (
-            <div className="flex items-center gap-2 text-sm text-white font-bold bg-white/20 px-5 py-3 rounded-xl border border-white/30">
-              <CheckCircle className="w-5 h-5 text-[#38BDF8]" />
-              <span>{lang === "bn" ? "সাবস্ক্রাইব সম্পন্ন হয়েছে!" : "Subscribed!"}</span>
-            </div>
-          )}
-        </div>
 
         {/* 4-Column Footer Links */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-14">
@@ -143,7 +106,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Col 2: Policy */}
+          {/* Col 2: Policy & Dynamic Pages */}
           <div>
             <h5 className="font-sans text-lg font-bold text-[#FFFFFF] mb-5 pb-2 border-b border-white/10">
               {lang === "bn" ? "নীতিমালা ও সাহায্য" : "Policies & Help"}
@@ -167,6 +130,20 @@ export default function Footer() {
                   <span>{lang === "bn" ? "রিফান্ড পলিসি" : "Refund Policy"}</span>
                 </Link>
               </li>
+              {/* Dynamic Newly Created Custom Pages from Admin Panel */}
+              {customPages
+                .filter((p) => !["privacy", "terms", "refund-policy"].includes(p.slug))
+                .map((page) => (
+                  <li key={page.id || page.slug}>
+                    <Link
+                      href={`/pages/${page.slug}`}
+                      className="hover:text-[#00A896] transition-colors flex items-center gap-2 text-white/90"
+                    >
+                      <ChevronRight className="w-4 h-4 text-[#38BDF8]" />
+                      <span>{lang === "bn" ? page.titleBn : (page.titleEn || page.titleBn)}</span>
+                    </Link>
+                  </li>
+                ))}
               <li>
                 <Link href="/contact" className="hover:text-[#00A896] transition-colors flex items-center gap-2">
                   <ChevronRight className="w-4 h-4 text-[#00A896]" />

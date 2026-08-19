@@ -166,7 +166,158 @@ export interface DBData {
   pages?: CustomPage[];
 }
 
+export const defaultPages: CustomPage[] = [
+  {
+    id: "privacy",
+    slug: "privacy",
+    titleBn: "প্রাইভেসি পলিসি",
+    titleEn: "Privacy Policy",
+    subtitleBn: "শিক্ষার্থী ও অভিভাবকদের তথ্যের শতভাগ নিরাপত্তা এবং জিরো থার্ড-পার্টি শেয়ারিং নিশ্চয়তা।",
+    subtitleEn: "100% data security and zero third-party sharing guarantee for students and guardians.",
+    lastUpdatedBn: "১০ আগস্ট, ২০২৬",
+    lastUpdatedEn: "August 10, 2026",
+    metaTitleBn: "প্রাইভেসি পলিসি | OTOTeachers",
+    metaTitleEn: "Privacy Policy | OTOTeachers",
+    metaDescriptionBn: "OTOTeachers প্ল্যাটফর্মের গোপনীয়তা নীতি — শিক্ষার্থী ও অভিভাবকদের তথ্যের শতভাগ নিরাপত্তা।",
+    metaDescriptionEn: "OTOTeachers Privacy Policy — Complete data security and confidentiality.",
+    sections: [
+      {
+        id: "sec-1",
+        icon: "ShieldCheck",
+        titleBn: "১. তথ্যের গোপনীয়তা ও সংগ্রহ",
+        titleEn: "1. Information Privacy & Collection",
+        contentBn: "আমরা শিক্ষার্থীদের নাম, ফোন নম্বর, শ্রেণি এবং বিষয় সংক্রান্ত তথ্য শুধুমাত্র উপযুক্ত শিক্ষক নির্বাচন ও ক্লাস সমন্বয়ের জন্য ব্যবহার করি। কোনো অবস্থাতেই বাণিজ্যিক উদ্দেশ্যে তৃতীয় কোনো পক্ষের সাথে তথ্য শেয়ার করা হয় না।",
+        contentEn: "We collect basic student information solely for tutor matching and class coordination. Your data is never sold or shared with third parties."
+      },
+      {
+        id: "sec-2",
+        icon: "Lock",
+        titleBn: "২. অনলাইন ক্লাস নিরাপত্তা ও এনক্রিপশন",
+        titleEn: "2. Live Session Security & Encryption",
+        contentBn: "সকল লাইভ ১-অন-১ ক্লাস নিরাপদ সুরক্ষিত চ্যানেলে পরিচালিত হয়। অপ্রাপ্তবয়স্ক শিক্ষার্থীদের ক্লাসে অভিভাবকের সরাসরি উপস্থিত থাকার পূর্ণ স্বাধীনতা রয়েছে।",
+        contentEn: "All 1-on-1 live sessions are conducted through secure encrypted channels. Parents are encouraged to observe sessions at any time."
+      },
+      {
+        id: "sec-3",
+        icon: "CreditCard",
+        titleBn: "৩. পেমেন্ট ও লেনদেন নিরাপত্তা",
+        titleEn: "3. Payment & Transaction Security",
+        contentBn: "বিকাশ, নগদ বা ব্যাংকের মাধ্যমে সকল ফি লেনদেনের তথ্য এনক্রিপ্টেড থাকে। আমরা কোনো কার্ড নম্বর বা পিন সংরক্ষণ করি না।",
+        contentEn: "All transactions made via bKash, Nagad, or bank transfer are strictly encrypted. We do not store sensitive payment credentials."
+      },
+      {
+        id: "sec-4",
+        icon: "UserCheck",
+        titleBn: "৪. ব্যবহারকারীর অধিকার ও তথ্য মুছে ফেলা",
+        titleEn: "4. User Rights & Data Deletion",
+        contentBn: "যেকোনো সময় শিক্ষার্থী বা অভিভাবক তাদের তথ্য হালনাগাদ বা ডাটাবেজ থেকে মুছে ফেলার জন্য অনুরোধ জানাতে পারেন।",
+        contentEn: "Users retain the right to request deletion or modification of their stored records at any time."
+      }
+    ],
+    updatedAt: new Date().toISOString()
+  },
+  {
+    id: "terms",
+    slug: "terms",
+    titleBn: "টার্মস অফ সার্ভিস",
+    titleEn: "Terms of Service",
+    subtitleBn: "OTOTeachers প্ল্যাটফর্ম ব্যবহারের নিয়মাবলী, অধিকার ও দায়িত্বের পূর্ণাঙ্গ রূপরেখা।",
+    subtitleEn: "Complete terms, conditions, rights and responsibilities for using OTOTeachers.",
+    lastUpdatedBn: "১০ আগস্ট, ২০২৬",
+    lastUpdatedEn: "August 10, 2026",
+    metaTitleBn: "টার্মস অফ সার্ভিস | OTOTeachers",
+    metaTitleEn: "Terms of Service | OTOTeachers",
+    metaDescriptionBn: "OTOTeachers এর ব্যবহার বিধি, শিক্ষার্থী ও শিক্ষকের অধিকার এবং শর্তাবলী।",
+    metaDescriptionEn: "Terms and conditions governing students, guardians and tutors on OTOTeachers.",
+    sections: [
+      {
+        id: "sec-1",
+        icon: "BookOpen",
+        titleBn: "১. সেবার আওতা ও প্ল্যাটফর্ম পরিচিতি",
+        titleEn: "1. Scope of Service & Platform Role",
+        contentBn: "OTOTeachers একটি ১-অন-১ অনলাইন শিক্ষক মেন্টরিং প্ল্যাটফর্ম, যা শিক্ষার্থী ও যাচাইকৃত টিউটরদের মধ্যে লাইভ ক্লাসের ব্যবস্থা করে থাকে।",
+        contentEn: "OTOTeachers is a 1-on-1 personalized online tutoring platform connecting verified mentors with students."
+      },
+      {
+        id: "sec-2",
+        icon: "CheckCircle",
+        titleBn: "২. শিক্ষার্থী ও অভিভাবকের দায়িত্ব",
+        titleEn: "2. Student & Guardian Responsibilities",
+        contentBn: "নিবন্ধনের সময় সঠিক তথ্য প্রদান করতে হবে। ক্লাসের নির্ধারিত সময়ে উপস্থিতি ও প্রয়োজনীয় ইন্টারনেট সংযোগ নিশ্চিত করা আবশ্যক।",
+        contentEn: "Provide accurate student details during registration. Ensure reliable internet connectivity and punctual attendance."
+      },
+      {
+        id: "sec-3",
+        icon: "ShieldCheck",
+        titleBn: "৩. শিক্ষক কোড অফ কন্ডাক্ট ও যাচাইকরণ",
+        titleEn: "3. Tutor Code of Conduct & Verification",
+        contentBn: "সকল শিক্ষক জাতীয় পরিচয়পত্র ও বিশ্ববিদ্যালয় আইডি যাচাই সাপেক্ষে প্ল্যাটফর্মে যুক্ত হন। শিক্ষার উপযুক্ত পরিবেশ রক্ষায় আমাদের জিরো-টলারেন্স নীতি বলবৎ রয়েছে।",
+        contentEn: "All mentors undergo identity and university credential verification. We maintain strict safety and professionalism standards."
+      },
+      {
+        id: "sec-4",
+        icon: "Clock",
+        titleBn: "৪. শিডিউলিং ও ক্লাস রিশিডিউলিং",
+        titleEn: "4. Scheduling & Class Rescheduling",
+        contentBn: "যেকোনো জরুরি প্রয়োজনে ক্লাস রিশিডিউল করতে চাইলে নির্ধারিত সময়ের অন্তত ৪ ঘণ্টা আগে শিক্ষক বা সাপোর্ট টিমকে অবহিত করতে হবে।",
+        contentEn: "Notify the tutor or support team at least 4 hours prior to scheduled class time for emergency rescheduling."
+      }
+    ],
+    updatedAt: new Date().toISOString()
+  },
+  {
+    id: "refund-policy",
+    slug: "refund-policy",
+    titleBn: "রিফান্ড পলিসি",
+    titleEn: "Refund Policy",
+    subtitleBn: "শিক্ষার্থী ও অভিভাবকদের অধিকার রক্ষায় আমাদের ১০০% স্বচ্ছ ও ঝুঁকিমুক্ত রিফান্ড নীতি।",
+    subtitleEn: "Our 100% transparent and risk-free refund policy designed to protect student and parent rights.",
+    lastUpdatedBn: "১০ আগস্ট, ২০২৬",
+    lastUpdatedEn: "August 10, 2026",
+    metaTitleBn: "রিফান্ড পলিসি | OTOTeachers",
+    metaTitleEn: "Refund Policy | OTOTeachers",
+    metaDescriptionBn: "১০০% স্বচ্ছ রিফান্ড পলিসি — ১ম ক্লাস ফ্রি ট্রায়াল এবং অসন্তুষ্টিতে শতভাগ মানিব্যাক গ্যারান্টি।",
+    metaDescriptionEn: "100% transparent refund policy — 1st free trial session and risk-free satisfaction guarantee.",
+    sections: [
+      {
+        id: "sec-1",
+        icon: "ShieldCheck",
+        titleBn: "১. প্রথম সেশন ১০০% ফ্রি ট্রায়াল",
+        titleEn: "1. 100% Free First Trial Session",
+        contentBn: "আমাদের যেকোনো বিষয়ভিত্তিক ১-অন-১ শিক্ষকের প্রথম ডেমো/ট্রায়াল ক্লাস সম্পূর্ণ বিনামূল্যে প্রদান করা হয়। প্রথম সেশন দেখার পরই অভিভাবক বা শিক্ষার্থী চূড়ান্ত ভর্তির সিদ্ধান্ত নিতে পারেন।",
+        contentEn: "Every subject 1-on-1 mentor matching comes with an initial free trial class. Finalize enrollment only after experiencing the first live session."
+      },
+      {
+        id: "sec-2",
+        icon: "RefreshCw",
+        titleBn: "২. শিক্ষক পরিবর্তনের সুযোগ ও রিফান্ড",
+        titleEn: "2. Tutor Replacement & Refund Options",
+        contentBn: "ভর্তির পর যদি শিক্ষকের পড়ানোর ধরণ শিক্ষার্থীর সাথে সামঞ্জস্যপূর্ণ না হয়, তবে ৪৮ ঘণ্টার মধ্যে সম্পূর্ণ নতুন শিক্ষক বরাদ্দ দেওয়া হবে। কোনো কারণে অভিভাবক যদি সেবা স্থগিত করতে চান, তবে অব্যবহৃত ক্লাসের সম্পূর্ণ ফি ফেরত প্রদান করা হবে।",
+        contentEn: "If an assigned tutor does not fit your learning pace, we replace the mentor within 48 hours. Unutilized session fees will be refunded pro-rata."
+      },
+      {
+        id: "sec-3",
+        icon: "CheckCircle",
+        titleBn: "৩. রিফান্ড আবেদনের নিয়মাবলী",
+        titleEn: "3. Refund Request Process",
+        contentBn: "আমাদের সাপোর্ট ইমেইলে (support@ototeachers.com) অথবা হটলাইনে (01775551325) যোগাযোগ করে রিফান্ড রিকোয়েস্ট পাঠান। আবেদন অনুমোদনের ৩ থেকে ৭ কর্মদিবসের মধ্যে আপনার বিকাশ, নগদ বা ব্যাংক অ্যাকাউন্টে অর্থ ফেরত পাঠানো হবে।",
+        contentEn: "Send your refund request to support@ototeachers.com or hotline 01775551325. Refunds are processed within 3 to 7 working days."
+      },
+      {
+        id: "sec-4",
+        icon: "HelpCircle",
+        titleBn: "৪. প্রযুক্তিগত বা শিক্ষক অনুপস্থিতির রিফান্ড",
+        titleEn: "4. Technical Issues or Tutor Absence",
+        contentBn: "শিক্ষকের ব্যক্তিগত সমস্যা বা বিদ্যুৎ/ইন্টারনেট বিভ্রাটের কারণে কোনো ক্লাস বাতিল হলে অতিরিক্ত মেকআপ ক্লাস নেওয়া হবে অথবা সমপরিমাণ অর্থ সম্পূর্ণ ফেরতযোগ্য হবে।",
+        contentEn: "If a class is cancelled due to tutor absence or technical disruption, a replacement makeup session is scheduled or a full refund for that session is issued."
+      }
+    ],
+    updatedAt: new Date().toISOString()
+  }
+];
+
 export const initialData: DBData = {
+  pages: defaultPages,
   enrollments: [
     {
       id: "ENR-1001",
@@ -288,26 +439,7 @@ export const initialData: DBData = {
       aEn: "Yes, you can book a free 1st demo trial class before confirming enrollment.",
     },
   ],
-  blogs: [
-    {
-      id: "1",
-      slug: "hsc-board-prep-guide",
-      titleBn: "এইচএসসি বোর্ড পরীক্ষায় ভালো করার বৈজ্ঞানিক টিপস ও ট্রিকস",
-      titleEn: "Scientific Tips to Excel in HSC Board Exams",
-      category: "board-prep",
-      excerptBn: "বুয়েট ও ঢাবি টিউটরদের অভিজ্ঞতা অনুযায়ী পদার্থ ও রসায়নে এ+ পাওয়ার সবচেয়ে কার্যকর পড়ার রুটিন।",
-      publishedDateBn: "০৫ আগস্ট, ২০২৬",
-    },
-    {
-      id: "2",
-      slug: "ssc-math-fear-elimination",
-      titleBn: "এসএসসি সাধারণ ও উচ্চতর গণিতের ভয় দূর করার ৫ কৌশল",
-      titleEn: "5 Strategies to Eliminate Math Fear in SSC",
-      category: "math-science",
-      excerptBn: "গণিতের সূত্রের সহজ প্রয়োগ এবং ১-অন-১ মেন্টরিংয়ের মাধ্যমে সহজেই নিশ্চিত এ+ পাওয়ার পথচিত্র।",
-      publishedDateBn: "০৩ আগস্ট, ২০২৬",
-    },
-  ],
+  blogs: [...BLOG_POSTS],
   settings: {
     socialLinks: [
       { id: "soc-1", name: "Facebook", iconUrl: "facebook", url: "https://facebook.com" },
@@ -340,6 +472,9 @@ let inMemoryDB: DBData | null = null;
 export function getDB(): DBData {
   if (!inMemoryDB) {
     inMemoryDB = JSON.parse(JSON.stringify(initialData)) as DBData;
+  }
+  if (!inMemoryDB.pages || inMemoryDB.pages.length === 0) {
+    inMemoryDB.pages = JSON.parse(JSON.stringify(defaultPages));
   }
   return inMemoryDB;
 }
@@ -861,97 +996,108 @@ export async function getBlogs(): Promise<BlogPost[]> {
         .from("blogs")
         .select("*")
         .order("created_at", { ascending: false });
-      if (!error && data && data.length > 0) {
-        return data.map((row: any) => ({
-          id: row.id,
-          slug: row.slug,
-          titleBn: row.title_bn,
-          titleEn: row.title_en || "",
-          category: row.category || "mentorship",
-          featured: Boolean(row.featured),
-          excerptBn: row.excerpt_bn || "",
-          excerptEn: row.excerpt_en || "",
-          publishedDateBn: row.published_date_bn || "",
-          publishedDateEn: row.published_date_en || "",
-          readTimeBn: row.read_time_bn || "৫ মিনিট পড়া",
-          readTimeEn: row.read_time_en || "5 min read",
-          image: row.image || "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1200&q=80",
-          author: typeof row.author === "object" && row.author !== null && row.author.nameBn ? row.author : {
-            nameBn: "OTOTeachers টিম",
-            nameEn: "OTOTeachers Team",
-            roleBn: "একাডেমিক মেন্টর",
-            roleEn: "Academic Mentor",
-            institutionBn: "বুয়েট ও ঢাবি",
-            institutionEn: "BUET & DU",
-            avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"
-          },
-          tagsBn: Array.isArray(row.tags_bn) && row.tags_bn.length > 0 ? row.tags_bn : ["১-অন-১ মেন্টরিং", "শিক্ষা পদ্ধতি"],
-          tagsEn: Array.isArray(row.tags_en) && row.tags_en.length > 0 ? row.tags_en : ["1-on-1 Mentoring", "Study Tips"],
-          introBn: row.intro_bn || row.excerpt_bn || "",
-          introEn: row.intro_en || row.excerpt_en || "",
-          sectionsBn: Array.isArray(row.sections_bn) && row.sections_bn.length > 0 ? row.sections_bn : [
-            {
-              heading: row.title_bn,
-              paragraphs: [row.content_bn || row.excerpt_bn || "বিস্তারিত বিবরণ শীঘ্রই আসছে।"],
+      if (!error && Array.isArray(data)) {
+        return data.map((row: any) => {
+          let extra: any = {};
+          if (row.content_bn) {
+            try {
+              extra = JSON.parse(row.content_bn);
+            } catch {
+              extra = { introBn: row.content_bn };
             }
-          ],
-          sectionsEn: Array.isArray(row.sections_en) && row.sections_en.length > 0 ? row.sections_en : [
-            {
-              heading: row.title_en || row.title_bn,
-              paragraphs: [row.content_en || row.excerpt_en || "Detailed description coming soon."],
-            }
-          ],
-          keyTakeawaysBn: Array.isArray(row.key_takeaways_bn) ? row.key_takeaways_bn : [],
-          keyTakeawaysEn: Array.isArray(row.key_takeaways_en) ? row.key_takeaways_en : [],
-        }));
+          }
+          return {
+            id: row.id || row.slug,
+            slug: row.slug || row.id,
+            titleBn: row.title_bn,
+            titleEn: row.title_en || "",
+            category: row.category || "mentorship",
+            featured: Boolean(extra.featured !== undefined ? extra.featured : row.featured),
+            excerptBn: row.excerpt_bn || "",
+            excerptEn: row.excerpt_en || "",
+            publishedDateBn: row.published_date_bn || "",
+            publishedDateEn: row.published_date_en || "",
+            readTimeBn: extra.readTimeBn || row.read_time_bn || "৫ মিনিট পড়া",
+            readTimeEn: extra.readTimeEn || row.read_time_en || "5 min read",
+            image: row.image || "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1200&q=80",
+            author: extra.author || (typeof row.author === "object" && row.author ? row.author : {
+              nameBn: "OTOTeachers টিম",
+              nameEn: "OTOTeachers Team",
+              roleBn: "একাডেমিক মেন্টর",
+              roleEn: "Academic Mentor",
+              institutionBn: "বুয়েট ও ঢাবি",
+              institutionEn: "BUET & DU",
+              avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"
+            }),
+            tagsBn: Array.isArray(extra.tagsBn) ? extra.tagsBn : (Array.isArray(row.tags_bn) ? row.tags_bn : ["১-অন-১ মেন্টরিং", "শিক্ষা পদ্ধতি"]),
+            tagsEn: Array.isArray(extra.tagsEn) ? extra.tagsEn : (Array.isArray(row.tags_en) ? row.tags_en : ["1-on-1 Mentoring", "Study Tips"]),
+            introBn: extra.introBn || row.intro_bn || row.excerpt_bn || "",
+            introEn: extra.introEn || row.intro_en || row.excerpt_en || "",
+            sectionsBn: Array.isArray(extra.sectionsBn) && extra.sectionsBn.length > 0 ? extra.sectionsBn : (
+              Array.isArray(row.sections_bn) && row.sections_bn.length > 0 ? row.sections_bn : [
+                {
+                  heading: row.title_bn,
+                  paragraphs: [row.excerpt_bn || ""],
+                }
+              ]
+            ),
+            sectionsEn: Array.isArray(extra.sectionsEn) && extra.sectionsEn.length > 0 ? extra.sectionsEn : (
+              Array.isArray(row.sections_en) && row.sections_en.length > 0 ? row.sections_en : [
+                {
+                  heading: row.title_en || row.title_bn,
+                  paragraphs: [row.excerpt_en || ""],
+                }
+              ]
+            ),
+            keyTakeawaysBn: Array.isArray(extra.keyTakeawaysBn) ? extra.keyTakeawaysBn : (Array.isArray(row.key_takeaways_bn) ? row.key_takeaways_bn : []),
+            keyTakeawaysEn: Array.isArray(extra.keyTakeawaysEn) ? extra.keyTakeawaysEn : (Array.isArray(row.key_takeaways_en) ? row.key_takeaways_en : []),
+          };
+        });
       }
     } catch (e) {
       console.error("Supabase getBlogs error, falling back to local DB:", e);
     }
   }
   const db = getDB();
-  const existingSlugs = new Set((db.blogs || []).map((b: any) => b.slug || b.id));
-  const missingDefaults = BLOG_POSTS.filter((p) => !existingSlugs.has(p.slug) && !existingSlugs.has(p.id));
-  if (missingDefaults.length > 0 || !db.blogs || db.blogs.length === 0) {
-    db.blogs = [...(db.blogs || []), ...missingDefaults];
-    saveDB(db);
-  }
-  return db.blogs;
+  return db.blogs || [];
 }
 
 export async function getBlogBySlug(slug: string): Promise<BlogPost | null> {
   const blogs = await getBlogs();
   const found = blogs.find((b) => b.slug === slug || b.id === slug);
-  if (found) return found;
-  return BLOG_POSTS.find((b) => b.slug === slug || b.id === slug) || null;
+  return found || null;
 }
 
 export async function insertBlog(blog: BlogPost): Promise<BlogPost> {
   if (supabase && isSupabaseConfigured()) {
     try {
+      const extraData = {
+        featured: Boolean(blog.featured),
+        author: blog.author,
+        readTimeBn: blog.readTimeBn,
+        readTimeEn: blog.readTimeEn,
+        tagsBn: blog.tagsBn,
+        tagsEn: blog.tagsEn,
+        introBn: blog.introBn,
+        introEn: blog.introEn,
+        sectionsBn: blog.sectionsBn,
+        sectionsEn: blog.sectionsEn,
+        keyTakeawaysBn: blog.keyTakeawaysBn,
+        keyTakeawaysEn: blog.keyTakeawaysEn,
+      };
       const row = {
         id: blog.id,
         slug: blog.slug,
         title_bn: blog.titleBn,
         title_en: blog.titleEn || "",
         category: blog.category || "mentorship",
-        featured: Boolean(blog.featured),
         excerpt_bn: blog.excerptBn || "",
         excerpt_en: blog.excerptEn || "",
         published_date_bn: blog.publishedDateBn || "",
         published_date_en: blog.publishedDateEn || "",
-        read_time_bn: blog.readTimeBn || "",
-        read_time_en: blog.readTimeEn || "",
         image: blog.image || "",
-        author: blog.author || null,
-        tags_bn: blog.tagsBn || [],
-        tags_en: blog.tagsEn || [],
-        intro_bn: blog.introBn || "",
-        intro_en: blog.introEn || "",
-        sections_bn: blog.sectionsBn || [],
-        sections_en: blog.sectionsEn || [],
-        key_takeaways_bn: blog.keyTakeawaysBn || [],
-        key_takeaways_en: blog.keyTakeawaysEn || [],
+        content_bn: JSON.stringify(extraData),
+        content_en: blog.introEn || "",
       };
       const { error } = await supabase.from("blogs").insert(row);
       if (!error) return blog;
@@ -961,7 +1107,7 @@ export async function insertBlog(blog: BlogPost): Promise<BlogPost> {
     }
   }
   const db = getDB();
-  db.blogs = db.blogs && db.blogs.length > 0 ? db.blogs : [...BLOG_POSTS];
+  db.blogs = db.blogs || [];
   db.blogs.unshift(blog);
   saveDB(db);
   return blog;
@@ -970,34 +1116,39 @@ export async function insertBlog(blog: BlogPost): Promise<BlogPost> {
 export async function updateBlog(blog: BlogPost): Promise<BlogPost | null> {
   if (supabase && isSupabaseConfigured()) {
     try {
+      const extraData = {
+        featured: Boolean(blog.featured),
+        author: blog.author,
+        readTimeBn: blog.readTimeBn,
+        readTimeEn: blog.readTimeEn,
+        tagsBn: blog.tagsBn,
+        tagsEn: blog.tagsEn,
+        introBn: blog.introBn,
+        introEn: blog.introEn,
+        sectionsBn: blog.sectionsBn,
+        sectionsEn: blog.sectionsEn,
+        keyTakeawaysBn: blog.keyTakeawaysBn,
+        keyTakeawaysEn: blog.keyTakeawaysEn,
+      };
       const row = {
         slug: blog.slug,
         title_bn: blog.titleBn,
         title_en: blog.titleEn || "",
         category: blog.category || "mentorship",
-        featured: Boolean(blog.featured),
         excerpt_bn: blog.excerptBn || "",
         excerpt_en: blog.excerptEn || "",
         published_date_bn: blog.publishedDateBn || "",
         published_date_en: blog.publishedDateEn || "",
-        read_time_bn: blog.readTimeBn || "",
-        read_time_en: blog.readTimeEn || "",
         image: blog.image || "",
-        author: blog.author || null,
-        tags_bn: blog.tagsBn || [],
-        tags_en: blog.tagsEn || [],
-        intro_bn: blog.introBn || "",
-        intro_en: blog.introEn || "",
-        sections_bn: blog.sectionsBn || [],
-        sections_en: blog.sectionsEn || [],
-        key_takeaways_bn: blog.keyTakeawaysBn || [],
-        key_takeaways_en: blog.keyTakeawaysEn || [],
+        content_bn: JSON.stringify(extraData),
+        content_en: blog.introEn || "",
       };
       const { error } = await supabase
         .from("blogs")
         .update(row)
         .eq("id", blog.id);
       if (!error) return blog;
+      console.error("Supabase updateBlog error:", error?.message);
     } catch (e) {
       console.error("Supabase updateBlog error:", e);
     }
@@ -1017,7 +1168,7 @@ export async function updateBlog(blog: BlogPost): Promise<BlogPost | null> {
 export async function deleteBlog(id: string): Promise<boolean> {
   if (supabase && isSupabaseConfigured()) {
     try {
-      const { error } = await supabase.from("blogs").delete().eq("id", id);
+      const { error } = await supabase.from("blogs").delete().or(`id.eq.${id},slug.eq.${id}`);
       if (!error) return true;
     } catch (e) {
       console.error("Supabase deleteBlog error:", e);

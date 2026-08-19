@@ -4,77 +4,6 @@ import { useState, useEffect } from "react";
 import { useLanguage } from "../context/LanguageContext";
 import { ChevronDown, HelpCircle } from "lucide-react";
 
-const defaultFaqs = {
-  bn: [
-    {
-      q: "ব্যক্তিগত অনলাইন ক্লাস কীভাবে পরিচালিত হয়?",
-      a: "আপনি আপনার পছন্দের বিষয় ও সময় বেছে নেন। আমরা ৪৮ ঘণ্টার মধ্যে আপনার জন্য একজন উপযুক্ত যাচাইকৃত শিক্ষক খুঁজে দিই। ক্লাস হয় সম্পূর্ণ অনলাইনে — Zoom, Google Meet বা WhatsApp Call-এর মাধ্যমে, একদম ঘরে বসে।",
-    },
-    {
-      q: "প্রথম ফ্রি ট্রায়াল ক্লাসটি কীভাবে পাবো?",
-      a: "শুধু ফর্মটি পূরণ করুন। আমরা আপনার সাথে যোগাযোগ করব এবং প্রথম সেশনটি সম্পূর্ণ বিনামূল্যে নেওয়ার ব্যবস্থা করব। কোনো কার্ড বা অগ্রিম পেমেন্টের প্রয়োজন নেই।",
-    },
-    {
-      q: "শিক্ষকরা কি সত্যিই বুয়েট, ঢাবি বা মেডিকেলের?",
-      a: "হ্যাঁ। আমাদের সকল শিক্ষক বাংলাদেশের শীর্ষস্থানীয় বিশ্ববিদ্যালয়ের ছাত্র বা সদ্য পাস করা গ্র্যাজুয়েট। তাদের একাডেমিক সনদ যাচাই করে তারপরই প্ল্যাটফর্মে যোগ দেওয়ার অনুমতি দেওয়া হয়।",
-    },
-    {
-      q: "ক্লাসের ফি কত? টাকা না থাকলে কী হবে?",
-      a: "আমাদের 'যা সাধ্যে কুলায় তাই দাও' (Pay-what-you-can) নীতি অনুযায়ী ফি নির্ধারিত হয়। আর্থিক সংকটে থাকা শিক্ষার্থীরা সম্পূর্ণ বিনামূল্যেও ক্লাস করতে পারবে — কারণ আমরা বিশ্বাস করি, অর্থ যেন কোনো শিক্ষার্থীর শিক্ষার পথে বাধা না হয়।",
-    },
-    {
-      q: "কোন কোন বিষয়ে শিক্ষক পাওয়া যাবে?",
-      a: "গণিত, পদার্থবিজ্ঞান, রসায়ন, জীববিজ্ঞান, ইংরেজি (স্পোকেন সহ), বাংলা, আইসিটি, হিসাববিজ্ঞান, এবং বোর্ড পরীক্ষার সকল বিষয়ে আমাদের যাচাইকৃত শিক্ষক রয়েছে।",
-    },
-    {
-      q: "ক্লাসের সময়সূচি কি নিজে ঠিক করা যাবে?",
-      a: "হ্যাঁ। শিক্ষার্থী ও শিক্ষক উভয়ের সুবিধামতো সময়ে ক্লাস নির্ধারিত হয়। সকাল, বিকেল বা রাতে — যেকোনো সময়ে নিতে পারবেন।",
-    },
-    {
-      q: "শিক্ষক পছন্দ না হলে কী করব?",
-      a: "কোনো সমস্যা নেই। ট্রায়াল ক্লাসের পরে শিক্ষক পছন্দ না হলে আমরা বিনামূল্যে নতুন শিক্ষক ম্যাচ করে দেব। আপনার সন্তুষ্টি আমাদের সর্বোচ্চ অগ্রাধিকার।",
-    },
-    {
-      q: "ঢাকার বাইরে থেকেও কি ক্লাস নেওয়া যাবে?",
-      a: "অবশ্যই। ক্লাস সম্পূর্ণ অনলাইনে হওয়ায় বাংলাদেশের যেকোনো জেলা — রংপুর, খুলনা, রাজশাহী, চট্টগ্রাম, বরিশাল যেখান থেকেই হোক — শুধু একটি স্মার্টফোন ও ইন্টারনেট সংযোগ থাকলেই চলবে।",
-    },
-  ],
-  en: [
-    {
-      q: "How does the 1-on-1 online class work?",
-      a: "You choose your subject and preferred time. Within 48 hours, we match you with a verified teacher. Classes happen entirely online via Zoom, Google Meet, or WhatsApp Call — from the comfort of your home.",
-    },
-    {
-      q: "How do I get the free trial class?",
-      a: "Just fill out the form. We'll contact you and arrange your first session completely free. No card or advance payment required.",
-    },
-    {
-      q: "Are the teachers really from BUET, DU, or Medical College?",
-      a: "Yes. All our teachers are current students or fresh graduates from Bangladesh's top universities. Academic credentials are verified before anyone joins the platform.",
-    },
-    {
-      q: "What is the fee? What if I can't afford it?",
-      a: "We follow a 'Pay-what-you-can' sliding scale model. Students facing financial hardship can attend classes for free — because we believe money should never be a barrier to education.",
-    },
-    {
-      q: "Which subjects are available?",
-      a: "Math, Physics, Chemistry, Biology, English (including spoken), Bangla, ICT, Accounting, and all subjects for board exams. We have verified teachers for all of them.",
-    },
-    {
-      q: "Can I choose my own class schedule?",
-      a: "Yes. Classes are scheduled at a mutually convenient time for both student and teacher — morning, afternoon, or evening, whatever works for you.",
-    },
-    {
-      q: "What if I don't like the teacher?",
-      a: "No problem. After the trial class, if you're not satisfied, we'll match you with a new teacher for free. Your satisfaction is our top priority.",
-    },
-    {
-      q: "Can students outside Dhaka join?",
-      a: "Absolutely. Since classes are fully online, students from any district — Rangpur, Khulna, Rajshahi, Chittagong, Barisal — can join. All you need is a smartphone and an internet connection.",
-    },
-  ],
-};
-
 export default function FAQ() {
   const { lang } = useLanguage();
   const [openIdx, setOpenIdx] = useState<number | null>(null);
@@ -91,14 +20,10 @@ export default function FAQ() {
       .catch(() => {});
   }, []);
 
-  const defaultItems = lang === "bn" ? defaultFaqs.bn : defaultFaqs.en;
-  const items =
-    apiFaqs.length > 0
-      ? apiFaqs.map((f) => ({
-          q: lang === "bn" ? f.qBn || f.qEn : f.qEn || f.qBn,
-          a: lang === "bn" ? f.aBn || f.aEn : f.aEn || f.aBn,
-        }))
-      : defaultItems;
+  const items = apiFaqs.map((f) => ({
+    q: lang === "bn" ? f.qBn || f.qEn : f.qEn || f.qBn,
+    a: lang === "bn" ? f.aBn || f.aEn : f.aEn || f.aBn,
+  }));
 
   return (
     <section id="faq" className="py-24 md:py-32 bg-white font-sans border-b border-[#0D2C4A]/10 scroll-mt-24">

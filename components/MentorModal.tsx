@@ -285,11 +285,25 @@ export default function MentorModal({ isOpen, onClose }: MentorModalProps) {
                     </label>
                     <input
                       type="tel"
+                      inputMode="tel"
                       required
                       placeholder="e.g. 01800000000"
                       value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl border border-[#12213D]/20 bg-white text-sm focus:outline-none focus:border-[#0B4F4A]"
+                      onChange={(e) => {
+                        const sanitized = e.target.value.replace(/[^0-9+() -০-৯]/g, "");
+                        setPhone(sanitized);
+                      }}
+                      onKeyDown={(e) => {
+                        if (
+                          e.key.length === 1 &&
+                          !/[0-9+() -০-৯]/.test(e.key) &&
+                          !e.ctrlKey &&
+                          !e.metaKey
+                        ) {
+                          e.preventDefault();
+                        }
+                      }}
+                      className="w-full px-4 py-3 rounded-xl border border-[#12213D]/20 bg-white text-sm focus:outline-none focus:border-[#0B4F4A] font-mono"
                     />
                   </div>
 

@@ -19,7 +19,7 @@ export default function HowItWorks() {
       num: t.howStep2Num,
       title: t.howStep2Title,
       desc: t.howStep2Desc,
-      img: "https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=600&q=80",
+      img: "/images/online-teaching-meeting.png",
       icon: CalendarCheck,
     },
     {

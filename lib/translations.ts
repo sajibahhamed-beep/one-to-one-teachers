@@ -11,7 +11,7 @@ export const translations = {
     // Navbar Exact Requested Items
     navHome: "হোম",
     navHowWeTeach: "আমরা কীভাবে পড়াই",
-    navAboutUs: "আমাদের সম্পর্কে (বিষয়ভিত্তিক টিচার্স)",
+    navAboutUs: "আমাদের সম্পর্কে",
     navPricingPlan: "নমনীয় ফি",
     navContactUs: "যোগাযোগ করুন",
 

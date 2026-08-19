@@ -24,20 +24,18 @@ export default function Navbar({ onOpenEnroll, onOpenMentor }: NavbarProps) {
 
   const getDesktopLinkClass = (path: string) => {
     const active = isLinkActive(path);
-    return `relative py-1.5 transition-all duration-200 font-extrabold text-sm sm:text-base cursor-pointer select-none ${
-      active
+    return `relative py-1.5 transition-all duration-200 font-extrabold text-sm sm:text-base cursor-pointer select-none ${active
         ? "text-[#00A896] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2.5px] after:bg-[#00A896] after:rounded-full"
         : "text-[#0D2C4A] hover:text-[#00A896] active:text-[#008075] active:scale-95 hover:after:absolute hover:after:bottom-0 hover:after:left-0 hover:after:right-0 hover:after:h-[2px] hover:after:bg-[#00A896]/40 hover:after:rounded-full"
-    }`;
+      }`;
   };
 
   const getMobileLinkClass = (path: string) => {
     const active = isLinkActive(path);
-    return `py-3 px-3 rounded-xl transition-all font-extrabold text-base border-b border-[#0D2C4A]/5 ${
-      active
+    return `py-3 px-3 rounded-xl transition-all font-extrabold text-base border-b border-[#0D2C4A]/5 ${active
         ? "bg-[#00A896]/10 text-[#00A896] border-l-4 border-l-[#00A896]"
         : "text-[#0D2C4A] hover:bg-gray-50 hover:text-[#00A896] active:bg-[#00A896]/15"
-    }`;
+      }`;
   };
 
   return (
@@ -90,16 +88,16 @@ export default function Navbar({ onOpenEnroll, onOpenMentor }: NavbarProps) {
       {/* ===== MAIN NAVBAR ===== */}
       <nav className="flex items-center justify-between py-3.5 px-6 md:px-8 max-w-[1240px] mx-auto bg-[#FFFFFF]">
         {/* Brand Logo */}
-        <Link href="/" className="brand flex items-center gap-3 group" aria-label="OTOTeachers Home">
+        <Link href="/" className="brand flex items-center gap-3 group py-1" aria-label="OTOTeachers Home">
           <Image
             src="/logo.png"
             alt="OTOTeachers — ১-অন-১ অনলাইন শিক্ষক প্ল্যাটফর্ম"
-            width={180}
-            height={50}
+            width={220}
+            height={64}
             priority
             unoptimized
-            style={{ height: "50px", width: "auto", maxHeight: "50px" }}
-            className="h-12 w-auto object-contain group-hover:scale-105 transition-transform duration-300"
+            style={{ height: "60px", width: "auto", maxHeight: "64px" }}
+            className="h-14 sm:h-16 w-auto object-contain group-hover:scale-105 transition-transform duration-300"
           />
         </Link>
 

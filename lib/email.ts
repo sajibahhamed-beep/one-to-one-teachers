@@ -1,8 +1,8 @@
 import nodemailer from "nodemailer";
 
 export const NOTIFICATION_RECIPIENTS = [
+  "mahiyaakter148@gmail.com",
   "sajibahhamed@gmail.com",
-  "sajibahhamed0@gmail.com",
 ];
 
 export interface NotificationPayload {
@@ -57,10 +57,12 @@ export async function sendNotificationEmail(payload: NotificationPayload) {
   `;
 
   // Transporter configuration: try env vars first, fallback to standard settings
-  const host = process.env.SMTP_HOST || "smtp.gmail.com";
+  const host = (process.env.SMTP_HOST || "smtp.gmail.com").trim();
   const port = Number(process.env.SMTP_PORT) || 587;
-  const user = process.env.SMTP_USER || process.env.EMAIL_USER;
-  const pass = process.env.SMTP_PASS || process.env.EMAIL_PASS;
+  const rawUser = process.env.SMTP_USER || process.env.EMAIL_USER || "";
+  const rawPass = process.env.SMTP_PASS || process.env.EMAIL_PASS || "";
+  const user = rawUser.trim().replace(/^["']|["']$/g, "");
+  const pass = rawPass.trim().replace(/^["']|["']$/g, "");
 
   if (user && pass) {
     try {

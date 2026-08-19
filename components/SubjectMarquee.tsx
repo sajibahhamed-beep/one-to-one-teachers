@@ -18,8 +18,8 @@ export default function SubjectMarquee() {
     t.marqueeHsc,
   ];
 
-  // Duplicate list to create seamless infinite loop
-  const marqueeItems = [...subjects, ...subjects, ...subjects, ...subjects];
+  // Duplicate list once to create seamless infinite loop with translateX(-50%)
+  const marqueeItems = [...subjects, ...subjects];
 
   return (
     <div className="strip bg-[#0D2C4A] text-[#F8FAFC] py-3.5 border-t border-[#00A896]/20 overflow-hidden font-sans">
