@@ -1,8 +1,8 @@
 import nodemailer from "nodemailer";
 
 export const NOTIFICATION_RECIPIENTS = [
+  "sajibahhamed0@gmail.com",
   "mahiyaakter148@gmail.com",
-  "sajibahhamed@gmail.com",
 ];
 
 export interface NotificationPayload {

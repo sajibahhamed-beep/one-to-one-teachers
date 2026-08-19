@@ -31,7 +31,7 @@ async function testAppNotification() {
   const user = rawUser.trim().replace(/^["']|["']$/g, "");
   const pass = rawPass.trim().replace(/^["']|["']$/g, "");
   const NOTIFICATION_RECIPIENTS = [
-    "sajibahhamed@gmail.com",
+    "sajibahhamed0@gmail.com",
     "mahiyaakter148@gmail.com"
   ];
 
