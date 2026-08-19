@@ -20,7 +20,7 @@ interface HeroProps {
 
 const heroSlides = [
   {
-    src: "/hero/hero-teacher.png",
+    src: "/hero/hero-teacher.webp",
     alt: "OTOTeachers — ভেরিফাইড শিক্ষক অনলাইনে পাঠদান করছেন",
     titleBn: "নিজের শিক্ষকের সাথে শুরু করুন ব্যক্তিগত লাইভ ক্লাস",
     titleEn: "Start Your Personal Live Classes with Selected Tutors Today",
@@ -28,7 +28,7 @@ const heroSlides = [
     badgeEn: "1-on-1 Verified Teacher",
   },
   {
-    src: "/hero/hero-student-boy.png",
+    src: "/hero/hero-student-boy.webp",
     alt: "OTOTeachers — অনলাইনে ১-অন-১ পড়ালেখা ও প্রবলেম সলভিং",
     titleBn: "পছন্দের সময়ে ঘরে বসেই সরাসরি শিক্ষকের কাছে পড়া",
     titleEn: "Study from Home with Personal Tutors at Your Preferred Time",
@@ -36,7 +36,7 @@ const heroSlides = [
     badgeEn: "Live Interactive Class",
   },
   {
-    src: "/hero/hero-student-girl.png",
+    src: "/hero/hero-student-girl.webp",
     alt: "OTOTeachers — আত্মবিশ্বাসের সাথে অ্যাকাডেমিক সাফল্য",
     titleBn: "দ্বিধাহীন প্রশ্ন করার পূর্ণ স্বাধীনতা ও সেরা প্রস্তুতি",
     titleEn: "Full Freedom to Ask Questions & Build Academic Confidence",

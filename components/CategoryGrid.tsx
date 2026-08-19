@@ -52,7 +52,7 @@ export default function CategoryGrid({ onOpenEnroll }: CategoryGridProps) {
       desc: t.catFreeResourceDesc,
       icon: HeartHandshake,
       badge: lang === "bn" ? "৳০ ফি শিক্ষক" : "৳0 Free Tutor",
-      img: "/images/online-teaching-meeting.png",
+      img: "/images/online-teaching-meeting.webp",
     },
   ];
 

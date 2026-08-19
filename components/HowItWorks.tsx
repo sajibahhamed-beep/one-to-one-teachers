@@ -19,7 +19,7 @@ export default function HowItWorks() {
       num: t.howStep2Num,
       title: t.howStep2Title,
       desc: t.howStep2Desc,
-      img: "/images/online-teaching-meeting.png",
+      img: "/images/online-teaching-meeting.webp",
       icon: CalendarCheck,
     },
     {
