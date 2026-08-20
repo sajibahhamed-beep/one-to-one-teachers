@@ -7,29 +7,34 @@ import { Quote, CheckCircle2, Award } from "lucide-react";
 
 interface MentorsProps {
   onOpenEnroll?: () => void;
+  initialTeachers?: any[];
 }
 
-export default function Mentors({ onOpenEnroll }: MentorsProps) {
+export default function Mentors({ onOpenEnroll, initialTeachers }: MentorsProps) {
   const { t, lang } = useLanguage();
-  const [teacherList, setTeacherList] = useState<any[]>([]);
+  const [teacherList, setTeacherList] = useState<any[]>(
+    Array.isArray(initialTeachers) && initialTeachers.length > 0 ? initialTeachers : []
+  );
 
   useEffect(() => {
-    fetch("/api/teachers")
-      .then((r) => r.json())
-      .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          setTeacherList(data);
-        }
-      })
-      .catch(() => {});
-  }, []);
+    if (!initialTeachers || initialTeachers.length === 0) {
+      fetch("/api/teachers")
+        .then((r) => r.json())
+        .then((data) => {
+          if (Array.isArray(data) && data.length > 0) {
+            setTeacherList(data);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [initialTeachers]);
 
   const displayMentors = teacherList.map((t) => ({
     name: lang === "bn" ? t.nameBn || t.nameEn : t.nameEn || t.nameBn,
     university: lang === "bn" ? t.universityBn || t.universityEn : t.universityEn || t.universityBn,
     subject: lang === "bn" ? t.subjectBn || t.subjectEn : t.subjectEn || t.subjectBn,
     students: lang === "bn" ? "যাচাইকৃত অনলাইন শিক্ষক" : "Verified 1-on-1 Tutor",
-    img: t.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80",
+    img: t.avatar || "/hero/hero-teacher.webp",
   }));
 
   return (

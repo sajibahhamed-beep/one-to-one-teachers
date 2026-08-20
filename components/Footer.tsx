@@ -5,7 +5,12 @@ import Link from "next/link";
 import { useLanguage } from "../context/LanguageContext";
 import { Heart, MapPin, Phone, Mail, ChevronRight } from "lucide-react";
 
-export default function Footer() {
+interface FooterProps {
+  initialSettings?: any;
+  initialPages?: any[];
+}
+
+export default function Footer({ initialSettings, initialPages }: FooterProps) {
   const { t, lang } = useLanguage();
   const [settings, setSettings] = useState<{
     socialLinks?: any[];
@@ -25,29 +30,36 @@ export default function Footer() {
     email: "support@ototeachers.com",
     addressBn: "ধানমণ্ডি, ঢাকা, বাংলাদেশ",
     addressEn: "Dhanmondi, Dhaka, Bangladesh",
+    ...(initialSettings || {}),
   });
 
-  const [customPages, setCustomPages] = useState<any[]>([]);
+  const [customPages, setCustomPages] = useState<any[]>(
+    Array.isArray(initialPages) && initialPages.length > 0 ? initialPages : []
+  );
 
   useEffect(() => {
-    fetch("/api/settings")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data && (data.socialLinks || data.phone || data.email)) {
-          setSettings((prev) => ({ ...prev, ...data }));
-        }
-      })
-      .catch(() => {});
+    if (!initialSettings || Object.keys(initialSettings).length === 0) {
+      fetch("/api/settings")
+        .then((res) => res.json())
+        .then((data) => {
+          if (data && (data.socialLinks || data.phone || data.email)) {
+            setSettings((prev) => ({ ...prev, ...data }));
+          }
+        })
+        .catch(() => {});
+    }
 
-    fetch("/api/pages")
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data)) {
-          setCustomPages(data);
-        }
-      })
-      .catch(() => {});
-  }, []);
+    if (!initialPages || initialPages.length === 0) {
+      fetch("/api/pages")
+        .then((res) => res.json())
+        .then((data) => {
+          if (Array.isArray(data)) {
+            setCustomPages(data);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [initialSettings, initialPages]);
 
   return (
     <footer id="contact" className="bg-[#0A1D33] text-[#F8FAFC]/80 pt-16 pb-8 font-sans border-t border-[#00A896]/20">

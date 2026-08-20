@@ -17,7 +17,7 @@ export default function SuccessStories() {
           : "My son was struggling in Math. With 6 months of 1-on-1 tutoring from a BUET teacher, he achieved GPA-5 in test exams.",
       grade: lang === "bn" ? "অংকে অ গ্রেড অর্জন" : "Achieved A Grade in Math",
       rating: 5,
-      img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
+      img: "/hero/hero-student-boy.webp",
     },
     {
       name: lang === "bn" ? "সামিয়া আক্তার (শিক্ষার্থী)" : "Samia Akter (Student)",
@@ -28,7 +28,7 @@ export default function SuccessStories() {
           : "We have no coaching centers in our remote char land. Audio 1-on-1 classes 3 days a week made English speaking natural for me.",
       grade: lang === "bn" ? "এসএসসি বোর্ড প্রস্তুতি সম্পন্ন" : "SSC Board Prep Completed",
       rating: 5,
-      img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80",
+      img: "/hero/hero-student-girl.webp",
     },
     {
       name: lang === "bn" ? "রেজাউল করিম (অভিভাবক)" : "Rezaul Karim (Parent)",
@@ -39,7 +39,7 @@ export default function SuccessStories() {
           : "Thanks to the sliding scale fee model, as a low-income father I can afford a dedicated DU tutor for my daughter.",
       grade: lang === "bn" ? "এইচএসসি বোর্ড প্রস্তুতি" : "HSC Board Prep",
       rating: 5,
-      img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&q=80",
+      img: "/hero/hero-teacher.webp",
     },
   ];
 

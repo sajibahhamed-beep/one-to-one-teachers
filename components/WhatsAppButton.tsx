@@ -4,27 +4,40 @@ import { useState, useEffect } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { usePathname } from "next/navigation";
 
-export default function WhatsAppButton() {
+interface WhatsAppButtonProps {
+  initialPhone?: string;
+  initialMsgBn?: string;
+  initialMsgEn?: string;
+}
+
+export default function WhatsAppButton({
+  initialPhone = "8801775551325",
+  initialMsgBn = "হ্যালো ototeachers.com টিম, ব্যক্তিগত অনলাইন শিক্ষক সম্পর্কে জানতে চাই।",
+  initialMsgEn = "Hello ototeachers.com team, I want to inquire about 1-on-1 online teachers.",
+}: WhatsAppButtonProps) {
   const { lang } = useLanguage();
   const pathname = usePathname();
-  const [phone, setPhone] = useState("8801775551325");
-  const [msgBn, setMsgBn] = useState("হ্যালো ototeachers.com টিম, ব্যক্তিগত অনলাইন শিক্ষক সম্পর্কে জানতে চাই।");
-  const [msgEn, setMsgEn] = useState("Hello ototeachers.com team, I want to inquire about 1-on-1 online teachers.");
+  const [phone, setPhone] = useState(initialPhone);
+  const [msgBn, setMsgBn] = useState(initialMsgBn);
+  const [msgEn, setMsgEn] = useState(initialMsgEn);
 
   useEffect(() => {
-    fetch("/api/settings")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data && data.whatsappPhone) {
-          setPhone(data.whatsappPhone.replace(/[^0-9]/g, ""));
-        } else if (data && data.phone) {
-          setPhone(data.phone.replace(/[^0-9]/g, ""));
-        }
-        if (data && data.whatsappMessageBn) setMsgBn(data.whatsappMessageBn);
-        if (data && data.whatsappMessageEn) setMsgEn(data.whatsappMessageEn);
-      })
-      .catch(() => {});
-  }, []);
+    // Only fetch if initial props were default and need checking
+    if (initialPhone === "8801775551325") {
+      fetch("/api/settings")
+        .then((res) => res.json())
+        .then((data) => {
+          if (data && data.whatsappPhone) {
+            setPhone(data.whatsappPhone.replace(/[^0-9]/g, ""));
+          } else if (data && data.phone) {
+            setPhone(data.phone.replace(/[^0-9]/g, ""));
+          }
+          if (data && data.whatsappMessageBn) setMsgBn(data.whatsappMessageBn);
+          if (data && data.whatsappMessageEn) setMsgEn(data.whatsappMessageEn);
+        })
+        .catch(() => {});
+    }
+  }, [initialPhone]);
 
   if (pathname?.startsWith("/admin")) {
     return null;

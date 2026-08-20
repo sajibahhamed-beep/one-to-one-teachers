@@ -41,7 +41,7 @@ export default function Subjects({ onOpenEnroll }: { onOpenEnroll: () => void })
         lang === "bn"
           ? "বীজগণিত, জ্যামিতি ও ক্যালকুলাসের গাণিতিক সমস্যা ধরে ধরে সমাধান।"
           : "Personalized 1-on-1 problem solving from basic algebra to calculus.",
-      img: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=600&q=80",
+      img: "/hero/hero-teacher.webp",
       syllabus:
         lang === "bn"
           ? [
@@ -67,7 +67,7 @@ export default function Subjects({ onOpenEnroll }: { onOpenEnroll: () => void })
         lang === "bn"
           ? "ভীতি দূর করে আত্মবিশ্বাসের সাথে সাবলীল ইংরেজিতে কথা বলা ও ফ্রি-হ্যান্ড রাইটিং।"
           : "Overcome fear and build fluent English speaking and writing confidence.",
-      img: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=600&q=80",
+      img: "/hero/hero-student-boy.webp",
       syllabus:
         lang === "bn"
           ? [
@@ -93,7 +93,7 @@ export default function Subjects({ onOpenEnroll }: { onOpenEnroll: () => void })
         lang === "bn"
           ? "পদার্থবিজ্ঞান, রসায়ন ও জীববিজ্ঞানের জটিল থিওরি ও অংক সহজ ভাষায় বুঝে নেওয়া।"
           : "Master complex physics, chemistry & biology concepts with 1-on-1 guidance.",
-      img: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=600&q=80",
+      img: "/hero/hero-student-girl.webp",
       syllabus:
         lang === "bn"
           ? [
@@ -119,7 +119,7 @@ export default function Subjects({ onOpenEnroll }: { onOpenEnroll: () => void })
         lang === "bn"
           ? "এইচএসসি আইসিটি সিলেবাস, এইচটিএমএল ওয়েব কোডিং ও বেসিক প্রোগ্রামিং।"
           : "Learn HSC ICT syllabus, HTML/CSS coding, and basic C programming.",
-      img: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=600&q=80",
+      img: "/images/online-teaching-meeting.webp",
       syllabus:
         lang === "bn"
           ? [

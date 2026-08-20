@@ -4,21 +4,29 @@ import { useState, useEffect } from "react";
 import { useLanguage } from "../context/LanguageContext";
 import { ChevronDown, HelpCircle } from "lucide-react";
 
-export default function FAQ() {
+interface FAQProps {
+  initialFaqs?: any[];
+}
+
+export default function FAQ({ initialFaqs }: FAQProps) {
   const { lang } = useLanguage();
   const [openIdx, setOpenIdx] = useState<number | null>(null);
-  const [apiFaqs, setApiFaqs] = useState<any[]>([]);
+  const [apiFaqs, setApiFaqs] = useState<any[]>(
+    Array.isArray(initialFaqs) && initialFaqs.length > 0 ? initialFaqs : []
+  );
 
   useEffect(() => {
-    fetch("/api/faqs")
-      .then((r) => r.json())
-      .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          setApiFaqs(data);
-        }
-      })
-      .catch(() => {});
-  }, []);
+    if (!initialFaqs || initialFaqs.length === 0) {
+      fetch("/api/faqs")
+        .then((r) => r.json())
+        .then((data) => {
+          if (Array.isArray(data) && data.length > 0) {
+            setApiFaqs(data);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [initialFaqs]);
 
   const items = apiFaqs.map((f) => ({
     q: lang === "bn" ? f.qBn || f.qEn : f.qEn || f.qBn,
