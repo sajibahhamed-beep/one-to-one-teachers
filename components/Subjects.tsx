@@ -27,6 +27,7 @@ interface SubjectItem {
 export default function Subjects({ onOpenEnroll }: { onOpenEnroll: () => void }) {
   const { t, lang } = useLanguage();
   const [activeCategory, setActiveCategory] = useState<string>("all");
+  const [mobileCategory, setMobileCategory] = useState<string>("board");
   const [selectedSubject, setSelectedSubject] = useState<SubjectItem | null>(null);
 
   const subjectList: SubjectItem[] = [
@@ -148,6 +149,9 @@ export default function Subjects({ onOpenEnroll }: { onOpenEnroll: () => void })
     return activeCategory === "all" || item.category === activeCategory;
   });
 
+  const activeMobileSubject =
+    subjectList.find((item) => item.category === mobileCategory) || subjectList[0];
+
   return (
     <section id="subjects" className="py-20 md:py-24 bg-[#F8FAFC] scroll-mt-24">
       <div className="max-w-[1240px] mx-auto px-6 md:px-8">
@@ -167,8 +171,8 @@ export default function Subjects({ onOpenEnroll }: { onOpenEnroll: () => void })
           </div>
         </div>
 
-        {/* Category Filters */}
-        <div className="flex flex-wrap items-center gap-3 mb-10">
+        {/* Desktop Category Filters */}
+        <div className="hidden md:flex flex-wrap items-center gap-3 mb-10">
           {categories.map((cat) => (
             <button
               key={cat.id}
@@ -184,8 +188,28 @@ export default function Subjects({ onOpenEnroll }: { onOpenEnroll: () => void })
           ))}
         </div>
 
-        {/* Grid Cards with generous breathing room & soft shadow */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Mobile Category Selection Pills (One category active at a time) */}
+        <div className="flex md:hidden overflow-x-auto no-scrollbar items-center gap-2 mb-6 pb-2 -mx-2 px-2">
+          {categories
+            .filter((cat) => cat.id !== "all")
+            .map((cat) => (
+              <button
+                key={cat.id}
+                type="button"
+                onClick={() => setMobileCategory(cat.id)}
+                className={`px-4 py-2.5 rounded-full text-xs font-extrabold whitespace-nowrap transition-all flex-shrink-0 cursor-pointer ${
+                  mobileCategory === cat.id
+                    ? "bg-[#0D2C4A] text-white shadow-md"
+                    : "bg-white text-[#0D2C4A] border border-[#0D2C4A]/15 hover:bg-[#00A896]/10 hover:text-[#00A896]"
+                }`}
+              >
+                {cat.label}
+              </button>
+            ))}
+        </div>
+
+        {/* Desktop Grid View: Displays all filtered subjects */}
+        <div className="hidden md:grid md:grid-cols-2 gap-8">
           {filteredSubjects.map((subject) => (
             <div
               key={subject.id}
@@ -245,6 +269,67 @@ export default function Subjects({ onOpenEnroll }: { onOpenEnroll: () => void })
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Mobile Single Card View: Shows ONLY the one selected category card */}
+        <div className="block md:hidden">
+          <div
+            key={activeMobileSubject.id}
+            className="bg-white rounded-3xl border border-[#0D2C4A]/12 p-6 shadow-[0_4px_20px_-4px_rgba(13,44,74,0.06)] flex flex-col justify-between"
+          >
+            <div>
+              {/* Subject Header Image Banner */}
+              <div className="relative h-44 w-full mb-5 rounded-2xl overflow-hidden bg-slate-100">
+                <Image
+                  src={activeMobileSubject.img}
+                  alt={activeMobileSubject.title}
+                  fill
+                  sizes="100vw"
+                  className="object-cover"
+                />
+              </div>
+
+              {/* Badges placed cleanly under the image */}
+              <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
+                <span className="font-mono text-xs font-bold uppercase text-[#00A896] bg-[#00A896]/10 px-3 py-1 rounded-full border border-[#00A896]/20">
+                  {activeMobileSubject.tag}
+                </span>
+                <span className="text-xs font-mono text-[#475569] font-bold bg-[#F8FAFC] px-2.5 py-1 rounded-lg border border-[#0D2C4A]/5">
+                  {activeMobileSubject.mentorInfo}
+                </span>
+              </div>
+
+              <h3 className="font-sans text-xl font-extrabold text-[#0D2C4A] leading-[1.35] tracking-tight mb-3">
+                {activeMobileSubject.title}
+              </h3>
+
+              <p className="text-sm text-[#475569] leading-relaxed mb-6 font-normal">
+                {activeMobileSubject.desc}
+              </p>
+
+              <div className="space-y-3 mb-6 bg-[#F8FAFC] p-4.5 rounded-2xl border border-[#0D2C4A]/10">
+                <h4 className="text-xs font-mono font-bold uppercase text-[#0D2C4A] mb-3 tracking-wider">
+                  {lang === "bn" ? "কোর্স সিলেবাস ও পড়ার সুবিধা:" : "1-on-1 Syllabus & Highlights:"}
+                </h4>
+                {activeMobileSubject.syllabus.map((item, idx) => (
+                  <div key={idx} className="flex items-start gap-2.5 text-xs text-[#0D2C4A] leading-relaxed">
+                    <CheckCircle2 className="w-4 h-4 text-[#00A896] flex-shrink-0 mt-0.5" />
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="pt-4 border-t border-[#0D2C4A]/10">
+              <button
+                onClick={onOpenEnroll}
+                className="w-full py-3.5 rounded-full bg-[#00A896] text-white font-extrabold text-sm hover:bg-[#008075] transition-all shadow-md shadow-[#00A896]/20 flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <span>{t.subjEnrollBtn}</span>
+                <ArrowRight className="w-4 h-4 text-white" />
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 

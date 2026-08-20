@@ -80,8 +80,10 @@ export default function HomeClient() {
       {/* Subjects & Syllabus Gallery */}
       <Subjects onOpenEnroll={() => handleOpenEnroll("Student Request", 0)} />
 
-      {/* Live Batch Schedule */}
-      <BatchSchedule onOpenEnroll={() => handleOpenEnroll("Student Request", 0)} />
+      {/* Live Batch Schedule (Hidden on mobile) */}
+      <div className="hidden md:block">
+        <BatchSchedule onOpenEnroll={() => handleOpenEnroll("Student Request", 0)} />
+      </div>
 
       {/* Student Success Stories & Scorecards */}
       <SuccessStories />
@@ -95,11 +97,13 @@ export default function HomeClient() {
       {/* Impact Statistics */}
       <ImpactSection />
 
-      {/* For Students & For Teachers (H2 Sections) */}
-      <StudentTeacherSection
-        onOpenEnroll={(plan) => handleOpenEnroll(plan || "Free Trial", 0)}
-        onOpenMentor={() => setMentorModalOpen(true)}
-      />
+      {/* For Students & For Teachers (H2 Sections - Hidden on mobile) */}
+      <div className="hidden md:block">
+        <StudentTeacherSection
+          onOpenEnroll={(plan) => handleOpenEnroll(plan || "Free Trial", 0)}
+          onOpenMentor={() => setMentorModalOpen(true)}
+        />
+      </div>
 
       {/* FAQ Section (H2) */}
       <FAQ />

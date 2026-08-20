@@ -61,7 +61,7 @@ export default function Hero({ onOpenEnroll }: HeroProps) {
     <section className="hero relative bg-[#F4F9F9] text-[#0D2C4A] pt-8 sm:pt-14 pb-12 sm:pb-20 font-sans border-b border-[#00A896]/15">
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 md:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
         {/* Left Text Column */}
-        <div className="lg:col-span-6 space-y-4 sm:space-y-5">
+        <div className="order-2 lg:order-1 lg:col-span-6 space-y-4 sm:space-y-5">
           {/* SEO Eyebrow Badge */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#00A896]/10 text-[#00A896] text-xs font-mono font-bold tracking-wide border border-[#00A896]/20">
             <ShieldCheck className="w-4 h-4 text-[#00A896]" />
@@ -164,7 +164,7 @@ export default function Hero({ onOpenEnroll }: HeroProps) {
         </div>
 
         {/* Right Feature Cards Column - Larger image showcase */}
-        <div className="lg:col-span-6 flex flex-col gap-4 sm:gap-5">
+        <div className="order-1 lg:order-2 lg:col-span-6 flex flex-col gap-4 sm:gap-5">
           {/* Main Classroom Image Card with Smooth Fade In/Out Transitions */}
           <div
             onClick={() => onOpenEnroll?.("Student Request")}

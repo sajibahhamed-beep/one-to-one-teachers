@@ -79,7 +79,9 @@ export default function CategoryGrid({ onOpenEnroll }: CategoryGridProps) {
               <div
                 key={idx}
                 onClick={() => onOpenEnroll?.()}
-                className="bg-white border border-[#0D2C4A]/12 rounded-3xl overflow-hidden shadow-[0_4px_20px_-4px_rgba(13,44,74,0.06)] hover:shadow-[0_20px_40px_-10px_rgba(13,44,74,0.15)] hover:-translate-y-1.5 transition-all duration-300 cursor-pointer group flex flex-col justify-between"
+                className={`${
+                  idx >= 3 ? "hidden sm:flex" : "flex"
+                } bg-white border border-[#0D2C4A]/12 rounded-3xl overflow-hidden shadow-[0_4px_20px_-4px_rgba(13,44,74,0.06)] hover:shadow-[0_20px_40px_-10px_rgba(13,44,74,0.15)] hover:-translate-y-1.5 transition-all duration-300 cursor-pointer group flex-col justify-between`}
               >
                 {/* Image Header with Gradient & Floating Glass Pill Badge */}
                 <div className="relative h-48 sm:h-52 overflow-hidden bg-[#0D2C4A]/5">
