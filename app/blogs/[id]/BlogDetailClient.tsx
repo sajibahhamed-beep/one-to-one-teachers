@@ -298,9 +298,9 @@ export default function BlogDetailClient({ post, relatedPosts }: BlogDetailClien
                     </h3>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3.5">
                     {keyTakeaways.map((takeaway, tkIdx) => (
-                      <div key={tkIdx} className="flex items-start gap-3 bg-white p-4.5 rounded-xl border border-[#00A896]/20 shadow-sm">
+                      <div key={tkIdx} className="flex items-start gap-3 py-1">
                         <CheckCircle2 className="w-5 h-5 text-[#00A896] flex-shrink-0 mt-0.5" />
                         <span className="text-sm sm:text-base font-bold text-[#0D2C4A] leading-snug">
                           {takeaway}
