@@ -21,7 +21,19 @@ import MentorModal from "@/components/MentorModal";
 import Footer from "@/components/Footer";
 import { ArrowRight, HeartHandshake } from "lucide-react";
 
-export default function HomeClient() {
+interface HomeClientProps {
+  initialTeachers?: any[];
+  initialFaqs?: any[];
+  initialSettings?: any;
+  initialPages?: any[];
+}
+
+export default function HomeClient({
+  initialTeachers,
+  initialFaqs,
+  initialSettings,
+  initialPages,
+}: HomeClientProps = {}) {
   const { lang } = useLanguage();
   const [enrollModalOpen, setEnrollModalOpen] = useState(false);
   const [mentorModalOpen, setMentorModalOpen] = useState(false);
@@ -89,7 +101,10 @@ export default function HomeClient() {
       <SuccessStories />
 
       {/* Mentor Spotlight */}
-      <Mentors onOpenEnroll={() => handleOpenEnroll("Student Request", 0)} />
+      <Mentors
+        onOpenEnroll={() => handleOpenEnroll("Student Request", 0)}
+        initialTeachers={initialTeachers}
+      />
 
       {/* Flexible Fee & Sliding Scale Calculator */}
       <Pricing onOpenEnroll={handleOpenEnroll} />
@@ -106,7 +121,7 @@ export default function HomeClient() {
       </div>
 
       {/* FAQ Section (H2) */}
-      <FAQ />
+      <FAQ initialFaqs={initialFaqs} />
 
       {/* Call to Action */}
       <section className="cta-final bg-[#12213D] text-[#FBF7EF] text-center py-24 relative overflow-hidden">
@@ -139,7 +154,7 @@ export default function HomeClient() {
       </section>
 
       {/* Footer */}
-      <Footer />
+      <Footer initialSettings={initialSettings} initialPages={initialPages} />
 
       {/* Student Registration Modal */}
       <EnrollModal

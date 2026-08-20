@@ -17,15 +17,17 @@ export default function TermsClient({ initialPage }: { initialPage?: CustomPage 
   const [page, setPage] = useState<CustomPage | null>(initialPage || null);
 
   useEffect(() => {
-    fetch("/api/pages?slug=terms")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data && !data.error) {
-          setPage(data);
-        }
-      })
-      .catch((err) => console.error("Error fetching terms page:", err));
-  }, []);
+    if (!initialPage) {
+      fetch("/api/pages?slug=terms")
+        .then((res) => res.json())
+        .then((data) => {
+          if (data && !data.error) {
+            setPage(data);
+          }
+        })
+        .catch((err) => console.error("Error fetching terms page:", err));
+    }
+  }, [initialPage]);
 
   const title = lang === "bn" ? (page?.titleBn || "টার্মস অ্যান্ড কন্ডিশনস") : (page?.titleEn || "Terms and Conditions");
   const subtitle = lang === "bn" ? (page?.subtitleBn || "ওয়ান-টু-ওয়ান টিচার্স (OTOTeachers) প্ল্যাটফর্ম ব্যবহারের নিয়মমালা ও সেবা গ্রহণের শর্তসমূহ।") : (page?.subtitleEn || "Rules and terms governing the use of One-to-One Teachers (OTOTeachers) platform.");

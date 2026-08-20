@@ -31,47 +31,49 @@ export default function BlogsClient({ initialPosts }: BlogsClientProps) {
   const [apiPosts, setApiPosts] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch("/api/blogs")
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          const mapped = data.map((b: any) => ({
-            id: b.id || b.slug,
-            slug: b.slug || b.id,
-            titleBn: b.titleBn || b.title_bn || "নিবন্ধ",
-            titleEn: b.titleEn || b.title_en || "Article",
-            category: b.category || "mentorship",
-            excerptBn: b.excerptBn || b.excerpt_bn || "",
-            excerptEn: b.excerptEn || b.excerpt_en || "",
-            publishedDateBn: b.publishedDateBn || b.published_date_bn || "",
-            publishedDateEn: b.publishedDateEn || b.published_date_en || "",
-            readTimeBn: b.readTimeBn || b.read_time_bn || "৫ মিনিট",
-            readTimeEn: b.readTimeEn || b.read_time_en || "5 min read",
-            featured: Boolean(b.featured),
-            image: b.image || "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=800&q=80",
-            author: b.author && typeof b.author === "object" && b.author.nameBn ? b.author : {
-              nameBn: b.authorNameBn || "OTOTeachers টিম",
-              nameEn: b.authorNameEn || "OTOTeachers Team",
-              avatar: b.authorAvatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
-              roleBn: b.authorRoleBn || "একাডেমিক পরামর্শক",
-              roleEn: b.authorRoleEn || "Academic Advisor",
-              institutionBn: b.authorUniBn || "বুয়েট ও ঢাবি",
-              institutionEn: b.authorUniEn || "BUET & DU",
-            },
-            tagsBn: Array.isArray(b.tagsBn) && b.tagsBn.length > 0 ? b.tagsBn : ["পড়াশোনা", "পরামর্শ"],
-            tagsEn: Array.isArray(b.tagsEn) && b.tagsEn.length > 0 ? b.tagsEn : ["study", "prep"],
-            introBn: b.introBn || b.excerptBn || "",
-            introEn: b.introEn || b.excerptEn || "",
-            sectionsBn: Array.isArray(b.sectionsBn) ? b.sectionsBn : [],
-            sectionsEn: Array.isArray(b.sectionsEn) ? b.sectionsEn : [],
-            keyTakeawaysBn: Array.isArray(b.keyTakeawaysBn) ? b.keyTakeawaysBn : [],
-            keyTakeawaysEn: Array.isArray(b.keyTakeawaysEn) ? b.keyTakeawaysEn : [],
-          }));
-          setApiPosts(mapped);
-        }
-      })
-      .catch(() => {});
-  }, []);
+    if (!initialPosts || initialPosts.length === 0) {
+      fetch("/api/blogs")
+        .then((res) => res.json())
+        .then((data) => {
+          if (Array.isArray(data) && data.length > 0) {
+            const mapped = data.map((b: any) => ({
+              id: b.id || b.slug,
+              slug: b.slug || b.id,
+              titleBn: b.titleBn || b.title_bn || "নিবন্ধ",
+              titleEn: b.titleEn || b.title_en || "Article",
+              category: b.category || "mentorship",
+              excerptBn: b.excerptBn || b.excerpt_bn || "",
+              excerptEn: b.excerptEn || b.excerpt_en || "",
+              publishedDateBn: b.publishedDateBn || b.published_date_bn || "",
+              publishedDateEn: b.publishedDateEn || b.published_date_en || "",
+              readTimeBn: b.readTimeBn || b.read_time_bn || "৫ মিনিট",
+              readTimeEn: b.readTimeEn || b.read_time_en || "5 min read",
+              featured: Boolean(b.featured),
+              image: b.image || "/hero/hero-teacher.webp",
+              author: b.author && typeof b.author === "object" && b.author.nameBn ? b.author : {
+                nameBn: b.authorNameBn || "OTOTeachers টিম",
+                nameEn: b.authorNameEn || "OTOTeachers Team",
+                avatar: b.authorAvatar || "/hero/hero-teacher.webp",
+                roleBn: b.authorRoleBn || "একাডেমিক পরামর্শক",
+                roleEn: b.authorRoleEn || "Academic Advisor",
+                institutionBn: b.authorUniBn || "বুয়েট ও ঢাবি",
+                institutionEn: b.authorUniEn || "BUET & DU",
+              },
+              tagsBn: Array.isArray(b.tagsBn) && b.tagsBn.length > 0 ? b.tagsBn : ["পড়াশোনা", "পরামর্শ"],
+              tagsEn: Array.isArray(b.tagsEn) && b.tagsEn.length > 0 ? b.tagsEn : ["study", "prep"],
+              introBn: b.introBn || b.excerptBn || "",
+              introEn: b.introEn || b.excerptEn || "",
+              sectionsBn: Array.isArray(b.sectionsBn) ? b.sectionsBn : [],
+              sectionsEn: Array.isArray(b.sectionsEn) ? b.sectionsEn : [],
+              keyTakeawaysBn: Array.isArray(b.keyTakeawaysBn) ? b.keyTakeawaysBn : [],
+              keyTakeawaysEn: Array.isArray(b.keyTakeawaysEn) ? b.keyTakeawaysEn : [],
+            }));
+            setApiPosts(mapped);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [initialPosts]);
 
   const basePosts = initialPosts && initialPosts.length > 0 ? initialPosts : [];
 

@@ -102,11 +102,18 @@ export const viewport: Viewport = {
   maximumScale: 5,
 };
 
-export default function RootLayout({
+import { getSettings } from "@/lib/db";
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const settings = ((await getSettings().catch(() => ({}))) || {}) as any;
+  const initialPhone = (settings?.whatsappPhone || settings?.phone || "8801775551325").replace(/[^0-9]/g, "");
+  const initialMsgBn = settings?.whatsappMessageBn || "হ্যালো ototeachers.com টিম, ব্যক্তিগত অনলাইন শিক্ষক সম্পর্কে জানতে চাই।";
+  const initialMsgEn = settings?.whatsappMessageEn || "Hello ototeachers.com team, I want to inquire about 1-on-1 online teachers.";
+
   const orgSchema = getOrganizationSchema();
   const webSiteSchema = getWebSiteSchema();
 
@@ -128,7 +135,11 @@ export default function RootLayout({
       >
         <LanguageProvider>
           {children}
-          <WhatsAppButton />
+          <WhatsAppButton
+            initialPhone={initialPhone}
+            initialMsgBn={initialMsgBn}
+            initialMsgEn={initialMsgEn}
+          />
         </LanguageProvider>
       </body>
     </html>

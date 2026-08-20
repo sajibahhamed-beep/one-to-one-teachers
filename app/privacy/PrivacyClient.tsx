@@ -17,15 +17,17 @@ export default function PrivacyClient({ initialPage }: { initialPage?: CustomPag
   const [page, setPage] = useState<CustomPage | null>(initialPage || null);
 
   useEffect(() => {
-    fetch("/api/pages?slug=privacy")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data && !data.error) {
-          setPage(data);
-        }
-      })
-      .catch((err) => console.error("Error fetching privacy page:", err));
-  }, []);
+    if (!initialPage) {
+      fetch("/api/pages?slug=privacy")
+        .then((res) => res.json())
+        .then((data) => {
+          if (data && !data.error) {
+            setPage(data);
+          }
+        })
+        .catch((err) => console.error("Error fetching privacy page:", err));
+    }
+  }, [initialPage]);
 
   const title = lang === "bn" ? (page?.titleBn || "গোপনীয় নীতি") : (page?.titleEn || "Privacy Policy");
   const subtitle = lang === "bn" ? (page?.subtitleBn || "শিক্ষার্থী ও অভিভাবকদের তথ্যের সর্বোচ্চ সুরক্ষা সুনিশ্চিত করা আমাদের অগ্রাধিকার।") : (page?.subtitleEn || "Protecting student and parent information is our top priority.");

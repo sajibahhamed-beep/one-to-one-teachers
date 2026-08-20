@@ -70,13 +70,35 @@ const homeFaqs = [
   },
 ];
 
-export default function HomePage() {
-  const faqSchema = getFAQPageSchema(homeFaqs);
+import { getTeachers, getFAQs, getSettings, getCustomPages } from "@/lib/db";
+
+export const revalidate = 0;
+
+export default async function HomePage() {
+  const [teachers, faqs, settings, customPages] = await Promise.all([
+    getTeachers().catch(() => []),
+    getFAQs().catch(() => []),
+    getSettings().catch(() => ({})),
+    getCustomPages().catch(() => []),
+  ]);
+
+  const faqListForSchema =
+    Array.isArray(faqs) && faqs.length > 0
+      ? faqs.map((f) => ({ q: f.qBn, a: f.aBn }))
+      : homeFaqs;
+
+  const faqSchema = getFAQPageSchema(faqListForSchema);
 
   return (
     <>
       <JsonLd data={faqSchema} />
-      <HomeClient />
+      <HomeClient
+        initialTeachers={teachers}
+        initialFaqs={faqs}
+        initialSettings={settings}
+        initialPages={customPages}
+      />
     </>
   );
 }
+

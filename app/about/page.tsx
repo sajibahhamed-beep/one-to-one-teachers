@@ -33,7 +33,17 @@ export const metadata: Metadata = {
   },
 };
 
-export default function AboutPage() {
+import { getTeachers, getSettings, getCustomPages } from "@/lib/db";
+
+export const revalidate = 0;
+
+export default async function AboutPage() {
+  const [teachers, settings, customPages] = await Promise.all([
+    getTeachers().catch(() => []),
+    getSettings().catch(() => ({})),
+    getCustomPages().catch(() => []),
+  ]);
+
   const breadcrumbSchema = getBreadcrumbSchema([
     { name: "হোম", url: "/" },
     { name: "আমাদের সম্পর্কে", url: "/about" },
@@ -56,7 +66,11 @@ export default function AboutPage() {
     <>
       <JsonLd data={breadcrumbSchema} />
       <JsonLd data={aboutPageSchema} />
-      <AboutClient />
+      <AboutClient
+        initialTeachers={teachers}
+        initialSettings={settings}
+        initialPages={customPages}
+      />
     </>
   );
 }

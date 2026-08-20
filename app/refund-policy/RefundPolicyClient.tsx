@@ -17,15 +17,17 @@ export default function RefundPolicyClient({ initialPage }: { initialPage?: Cust
   const [page, setPage] = useState<CustomPage | null>(initialPage || null);
 
   useEffect(() => {
-    fetch("/api/pages?slug=refund-policy")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data && !data.error) {
-          setPage(data);
-        }
-      })
-      .catch((err) => console.error("Error fetching refund policy page:", err));
-  }, []);
+    if (!initialPage) {
+      fetch("/api/pages?slug=refund-policy")
+        .then((res) => res.json())
+        .then((data) => {
+          if (data && !data.error) {
+            setPage(data);
+          }
+        })
+        .catch((err) => console.error("Error fetching refund policy page:", err));
+    }
+  }, [initialPage]);
 
   const title = lang === "bn" ? (page?.titleBn || "রিফান্ড পলিসি") : (page?.titleEn || "Refund Policy");
   const subtitle = lang === "bn" ? (page?.subtitleBn || "শিক্ষার্থী ও অভিভাবকদের অধিকার রক্ষায় আমাদের ১০০% স্বচ্ছ ও ঝুঁকিমুক্ত রিফান্ড নীতি।") : (page?.subtitleEn || "Our 100% transparent and risk-free refund policy designed to protect student and parent rights.");

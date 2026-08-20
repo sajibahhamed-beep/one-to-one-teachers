@@ -10,7 +10,17 @@ import EnrollModal from "@/components/EnrollModal";
 import MentorModal from "@/components/MentorModal";
 import { useLanguage } from "@/context/LanguageContext";
 
-export default function AboutClient() {
+interface AboutClientProps {
+  initialTeachers?: any[];
+  initialSettings?: any;
+  initialPages?: any[];
+}
+
+export default function AboutClient({
+  initialTeachers,
+  initialSettings,
+  initialPages,
+}: AboutClientProps = {}) {
   const { lang } = useLanguage();
   const [enrollModalOpen, setEnrollModalOpen] = useState(false);
   const [mentorModalOpen, setMentorModalOpen] = useState(false);
@@ -52,9 +62,12 @@ export default function AboutClient() {
       <ImpactSection />
 
       {/* Verified Mentors Spotlight */}
-      <Mentors onOpenEnroll={() => handleOpenEnroll("Student Request")} />
+      <Mentors
+        onOpenEnroll={() => handleOpenEnroll("Student Request")}
+        initialTeachers={initialTeachers}
+      />
 
-      <Footer />
+      <Footer initialSettings={initialSettings} initialPages={initialPages} />
 
       <EnrollModal
         isOpen={enrollModalOpen}

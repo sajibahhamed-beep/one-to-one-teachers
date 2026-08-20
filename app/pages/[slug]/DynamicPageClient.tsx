@@ -23,15 +23,17 @@ export default function DynamicPageClient({
   const [page, setPage] = useState<CustomPage>(initialPage);
 
   useEffect(() => {
-    fetch(`/api/pages?slug=${slug}`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data && !data.error) {
-          setPage(data);
-        }
-      })
-      .catch((err) => console.error("Error fetching dynamic page:", err));
-  }, [slug]);
+    if (!initialPage) {
+      fetch(`/api/pages?slug=${slug}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data && !data.error) {
+            setPage(data);
+          }
+        })
+        .catch((err) => console.error("Error fetching dynamic page:", err));
+    }
+  }, [slug, initialPage]);
 
   const title = lang === "bn" ? page.titleBn : (page.titleEn || page.titleBn);
   const subtitle = lang === "bn" ? page.subtitleBn : (page.subtitleEn || page.subtitleBn);
